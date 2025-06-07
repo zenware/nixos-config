@@ -1,0 +1,13 @@
+keys:
+  - &admin_jay age1mv8xtvkuuw3hphq5ytaekz7p8a4kht79uajyhy534uy9e5472fhqj5zpxu
+  - &server_lithium age148yre4vaxp6lm59rft24te46szawqyguf8znkrtpq7ud8tpteauqxkwyjl 
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+        - *admin_jay
+        - *server_lithium
+  - path_regex: secrets/lithium/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+        - *server_lithium

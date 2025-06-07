@@ -2,15 +2,9 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, nixos-hardware, ... }:
+{ config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      #nixos-hardware.nixosModules.gpd-pocket-3
-      ./hardware-configuration.nix
-    ];
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -110,9 +104,6 @@
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     xwayland
-  ];
-
-  services.udev.packages = with pkgs; [
   ];
 
   programs.neovim.enable = true;
