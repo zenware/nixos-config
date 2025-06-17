@@ -1,5 +1,6 @@
 { config, lib, pkgs, ... }:
 {
+  powerManagement.enable = false;
   networking.hostName = "titanium";
   networking.networkmanager.enable = true;
   environment.systemPackages = with pkgs; [
