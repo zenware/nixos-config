@@ -14,14 +14,40 @@ It's designed to be **secure, composable, and automated** using modern Nix tooli
 - Secrets managed via `sops-nix`
 - Deployable with `nixos-rebuild` (and soon `deploy-rs` or `nixos-anywhere`)
 
+
 ```mermaid
+---
+title: How it all fits together
+---
 graph TD
+    subgraph Entrypoint
+        flake
+        mkSystem
+    end
+    subgraph System Configuration
+        hosts
+        hosts_conf
+        hosts_hardware
+    end
+    subgraph User Configuration
+        users_default
+        users_home
+    end
+    subgraph Shared Modules
+      nixos_mods
+      home_mods
+    end
     flake["flake.nix"] --> mkSystem["lib/mkSystem"]
+    
     mkSystem --> hosts["hosts/{hostname}/default.nix"]
     mkSystem --> users_default["users/{username}/default.nix"]
-    mkSystem -.->|if user home-manager| users_home["users/{username}/home.nix"]
-    hosts --> nixosMods@{ shape: docs, label: "modules/nixos/*"}
-    users_home --> homeMods@{ shape: docs, label: "modules/home/*"}
+    mkSystem -.->|if file exists| users_home["users/{username}/home.nix"]
+    
+    hosts --> nixos_mods@{ shape: docs, label: "modules/nixos/*"}
+    hosts --> hosts_conf["configuration.nix"]
+    hosts --> hosts_hardware["hardware.nix"]
+    
+    users_home --> home_mods@{ shape: docs, label: "modules/home/*"}
 ```
 
 ## How to use this? (Deployment)
