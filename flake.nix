@@ -9,9 +9,11 @@
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
-  outputs = inputs@{self, nixpkgs, nixos-hardware, home-manager, sops-nix, lanzaboote, ...}:
+  outputs = inputs@{self, nixpkgs, nixos-hardware, home-manager, sops-nix, lanzaboote, disko, ...}:
   let
     mkSystem = (import ./lib {
       inherit nixpkgs home-manager inputs;
@@ -40,6 +42,8 @@
         ];
         extraModules = [
           { nixpkgs.config.allowUnfree = true; }
+          disko.nixosModules.disko
+          ./hosts/titanium/disko.nix  # TODO: Import this in mkSystem if both the file and module exist.
           lanzaboote.nixosModules.lanzaboote
           ({ pkgs, lib, ... }: {
             environment.systemPackages = [ pkgs.sbctl ];
