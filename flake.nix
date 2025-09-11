@@ -45,8 +45,20 @@
         users = [
           "jml"
         ];
-        #extraModules = [ (import ./overlays) ];
-        extraModules = [ stylix.nixosModules.stylix ];
+        extraModules = [
+          #(import ./overlays)
+          #stylix.nixosModules.stylix
+          { nixpkgs.config.allowUnfree = true; }
+          lanzaboote.nixosModules.lanzaboote
+          disko.nixosModules.disko
+          ./hosts/titanium/disko.nix
+          ({ pkgs, lib, ... }: {
+            environment.systemPackages = [ pkgs.sbctl ];
+            boot.loader.systemd-boot.enable = lib.mkForce false;
+            boot.lanzaboote.enable = true;
+            boot.lanzaboote.pkiBundle = "/var/lib/sbctl";
+          })
+        ];
       };
       cobalt = mkSystem {
         hostname = "cobalt";
