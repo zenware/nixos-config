@@ -6,7 +6,8 @@
     ../../modules/nixos/desktop.nix
     ../../modules/nixos/gaming.nix
     inputs.nixos-hardware.nixosModules.asus-rog-strix-x570e
-    ./hardware.nix
+    #./hardware.nix
     ./configuration.nix
+    ./nvidia.nix
   ];
 }
