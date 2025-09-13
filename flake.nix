@@ -40,18 +40,7 @@
         users = [
           "jml"
         ];
-        extraModules = [
-          { nixpkgs.config.allowUnfree = true; }
-          disko.nixosModules.disko
-          ./hosts/titanium/disko.nix  # TODO: Import this in mkSystem if both the file and module exist.
-          lanzaboote.nixosModules.lanzaboote
-          ({ pkgs, lib, ... }: {
-            environment.systemPackages = [ pkgs.sbctl ];
-            boot.loader.systemd-boot.enable = lib.mkForce false;
-            boot.lanzaboote.enable = true;
-            boot.lanzaboote.pkiBundle = "/var/lib/sbctl";
-          })
-        ];
+        extraModules = [];
       };
       # `nix build .#nixosConfigurations.installIso.config.system.build.isoImage`
       # https://github.com/nix-community/nixos-generators

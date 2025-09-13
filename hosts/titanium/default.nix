@@ -1,5 +1,6 @@
 { inputs, ... }:
 {
+  nixpkgs.config.allowUnfree = true;
   imports = [
     ../../modules/nixos/base.nix
     ../../modules/nixos/audio.nix
@@ -9,5 +10,8 @@
     #./hardware.nix
     ./configuration.nix
     ./nvidia.nix
+    ./secure-boot.nix
+    inputs.disko.nixosModules.disko
+    ./disko.nix
   ];
 }
