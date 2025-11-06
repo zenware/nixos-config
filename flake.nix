@@ -11,15 +11,20 @@
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+    stylix.url = "github:nix-community/stylix";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
-  outputs = inputs@{self, nixpkgs, nixos-hardware, home-manager, sops-nix, lanzaboote, disko, ...}:
+  outputs = inputs@{self, nixpkgs, nixos-hardware, home-manager, sops-nix, lanzaboote, disko, stylix, ...}:
   let
     mkSystem = (import ./lib {
       inherit nixpkgs home-manager inputs;
     }).mkSystem;
   in
   {
+    lib = {
+      mkSystem = mkSystem;
+    };
     # NOTE: Run `nix flake show` to see what this flake has to offer.
     # TODO: Enable automated formatting with something like numtide/treefmt-nix
     nixosConfigurations = {
@@ -40,7 +45,8 @@
         users = [
           "jml"
         ];
-        extraModules = [];
+        #extraModules = [ (import ./overlays) ];
+        extraModules = [ stylix.nixosModules.stylix ];
       };
       # `nix build .#nixosConfigurations.installIso.config.system.build.isoImage`
       # https://github.com/nix-community/nixos-generators
