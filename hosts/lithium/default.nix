@@ -5,7 +5,6 @@
     inputs.sops-nix.nixosModules.sops
     ./hardware.nix
     ./configuration.nix
-    ./semi-secret-vars.nix
     ./services/caddy.nix
     ./services/tailscale.nix
     ./services/kanidm.nix
