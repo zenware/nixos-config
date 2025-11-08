@@ -2,7 +2,6 @@
 {
   sops.defaultSopsFile = ./secrets/common.yaml;
   networking.hostName = "lithium";
-  networking.domain = config.vars.domain;
   environment.systemPackages = with pkgs; [
     zfs
   ];
