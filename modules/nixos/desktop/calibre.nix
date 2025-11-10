@@ -3,22 +3,15 @@
   imports = [];
 
   options = {
-    zw-calibre = {
+    zw.calibre = {
       enable = lib.mkEnableOption "Enable Calibre";
     };
   };
-
+  
   config = {
-    config.allowUnfreePredigate = pkg: builtins.elem (lib.getName pkg) [
-      "calibre"
-      "unrar"
-    ];
-
+    # NOTE: Without unrar support we can't open ".cbr" files.
     environment.systemPackages = with pkgs; [
-      (calibre.override {
-        unrarSupport = true;
-      })
-      unrar
+      calibre
     ];
 
     services.udisks2.enable = true;

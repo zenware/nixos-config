@@ -1,11 +1,17 @@
 { pkgs, ... }:
 {
+  imports = [
+    ./calibre.nix
+  ];
+
+  zw.calibre.enable = true;
+
   environment.systemPackages = with pkgs; [
     yubikey-personalization
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     xwayland
-    rofi-wayland
+    rofi
     waybar
     hyprpaper
     kitty # hyprland default term

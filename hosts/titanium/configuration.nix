@@ -16,5 +16,5 @@
   services.openssh.enable = true;
   services.tailscale.enable = true;
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }

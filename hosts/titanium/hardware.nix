@@ -8,41 +8,43 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.systemd.enable = true;
+  #boot.initrd.luks.devices.FOO.crypttabExtraOpts = ["fido2-device=auto"];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/0b3de117-c34f-4cc6-81db-5b84ea46cd51";
+    { #device = "/dev/disk/by-uuid/bac9b4de-d201-4008-9e97-3954417aab65";
       fsType = "btrfs";
       options = [ "subvol=root" ];
     };
 
-  boot.initrd.luks.devices."crypted".device = "/dev/disk/by-uuid/0ccc4028-c27e-4259-ade9-a2b2081722cb";
+  #boot.initrd.luks.devices."crypted".device = "/dev/disk/by-uuid/16b8ccb6-0102-4348-bb1b-d8d68bfb4d23";
+
+  fileSystems."/nix" =
+    { #device = "/dev/disk/by-uuid/bac9b4de-d201-4008-9e97-3954417aab65";
+      fsType = "btrfs";
+      options = [ "subvol=nix" ];
+    };
 
   fileSystems."/.swapvol" =
-    { device = "/dev/disk/by-uuid/0b3de117-c34f-4cc6-81db-5b84ea46cd51";
+    { #device = "/dev/disk/by-uuid/bac9b4de-d201-4008-9e97-3954417aab65";
       fsType = "btrfs";
       options = [ "subvol=swap" ];
     };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/219D-4579";
-      fsType = "vfat";
-      options = [ "fmask=0077" "dmask=0077" ];
-    };
-
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/0b3de117-c34f-4cc6-81db-5b84ea46cd51";
+    { #device = "/dev/disk/by-uuid/bac9b4de-d201-4008-9e97-3954417aab65";
       fsType = "btrfs";
       options = [ "subvol=home" ];
     };
 
-  fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/0b3de117-c34f-4cc6-81db-5b84ea46cd51";
-      fsType = "btrfs";
-      options = [ "subvol=nix" ];
+  fileSystems."/boot" =
+    { #device = "/dev/disk/by-uuid/E076-75D6";
+      fsType = "vfat";
+      options = [ "fmask=0077" "dmask=0077" ];
     };
 
   swapDevices = [ ];
@@ -54,7 +56,7 @@
   networking.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp4s0.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp5s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.wlp3s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.tailscale0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
