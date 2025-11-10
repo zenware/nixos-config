@@ -17,7 +17,7 @@ let
         mgba  # GameBoy / Color / Advance
         melonds  # Nintendo DS
         citra  # Nintendo 3DS
-        
+
 
         # Sony
         swanstation  #duckstation  # PlayStation
@@ -35,11 +35,13 @@ in
 {
   environment.systemPackages = [
     retroarchWithCores
+    #pkgs.retroarch-full
     #pkgs.emulationstation-de
     pkgs.gnome-bluetooth
   ];
 
   hardware.xone.enable = true;  # Xbox Controller Driver
+  hardware.xpadneo.enable = true;  # Xbox Controller Driver
   hardware.enableAllFirmware = true;
   hardware.bluetooth = {
     enable = true;
