@@ -1,6 +1,9 @@
 { pkgs, lib, ... }:
 {
   programs.fish.enable = true;
+  environment.systemPackages = [
+    pkgs.home-manager
+  ];
   users.users.jml = {
     shell = pkgs.fish;
     home =
