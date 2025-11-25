@@ -5,7 +5,7 @@
 
 ## Overview
 
-This repository maanges **multiple NixOS systems** using a shared modular configuration.
+This repository manages **multiple NixOS systems** using a shared modular configuration.
 It's designed to be **secure, composable, and automated** using modern Nix tooling.
 
 - **Laptop ("neon")**: Portable KVM/Swiss-Army Knife
