@@ -9,7 +9,7 @@
   # And what I actually want to try out is one of DankMaterialShell or Noctalia
   programs.niri.enable = true;
 
-  environments.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; [
     inputs.noctalia.packages.${system}.default
     xwayland-satellite
     fuzzel
