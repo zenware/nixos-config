@@ -15,8 +15,8 @@ let
         mupen64plus # Nintendo 64 - Maybe simple64 some day.
         dolphin  # GameCube
         mgba  # GameBoy / Color / Advance
-        melonds  # Nintendo DS
-        citra  # Nintendo 3DS
+        #melonds  # Nintendo DS
+        #citra  # Nintendo 3DS
 
 
         # Sony

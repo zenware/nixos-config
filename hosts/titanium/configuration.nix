@@ -6,9 +6,12 @@
   environment.systemPackages = with pkgs; [
     sbctl  # Secure-Boot
     helix nil  # nice for editing '.nix'
-    discord
+    (discord.override { withVencord = true; })
     signal-desktop
     obs-studio
+    halloy  # IRC
+    gimp3
+    nyxt # browser
   ];
   # Hardware Specific programs...
   #programs.ryzen-monitor-ng.enable = true;

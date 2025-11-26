@@ -14,9 +14,12 @@
   # https://github.com/NixOS/nixpkgs/blob/master/pkgs/os-specific/linux/nvidia-x11/generic.nix#L65
   nixpkgs.config.nvidia.acceptLicense = true;
   hardware.nvidia = {
+    # TODO: Consider legacy drivers.
+    # https://discourse.nixos.org/t/cant-use-nvidia-offload-mode/27791/8
     package = config.boot.kernelPackages.nvidiaPackages.latest;
     modesetting.enable = true;
-    open = true;
+    # Open Source Drivers: https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
+    open = false;
     nvidiaSettings = true;
     powerManagement.enable = false;
     powerManagement.finegrained = false;
