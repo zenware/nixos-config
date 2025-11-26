@@ -99,6 +99,10 @@
             stylix.nixosModules.stylix
           ];
         };
+        cobalt = mkSystem {
+          hostname = "cobalt";
+          users = [ "jml" ];
+        };
         # `nix build .#nixosConfigurations.installIso.config.system.build.isoImage`
         # https://github.com/nix-community/nixos-generators
         installIso = nixpkgs.lib.nixosSystem {
