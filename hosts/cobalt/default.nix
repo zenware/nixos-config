@@ -11,6 +11,7 @@
     ./hardware-configuration.nix
     ./configuration.nix
     ../../modules/nixos/gaming.nix
+    ../../modules/nixos/desktop/niri
   ];
 
   zw.gaming.enable = true;
