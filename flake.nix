@@ -20,6 +20,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
       #inputs.obsidian-nvim.follows = "obsidian-nvim";
     };
+
+    quickshell = {
+      url = "github:outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.quickshell.follows = "quickshell";
+    };
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
   outputs =
