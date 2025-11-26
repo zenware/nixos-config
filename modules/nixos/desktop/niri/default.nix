@@ -15,7 +15,7 @@
     fuzzel
     kitty
     fastfetch
-  ]
+  ];
 
   # Notification Daemon
   #services.mako.enable = true;
