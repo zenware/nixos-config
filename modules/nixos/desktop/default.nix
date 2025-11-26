@@ -2,6 +2,7 @@
 {
   imports = [
     ./calibre.nix
+    ./fonts.nix
   ];
 
   zw.calibre.enable = true;
@@ -37,10 +38,4 @@
   };
   # screen sharing /w hyp 
   services.dbus.enable = true;
-
-  fonts.packages = with pkgs; [
-    nerd-fonts.fira-code
-    nerd-fonts.iosevka
-    atkinson-hyperlegible
-  ];
 }
