@@ -5,6 +5,9 @@
     ./fonts.nix
   ];
 
+  # TODO: Add options for enabling/switching between different Desktop Environments.
+  options = {};
+
   zw.calibre.enable = true;
 
   environment.systemPackages = with pkgs; [

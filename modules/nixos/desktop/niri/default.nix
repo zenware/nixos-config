@@ -17,6 +17,10 @@
     fastfetch
   ];
 
+  services.displayManager.sessionPackages = [ pkgs.niri ];
+  programs.niri.package = pkgs.niri;
+
+
   # Notification Daemon
   #services.mako.enable = true;
   #services.mako.settings.default-timeout = 3000;

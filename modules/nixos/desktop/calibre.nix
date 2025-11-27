@@ -14,7 +14,8 @@
       calibre
     ];
 
-    services.udisks2.enable = true;
+    services.udisks2.enable = true; # Required for eReader Support
   };
   # NOTE: Consider adding https://github.com/nydragon/calibre-plugins
+  # especially for DeDRM
 }
