@@ -2,12 +2,14 @@
 {
   imports = [
     ./calibre.nix
-    ./fonts.nix
+    ../fonts.nix
   ];
 
   # TODO: Add options for enabling/switching between different Desktop Environments.
-  options = {};
+  # options = {};
 
+  # NOTE: Calibre is enabled this way because it also needs udisks2 for e-readers
+  # Ideally I move it somewhere else anyway.
   zw.calibre.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -41,4 +43,5 @@
   };
   # screen sharing /w hyp 
   services.dbus.enable = true;
+  services.avahi.enable = true;  # zeroconf/mDNS(.local)
 }
