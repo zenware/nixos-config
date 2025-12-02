@@ -1,4 +1,4 @@
-{}:
+{ ... }:
 {
   services.displayManager.defaultSession = "xfce";
   services.xserver.desktopManager = {
