@@ -1,18 +1,23 @@
 { config, pkgs, lib, ... }:
 {
   nixpkgs.config.allowUnfree = true;
+  # TODO: Consider adding a randomized delay.
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
   nix.settings = {
+    auto-optimise-store = true;
     experimental-features = [ "nix-command" "flakes" ];
   };
 
-  # Default to systemd-boot
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   # https://datatracker.ietf.org/doc/html/rfc8375
-  networking.domain = "home.arpa";
+  networking.domain = lib.mkDefault "home.arpa";
 
-  time.timeZone = "America/Chicago";
+  # TODO: Consider enabling automatic-timezoned on laptops that move between TZs
+  time.timeZone = lib.mkDefault "America/Chicago";
+  services.automatic-timezoned.enable = lib.mkDefault false;
 
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
@@ -73,38 +78,39 @@
         ];
         # Render colors
         # TODO: Figure out how to represent those termcap sequences properly.
-        #LESS_TERMCAP_mb=$'\E[1;31m'     # begin bold
-        #LESS_TERMCAP_md=$'\E[1;36m'     # begin blink
-        #LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
-        #LESS_TERMCAP_so=$'\E[01;44;33m' # begin reverse video
-        #LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
-        #LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
-        #LESS_TERMCAP_ue=$'\E[0m'        # reset underline
+        LESS_TERMCAP_mb="\E[1;31m";     # begin bold
+        LESS_TERMCAP_md="\E[1;36m";     # begin blink
+        LESS_TERMCAP_me="\E[0m";        # reset bold/blink
+        LESS_TERMCAP_so="\E[01;44;33m"; # begin reverse video
+        LESS_TERMCAP_se="\E[0m";        # reset reverse video
+        LESS_TERMCAP_us="\E[1;32m";     # begin underline
+        LESS_TERMCAP_ue="\E[0m";        # reset underline
       };
     };
 
     git.enable = true;
     htop.enable = true;
-    command-not-found.enable = false;
     bat.enable = true;
     bandwhich.enable = true;
+
+    command-not-found.enable = false;
+    #nix-index.enable = true;
 
     nano.enable = false;
     neovim = {
       enable = true;
       defaultEditor = true;
-
       viAlias = true;
       vimAlias = true;
-
-      withRuby = true;
-      withPython3 = true;
-      withNodeJs = true;
-
-      #configure = {};
     };
   };
 
-  # Services running on all machines
-  services.avahi.enable = true;  # zeroconf/mDNS(.local)
+  services.openssh.enable = lib.mkDefault false;
+  # services.openssh = {
+  #   enable = true;
+  #   settings = {
+  #     PasswordAuthentication = false;
+  #     PermitRootLogin = "no";
+  #   };
+  # };
 }

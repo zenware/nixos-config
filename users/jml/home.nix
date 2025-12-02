@@ -73,6 +73,11 @@
     helix.enable = true;
     zoxide.enable = true;
     fd.enable = true;
+
+    difftastic.enable = true;
+    difftastic.git.enable = true;
+    difftastic.git.diffToolMode = true;
+    mergiraf.enable = true;
   };
 
   programs.starship = {
@@ -522,9 +527,9 @@
   programs.vscode = {
     enable = true;
     mutableExtensionsDir = true; # mutually exclusive to programs.vscode.profiles
-    profiles.default.userSettings = {
-      "[nix]"."editor.tabSize" = 2;
-    };
+    # profiles.default.userSettings = {
+    #   "[nix]"."editor.tabSize" = 2;
+    # };
   };
   # services.podman.enable = true;
 }

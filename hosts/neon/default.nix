@@ -1,6 +1,7 @@
 { inputs, ... }:
 {
   imports = [
+    ./boot.nix
     ../../modules/nixos/base.nix
     ../../modules/nixos/audio.nix
     ../../modules/nixos/desktop
