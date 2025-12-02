@@ -7,10 +7,13 @@
   # According to the docs there's a few options: https://yalter.github.io/niri/Getting-Started.html#desktop-environments
   # LXQt, many parts of XFCE, COSMIC + `cosmic-ext-extra-sessions`
   # And what I actually want to try out is one of DankMaterialShell or Noctalia
-  programs.niri.enable = true;
+  programs.niri = {
+    enable = true;
+    package = pkgs.niri;
+  };
 
   environment.systemPackages = with pkgs; [
-    inputs.noctalia.packages.${system}.default
+    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
     xwayland-satellite
     fuzzel
     kitty
@@ -18,17 +21,12 @@
   ];
 
   services.displayManager.sessionPackages = [ pkgs.niri ];
-  programs.niri.package = pkgs.niri;
-
 
   # Notification Daemon
   #services.mako.enable = true;
   #services.mako.settings.default-timeout = 3000;
   
   # Portal - https://wiki.archlinux.org/title/XDG_Desktop_Portal#List_of_backends_and_interfaces
-
-  # Authentication Agent (polkit)
-  #security.polkit.enable = lib.mkDefault true;
 
   # Xwayland
   # https://github.com/Supreeeme/xwayland-satellite
