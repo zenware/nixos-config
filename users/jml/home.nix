@@ -532,4 +532,88 @@
     # };
   };
   # services.podman.enable = true;
+
+  # TODO: Consider configuring MCP servers. and local-ai
+  # TODO:
+  # services.home-manager.autoUpgrade.useFlake = true;
+  # services.home-manager.autoUpgrade.flakeDir = <here-ish>;
+  # TODO: Manually import necessary modules.
+  # home-manager.minimal = true;
+
+  # https://docs.noctalia.dev/getting-started/nixos/#config-ref
+  programs.noctalia-shell = {
+    enable = true;
+    settings = {
+      bar = {
+        density = "compact";
+        position = "right";
+        showCapsule = false;
+        widgets = {
+          left = [
+            {
+              id = "SidePanelToggle";
+              useDistroLogo = true;
+            }
+            { id = "WiFi"; }
+            { id = "Bluetooth"; }
+          ];
+          center = [
+            {
+              id = "Workspace";
+              hideUnoccupied = false;
+              labelMode = "none";
+            }
+          ];
+          right = [
+            {
+              id = "Battery";
+              alwaysShowPercentage = false;
+              warningThreshold = 30;
+            }
+            {
+              id = "Clock";
+              formatHorizontal = "HH:mm";
+              formatVertical = "HH mm";
+              useMonospacedFont = true;
+              usePrimaryColor = true;
+            }
+          ];
+        };
+      };
+      colorSchemes.predefinedScheme = "Monochrome";
+      general = {
+        avatarImage = "/home/jml/.face";
+        radiusRatio = 0.5;
+      };
+      ui = {
+        fontDefault = "Noto Sans";
+        fontFixed = "Noto Sans Mono";
+      };
+      location = {
+        name = "Madison, Wisconsin";
+        useFahrenheit = true;
+        monthBeforeDay = true;
+      };
+      # wallpaper = {};
+      appLauncher = {
+        # TODO: Select a different terminal (Ghostty)
+        terminalCommand = "xterm -e";
+      };
+    };
+  };
+
+  # programs.niri = {
+  #   settings = {
+  #     spawn-at-startup = [
+  #       {
+  #         command = [ "noctalia-shell" ];
+  #       }
+  #     ];
+  #     binds = with config.lib.niri.actions; {
+  #       "Mod+Space".action.spawn = [
+  #         "noctalia-shell" "ipc" "call" "launcher" "toggle"
+  #       ];
+  #     };
+  #   };
+  # };
 }

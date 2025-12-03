@@ -43,6 +43,7 @@
       disko,
       stylix,
       nvf,
+      noctalia,
       ...
     }:
     let
@@ -60,7 +61,10 @@
         jml = mkHome {
           inherit system; # inputs;
           username = "jml";
-          extraModules = [ nvf.homeManagerModules.default ];
+          extraModules = [
+            nvf.homeManagerModules.default
+            noctalia.homeModules.default
+          ];
         };
       };
     in
