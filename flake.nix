@@ -30,6 +30,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
       # inputs.quickshell.follows = "quickshell";
     };
+
+    # niri = {
+    #   url = "github:sodiboo/niri-flake";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
   outputs =
@@ -44,6 +49,7 @@
       stylix,
       nvf,
       noctalia,
+      #niri,
       ...
     }:
     let
@@ -64,6 +70,7 @@
           extraModules = [
             nvf.homeManagerModules.default
             noctalia.homeModules.default
+            #niri.homeModules.niri
           ];
         };
       };
@@ -101,6 +108,7 @@
           # TODO: Can I instead self-reference the homeConfigurations in this flake?
           extraModules = [
             stylix.nixosModules.stylix
+            #niri.nixosModules.niri
           ];
         };
         cobalt = mkSystem {

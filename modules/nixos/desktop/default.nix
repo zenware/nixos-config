@@ -8,6 +8,7 @@
     ../bluetooth.nix
     ../gaming.nix
     # Desktop Environments
+    ./display-manager.nix
     ./hyprland
     ./niri
     ./xfce
@@ -33,17 +34,6 @@
     enable = true;
     xkb.layout = "us";
     displayManager.startx.enable = lib.mkDefault false;
-  };
-
-  services.displayManager.sddm = {
-    enable = true;
-    package = pkgs.kdePackages.sddm;
-    wayland.enable = true;
-    # TODO: Package sddm-catppuccin for NixOS
-    theme = "sddm-astronaut-theme";
-    extraPackages = [
-      (pkgs.sddm-astronaut.override { embeddedTheme = "pixel_sakura"; })
-    ];
   };
 
 

@@ -62,6 +62,7 @@
     ripgrep
   ];
   programs = {
+    nix-ld.enable = true; # https://github.com/nix-community/nix-ld
     less = {
       enable = true;
       # https://ascending.wordpress.com/2011/02/11/unix-tip-make-less-more-friendly/
@@ -78,13 +79,13 @@
         ];
         # Render colors
         # TODO: Figure out how to represent those termcap sequences properly.
-        LESS_TERMCAP_mb="\E[1;31m";     # begin bold
-        LESS_TERMCAP_md="\E[1;36m";     # begin blink
-        LESS_TERMCAP_me="\E[0m";        # reset bold/blink
-        LESS_TERMCAP_so="\E[01;44;33m"; # begin reverse video
-        LESS_TERMCAP_se="\E[0m";        # reset reverse video
-        LESS_TERMCAP_us="\E[1;32m";     # begin underline
-        LESS_TERMCAP_ue="\E[0m";        # reset underline
+        # LESS_TERMCAP_mb="\\e[1;31m";     # begin bold
+        # LESS_TERMCAP_md="\\e[1;36m";     # begin blink
+        # LESS_TERMCAP_me="\\e[0m";        # reset bold/blink
+        # LESS_TERMCAP_so="\\e[01;44;33m"; # begin reverse video
+        # LESS_TERMCAP_se="\\e[0m";        # reset reverse video
+        # LESS_TERMCAP_us="\\e[1;32m";     # begin underline
+        # LESS_TERMCAP_ue="\\e[0m";        # reset underline
       };
     };
 

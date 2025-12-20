@@ -14,6 +14,11 @@ It's designed to be **secure, composable, and automated** using modern Nix tooli
 - Secrets managed via `sops-nix`
 - Deployable with `nixos-rebuild` (and soon `deploy-rs` or `nixos-anywhere`)
 
+Goofing
+```bash
+nix --extra-experimental-features repl-flake repl ".#nixosConfigurations.titanium"
+nix repl --expr "builtins.getFlake \"$PWD\""
+```
 
 ```mermaid
 ---

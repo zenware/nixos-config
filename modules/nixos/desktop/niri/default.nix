@@ -22,6 +22,8 @@
 
   services.displayManager.sessionPackages = [ pkgs.niri ];
 
+  # Deploy ${./config.kdl} to `~/.config/niri/config.kdl`
+
   # Notification Daemon
   #services.mako.enable = true;
   #services.mako.settings.default-timeout = 3000;
