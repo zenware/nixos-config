@@ -1,8 +1,8 @@
 { pkgs, ... }:
 {
   programs.waybar = {
-    enable = true;
-    systemd.enable = true;
+    #enable = true;
+    #systemd.enable = true;
 
     settings = {
       mainBar = {
@@ -16,7 +16,7 @@
         ];
 
         modules-center = [
-          "niri/window";
+          "niri/window"
         ];
 
         modules-right = [

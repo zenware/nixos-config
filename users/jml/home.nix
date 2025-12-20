@@ -602,6 +602,9 @@
     };
   };
 
+  # NOTE: Manually linking a niri config because my kludges have borked the
+  # ability to conveniently use the niri-flake.
+  home.file.".config/niri/config.kdl".source = ./niri/config.kdl;
   # programs.niri = {
   #   settings = {
   #     spawn-at-startup = [
@@ -609,11 +612,45 @@
   #         command = [ "noctalia-shell" ];
   #       }
   #     ];
-  #     binds = with config.lib.niri.actions; {
+  #     # binds = with config.lib.niri.actions; {
+  #     binds = with lib.niri.actions; {
   #       "Mod+Space".action.spawn = [
   #         "noctalia-shell" "ipc" "call" "launcher" "toggle"
   #       ];
   #     };
   #   };
   # };
+
+  # TODO: A weird amount of work if I actually care to get Zed running.
+  # https://wiki.nixos.org/wiki/Zed
+  targets.genericLinux.nixGL.vulkan.enable = true;
+  programs.zed-editor = {
+    enable = true;
+    extensions = [
+      "nix"
+      "toml"
+      #"rust"
+      "basedpyright"
+      "ruff"
+    ];
+    extraPackages = with pkgs; [
+      basedpyright
+      nil
+      nixd
+      ruff
+      #rust-analyzer
+      #rustc
+    ];
+    userSettings = {
+      vim_mode = true;
+      languages = {
+        Python = {
+          language_servers = [
+            "basedpyright"
+            "!pyright"
+          ];
+        };
+      };
+    };
+  };
 }
