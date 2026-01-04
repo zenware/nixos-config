@@ -1,6 +1,5 @@
 { pkgs, lib, ... }:
 {
-  programs.fish.enable = true;
   environment.systemPackages = [
     pkgs.home-manager
   ];
