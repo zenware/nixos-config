@@ -54,6 +54,9 @@
     "cdd6f4"  # bright white        -> text
   ];
 
+  # TODO: Consider zsh for default shell.
+  #users.defaultUserShell = pkgs.zsh;
+
   networking.firewall.enable = true;
 
   # Installed on every NixOS Host.
@@ -94,6 +97,7 @@
     bat.enable = true;
     bandwhich.enable = true;
 
+    fish.enable = true;
     command-not-found.enable = false;
     #nix-index.enable = true;
 

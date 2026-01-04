@@ -99,14 +99,8 @@
           users = [
             "jml"
           ];
-          homeUsers = {
-            jml = homeUserProfiles.jml.module;
-          };
-          #extraModules = [ (import ./overlays) ];
-          # NOTE: If I'm using a home-manager configuration on a given host,
-          # I also need to include the relevant modules.
-          # TODO: Can I instead self-reference the homeConfigurations in this flake?
           extraModules = [
+            #(import ./overlays)
             stylix.nixosModules.stylix
             #niri.nixosModules.niri
           ];
