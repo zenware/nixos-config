@@ -65,6 +65,11 @@
     ripgrep
   ];
   programs = {
+    # direnv?
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
     nix-ld.enable = true; # https://github.com/nix-community/nix-ld
     less = {
       enable = true;

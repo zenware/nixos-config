@@ -2,6 +2,7 @@
   description = "Configuration for NixOS";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -35,6 +36,7 @@
     #   url = "github:sodiboo/niri-flake";
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
   outputs =
@@ -50,6 +52,8 @@
       nvf,
       noctalia,
       #niri,
+      llm-agents,
+      determinate,
       ...
     }:
     let
@@ -82,18 +86,6 @@
       # NOTE: Run `nix flake show` to see what this flake has to offer.
       # TODO: Enable automated formatting with something like numtide/treefmt-nix
       nixosConfigurations = {
-        neon = mkSystem {
-          hostname = "neon";
-          users = [ "jml" ];
-        };
-        lithium = mkSystem {
-          hostname = "lithium";
-          # extraModules = [ inputs.sops-nix.nixosModules.sops ];
-          users = [
-            "jml"
-            "breakglass"
-          ];
-        };
         titanium = mkSystem {
           hostname = "titanium";
           users = [
@@ -103,10 +95,23 @@
             #(import ./overlays)
             stylix.nixosModules.stylix
             #niri.nixosModules.niri
+            determinate.nixosModules.default
+          ];
+        };
+        lithium = mkSystem {
+          hostname = "lithium";
+          # extraModules = [ inputs.sops-nix.nixosModules.sops ];
+          users = [
+            "jml"
+            "breakglass"
           ];
         };
         cobalt = mkSystem {
           hostname = "cobalt";
+          users = [ "jml" ];
+        };
+        neon = mkSystem {
+          hostname = "neon";
           users = [ "jml" ];
         };
         # `nix build .#nixosConfigurations.installIso.config.system.build.isoImage`
