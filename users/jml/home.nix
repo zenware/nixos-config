@@ -524,6 +524,8 @@
     };
   };
 
+  programs.gemini-cli.enable = true;
+
   programs.vscode = {
     enable = true;
     mutableExtensionsDir = true; # mutually exclusive to programs.vscode.profiles

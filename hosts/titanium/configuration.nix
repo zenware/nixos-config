@@ -11,7 +11,7 @@
     obs-studio
     halloy  # IRC
     gimp3
-    nyxt # browser
+    # nyxt # browser - Was accidentally defaulting?
   ];
   # Hardware Specific programs...
   #programs.ryzen-monitor-ng.enable = true;

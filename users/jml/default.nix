@@ -1,7 +1,10 @@
 { pkgs, lib, ... }:
 {
+  # NOTE: Some software should follow my user, rather than being deployed to a specific system.
+  # not sure I've actually worked out where that delineation is best made yet.
   environment.systemPackages = [
     pkgs.home-manager
+    pkgs.telegram-desktop
   ];
   users.users.jml = {
     shell = pkgs.fish;

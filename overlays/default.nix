@@ -1,4 +1,4 @@
-{ nixpkgs }:
+{ nixpkgs, inputs ? null }:
   let
     fixCmake = pkg: pkg.overrideAttrs (old: {
       cmakeFlakes = (old.cmakeFlags or []) ++ [
