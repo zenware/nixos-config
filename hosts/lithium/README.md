@@ -1,13 +1,17 @@
 # lithium
 
 This is my primary homelab host/NAS, previously powered by TrueNAS Scale/k3s.
+You can start a test version from the `nixos-config` repo, but in order to run
+the production version you need to make a new repo from the secrets template,
+and manually configure a selection of secrets both for internal and external
+services.
 
 ## Manual Actions
 
 Even with fully declarative Nix/Nixpkgs/NixOS at the end of the day there are
 still some actions that need to be taken manually.
 
-- secrets configuration for `sops-nix`
+- secrets configuration `sops-nix`
 - kanidm user management
 - tailscale auth key
 - jellyfin configuration via web-ui

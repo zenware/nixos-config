@@ -1,9 +1,8 @@
-{ inputs, ... }:
+{ ... }:
 {
   imports = [
     ./boot.nix
     ../../modules/nixos/base.nix
-    inputs.sops-nix.nixosModules.sops
     ./hardware.nix
     ./configuration.nix
     ./services/caddy.nix

@@ -8,8 +8,6 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     lanzaboote.url = "github:nix-community/lanzaboote/v0.4.3";
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
-    sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     stylix.url = "github:nix-community/stylix";
@@ -37,6 +35,8 @@
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
     llm-agents.url = "github:numtide/llm-agents.nix";
+    microvm.url = "github:astro/microvm.nix";
+    microvm.inputs.nixpkgs.follows = "nixpkgs";
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
   outputs =
@@ -45,9 +45,9 @@
       nixpkgs,
       nixos-hardware,
       home-manager,
-      sops-nix,
       lanzaboote,
       disko,
+      microvm,
       stylix,
       nvf,
       noctalia,
@@ -100,7 +100,9 @@
         };
         lithium = mkSystem {
           hostname = "lithium";
-          # extraModules = [ inputs.sops-nix.nixosModules.sops ];
+          #specialArgs = {inherit inputs;};
+          # NOTE: Rather than declare extraModules here, we override them in `nixos-secrets`
+          #extraModules = [ microvm.nixosModules.host ];
           users = [
             "jml"
             "breakglass"
