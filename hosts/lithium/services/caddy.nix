@@ -1,13 +1,11 @@
-{ config, pkgs, ... }:
+{ inputs, config, pkgs, lib, ... }:
+let
+  certDir = config.security.acme.certs."${config.networking.domain}".directory;
+in
 {
-  sops.secrets.caddy_env = {
-    sopsFile = ../secrets/caddy.env;
-    format = "dotenv";
-    mode = "0440";
-    owner = config.services.caddy.user;
-    group = config.services.caddy.group;
-    restartUnits = [ "caddy.service" ];
-  };
+  services.nginx.enable = lib.mkForce false;
+
+  # TODO: Add Metrics with Prometheus & Grafana
   services.caddy = {
     enable = true;
     package = pkgs.caddy.withPlugins {
@@ -23,9 +21,9 @@
     # NOTE: Use Staging CA while testing, check `systemctl status caddy`
     # to see if everything is working.
     # acmeCA = "https://acme-staging-v02.api.letsencrypt.org/directory";
-
-    # TODO: Add Metrics with Prometheus & Grafana
-    environmentFile = config.sops.secrets.caddy_env.path;
+    # environmentFile = config.sops.secrets.cloudflare_env.path;
+    # NOTE: DNS provider settings
+    # https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148
     globalConfig = ''
       # acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
       dynamic_dns {
