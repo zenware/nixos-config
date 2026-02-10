@@ -13,6 +13,8 @@ in
     enable = true;
     # NOTE: NixOS Attributes here resolve into these ENV vars:
     # https://github.com/louislam/uptime-kuma/wiki/Environment-Variables
-    # settings = {};
+    settings = {
+      PORT = "3002";
+    };
   };
 }

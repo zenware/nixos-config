@@ -33,8 +33,16 @@
         });
       };
     };
+  topologyOverlay =
+    if inputs == null || !inputs ? nix-topology then
+      null
+    else
+      inputs.nix-topology.overlays.default;
 in
-[
-  cmake3Overlay
-  libretroCmake3Overlay
-]
+(
+  [
+    cmake3Overlay
+    libretroCmake3Overlay
+  ]
+  ++ (nixpkgs.lib.optional (topologyOverlay != null) topologyOverlay)
+)

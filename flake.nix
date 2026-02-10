@@ -37,6 +37,7 @@
     llm-agents.url = "github:numtide/llm-agents.nix";
     microvm.url = "github:astro/microvm.nix";
     microvm.inputs.nixpkgs.follows = "nixpkgs";
+    nix-topology.url = "github:oddlama/nix-topology";
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
   outputs =
@@ -54,6 +55,7 @@
       #niri,
       llm-agents,
       determinate,
+      nix-topology,
       ...
     }:
     let
@@ -78,6 +80,7 @@
           ];
         };
       };
+      pkgs = import nixpkgs { inherit system; overlays = import ./overlays { inherit nixpkgs inputs; }; };
     in
     {
       lib = {
@@ -131,5 +134,21 @@
       # `home-manager switch --flake .#jml`
       # https://nix-community.github.io/home-manager/options.xhtml
       homeConfigurations = mkHomeConfigs homeUserProfiles;
+      topology =
+        let
+        in
+        {
+          ${system} = import nix-topology {
+            inherit pkgs;
+            modules = [
+              ./topology
+              {
+                nixosConfigurations = nixpkgs.lib.filterAttrs (
+                  name: _: name != "installIso"
+                ) self.nixosConfigurations;
+              }
+            ];
+          };
+        };
     };
 }

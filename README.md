@@ -84,6 +84,9 @@ nix build .#nixosConfigurations.installIso.config.system.build.images.iso
 sudo mount -o loop result/iso/nixos-*.iso mnt
 ls mnt
 umount mnt
+
+# Generate Service and Network Topology Diagrams
+nix build .#topology.x86_64-linux.config.output
 ```
 
 ## Design Goals
@@ -114,6 +117,10 @@ umount mnt
 └── pkgs       # Custom Nix packages (not in nixpkgs)
 
 ```
+
+## Topology
+
+![Network and Service Topology Diagram](assets/topology/main.svg)
 
 ## References
 

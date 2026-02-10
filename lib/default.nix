@@ -5,7 +5,7 @@
   ...
 }:
 let
-  allOverlays = import (../overlays) { inherit nixpkgs; };
+  allOverlays = import (../overlays) { inherit nixpkgs inputs; };
   getPkgs =
     system:
     import nixpkgs {
@@ -41,7 +41,7 @@ in
     in
     nixpkgs.lib.nixosSystem {
       inherit system;
-      modules = [ hostModule ] ++ userModules ++ extraModules;
+      modules = [ hostModule ] ++ userModules ++ extraModules ++ (if inputs ? nix-topology then [ inputs.nix-topology.nixosModules.default ] else []);
       specialArgs = { inherit inputs hostname; } // extraSpecialArgs;
     };
 
