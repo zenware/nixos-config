@@ -21,8 +21,8 @@ in
         "github.com/caddy-dns/cloudflare@v0.2.1"
       ];
 
-      # NOTE: Built on 6/4/2025
-      hash = "sha256-swskhAr7yFJX+qy0FR54nqJarTOojwhV2Mbk7+fyS0I=";
+      # NOTE: Built on 2026-02-11
+      hash = "sha256-W67Jbu9e0RssVmMeY72ceTKBJ4iPZPqNkLWrsdn5ADk=";
     };
     # NOTE: Use Staging CA while testing, check `systemctl status caddy`
     # to see if everything is working.
