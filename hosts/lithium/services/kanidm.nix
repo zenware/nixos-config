@@ -1,4 +1,10 @@
-{ inputs, config, pkgs, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   svcDomain = "id.${config.networking.domain}";
   kanidmCertDir = "/var/lib/kanidm/certs";
@@ -26,7 +32,7 @@ in
   # australia.id.example.com
   # id-test.example.com
   # australia.id-test.example.com
-  
+
   # Example of yoinking certs from caddy:
   # https://github.com/marcusramberg/nix-config/blob/e558914dd3705150511c5ef76278fc50bb4604f3/nixos/kanidm.nix#L3
 
@@ -71,7 +77,7 @@ in
   # systemd.services.caddy.wants = [ kanidmCertCopier ];
   systemd.services.caddy.reloadTriggers = [ kanidmCertCopier ];
   systemd.timers.kanidm-cert-copier-daily = {
-    wantedBy =  [ "timers.target" ];
+    wantedBy = [ "timers.target" ];
     timerConfig = {
       OnBootSec = "5min";
       OnCalendar = "daily";
@@ -103,7 +109,7 @@ in
 
       # NOTE: Optional Settings
       # TODO: Configure the rest of the binding properly, should be 363 and maybe 8443
-      ldapbindaddress = "127.0.0.1:3636";  # For Jellyfin LDAP integration.
+      ldapbindaddress = "127.0.0.1:3636"; # For Jellyfin LDAP integration.
 
       #trust_x_forwarded_for = true;
     };
@@ -152,13 +158,13 @@ in
         };
       };
       groups = {
-        "unix.admins" = {};
-        "git.users" = {};
-        "git.admins" = {};
-        "tv.users" = {};
-        "tv.admins" = {};
-        "immich.users" = {};
-        "miniflux.users" = {};
+        "unix.admins" = { };
+        "git.users" = { };
+        "git.admins" = { };
+        "tv.users" = { };
+        "tv.admins" = { };
+        "immich.users" = { };
+        "miniflux.users" = { };
       };
     };
   };
@@ -168,10 +174,7 @@ in
     UsePAM = true;
     PubkeyAuthentication = true;
     PasswordAuthentication = true;
-    AuthorizedKeysCommand = "${
-      lib.getExe' config.services.kanidm.package
-      "kanidm_ssh_authorizedkeys"
-    } %u";
+    AuthorizedKeysCommand = "${lib.getExe' config.services.kanidm.package "kanidm_ssh_authorizedkeys"} %u";
     AuthorizedKeysCommandUser = "nobody";
   };
 }

@@ -1,6 +1,11 @@
 { config, lib, ... }:
 let
-  inherit (config.lib.topology) mkInternet mkRouter mkSwitch mkConnection;
+  inherit (config.lib.topology)
+    mkInternet
+    mkRouter
+    mkSwitch
+    mkConnection
+    ;
 in
 {
   networks.home = {
@@ -22,7 +27,19 @@ in
     info = "Asus ZenWiFi ET8";
     image = ./images/ZenWiFi_ET8.png;
     deviceType = "router";
-    interfaceGroups = [["LAN3" "LAN2"  "LAN1"  "2.5G/1G WAN"] ["WLAN2.4GHz" "WLAN5GHz" "WLAN6GHz"]];
+    interfaceGroups = [
+      [
+        "LAN3"
+        "LAN2"
+        "LAN1"
+        "2.5G/1G WAN"
+      ]
+      [
+        "WLAN2.4GHz"
+        "WLAN5GHz"
+        "WLAN6GHz"
+      ]
+    ];
     connections.LAN1 = mkConnection "titanium" "LAN1";
     connections.WLAN6GHz = mkConnection "helium" "WLAN6GHz";
   };
@@ -31,7 +48,19 @@ in
     info = "Asus ZenWiFi ET8";
     image = ./images/ZenWiFi_ET8.png;
     deviceType = "router";
-    interfaceGroups = [["LAN3" "LAN2"  "LAN1"  "WAN"] ["WLAN2.4GHz" "WLAN5GHz" "WLAN6GHz"]];
+    interfaceGroups = [
+      [
+        "LAN3"
+        "LAN2"
+        "LAN1"
+        "WAN"
+      ]
+      [
+        "WLAN2.4GHz"
+        "WLAN5GHz"
+        "WLAN6GHz"
+      ]
+    ];
     connections.WLAN6GHz = mkConnection "hydrogen" "WLAN6GHz";
     connections.LAN1 = mkConnection "lithium" "LAN1";
     connections.LAN2 = mkConnection "lithium" "LAN2";

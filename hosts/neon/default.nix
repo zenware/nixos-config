@@ -7,8 +7,13 @@
     ../../modules/nixos/desktop
     # https://github.com/NixOS/nixos-hardware/blob/master/README.md#using-nix-flakes-support
     inputs.nixos-hardware.nixosModules.gpd-pocket-3
-     # override from nixos-hardware
-    ({config, lib, ...}: { services.xserver.videoDrivers = lib.mkForce [ "modesetting" ]; })
+    # override from nixos-hardware
+    (
+      { config, lib, ... }:
+      {
+        services.xserver.videoDrivers = lib.mkForce [ "modesetting" ];
+      }
+    )
     ./hardware-configuration.nix
     ./configuration.nix
   ];

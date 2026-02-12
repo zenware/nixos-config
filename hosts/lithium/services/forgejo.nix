@@ -1,11 +1,16 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   homelabDomain = config.networking.domain;
   svcDomain = "git.${homelabDomain}";
   theme = pkgs.fetchzip {
     url = "https://github.com/catppuccin/gitea/releases/download/v1.0.2/catppuccin-gitea.tar.gz";
     hash = "sha256-rZHLORwLUfIFcB6K9yhrzr+UwdPNQVSadsw6rg8Q7gs=";
-    stripRoot = false;  
+    stripRoot = false;
   };
   svcHttpPort = config.services.forgejo.settings.server.HTTP_PORT;
   assetsDir = "${config.services.forgejo.stateDir}/custom/public/assets";
@@ -26,7 +31,7 @@ in
   # TODO: Setup a PostgreSQL Server.
   # Inspiration here: https://github.com/nyawox/arcanum/blob/4629dfba1bc6d4dd2f4cf45724df81289230b61a/nixos/servers/forgejo.nix#L64
   #sops-secrets.postgres-forgejo = {
-    #sopsFile = ../secrets/forgejo.yaml;
+  #sopsFile = ../secrets/forgejo.yaml;
   #};
 
   services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
@@ -45,8 +50,8 @@ in
       };
       # NOTE: Actions support is based on: https://github.com/nektos/act
       #actions = {
-        #ENABLED = true;
-        #DEFAULT_ACTIONS_URL = "github";
+      #ENABLED = true;
+      #DEFAULT_ACTIONS_URL = "github";
       #};
       actions.ENABLED = false;
       # NOTE: Registration is handled with kanidm.
@@ -112,30 +117,29 @@ in
   systemd.services.forgejo = {
     preStart =
       lib.mkAfter # bash
-      ''
-        echo "Installing Catppuccin Assets"
-        rm -rf ${assetsDir}
-        mkdir -p ${assetsDir}
-        ln -sf ${theme} ${assetsDir}/css
-      '';
+        ''
+          echo "Installing Catppuccin Assets"
+          rm -rf ${assetsDir}
+          mkdir -p ${assetsDir}
+          ln -sf ${theme} ${assetsDir}/css
+        '';
   };
-
 
   #sops.secrets.forgejo-runner-token = {};
   #services.gitea-actions-runner = {
-    #package = pkgs.forgejo-runner;
-    #instances.default = {
-      #enable = true;
-      #name = "monolith";
-      #url = "https://${serviceDomain}";
-      #tokenFile = config.sops.secrets.forgejo-runner-token.path;
-      # NOTE: I don't want huge images if it can be avoided.
-      # https://nektosact.com/usage/runners.html
-      #labels = [
-        #"ubuntu-latest:docker://node:16-bullseye-slim"
-        #"ubuntu-22.04:docker://node:16-bullseye-slim"
-      #];
-    #};
+  #package = pkgs.forgejo-runner;
+  #instances.default = {
+  #enable = true;
+  #name = "monolith";
+  #url = "https://${serviceDomain}";
+  #tokenFile = config.sops.secrets.forgejo-runner-token.path;
+  # NOTE: I don't want huge images if it can be avoided.
+  # https://nektosact.com/usage/runners.html
+  #labels = [
+  #"ubuntu-latest:docker://node:16-bullseye-slim"
+  #"ubuntu-22.04:docker://node:16-bullseye-slim"
+  #];
+  #};
   #};
 
   # TODO: Consider automatically creating admin account and password...

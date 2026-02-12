@@ -1,4 +1,10 @@
-{ inputs, config, pkgs, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   homelabDomain = config.networking.domain;
   #certDir = config.security.acme.certs."${homelabDomain}".directory;
@@ -13,13 +19,13 @@ in
   # TODO: This isn't the right place for this, but we need to guarantee that a
   # media group exists.
   users.users.calibre-web.extraGroups = [ "media" ];
-  users.groups.media = {};
+  users.groups.media = { };
 
   services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
     reverse_proxy localhost:8883
   '';
 
-    # reverse_proxy :${toString svcHttpPort}
+  # reverse_proxy :${toString svcHttpPort}
   #   encode {
   #     zstd
   #     gzip
@@ -34,7 +40,7 @@ in
     enable = true;
     listen.port = 8883;
     # NOTE: Don't need to open calibre-web port, it's served by reverse_proxy
-    openFirewall = true;  # TODO: Temporarily opened to allow configuration from inside my network.
+    openFirewall = true; # TODO: Temporarily opened to allow configuration from inside my network.
 
     user = "calibre-web";
     group = "calibre-web";

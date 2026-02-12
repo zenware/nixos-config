@@ -6,8 +6,14 @@
     };
 
     sops.secrets = {
-      "kanidm/admin-password" = { group = "kanidm"; mode = "440"; };
-      "kanidm/idm-admin-password" = { group = "kanidm"; mode = "440"; };
+      "kanidm/admin-password" = {
+        group = "kanidm";
+        mode = "440";
+      };
+      "kanidm/idm-admin-password" = {
+        group = "kanidm";
+        mode = "440";
+      };
     };
     services.kanidm.provision = {
       adminPasswordFile = config.sops.secrets."kanidm/admin-password".path;
@@ -34,7 +40,8 @@
     services.immich.environment.IMMICH_CONFIG_FILE = config.sops.templates."immich.json".path;
 
     sops.secrets."forgejo/admin-password".owner = "forgejo";
-    services.kanidm.provision.systems.oauth2.forgejo.basicSecretFile = config.sops.secrets."forgejo/admin-password".path;
+    services.kanidm.provision.systems.oauth2.forgejo.basicSecretFile =
+      config.sops.secrets."forgejo/admin-password".path;
 
     sops.secrets.miniflux_env = {
       sopsFile = ../../../lithium/miniflux_admin_credentials.env;
@@ -48,11 +55,16 @@
       owner = "miniflux";
       group = "kanidm";
       mode = "0440";
-      restartUnits = [ "miniflux.service" "kanidm.service" ];
+      restartUnits = [
+        "miniflux.service"
+        "kanidm.service"
+      ];
     };
     services.miniflux.adminCredentialsFile = config.sops.secrets.miniflux_env.path;
     services.miniflux.config.CREATE_ADMIN = lib.mkForce 1;
-    services.miniflux.config.OAUTH2_CLIENT_SECRET_FILE = config.sops.secrets."miniflux/oauth2_client_secret".path;
-    services.kanidm.provision.systems.oauth2.miniflux.basicSecretFile = config.sops.secrets."miniflux/oauth2_client_secret".path;
+    services.miniflux.config.OAUTH2_CLIENT_SECRET_FILE =
+      config.sops.secrets."miniflux/oauth2_client_secret".path;
+    services.kanidm.provision.systems.oauth2.miniflux.basicSecretFile =
+      config.sops.secrets."miniflux/oauth2_client_secret".path;
   };
 }

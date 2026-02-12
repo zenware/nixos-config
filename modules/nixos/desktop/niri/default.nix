@@ -1,4 +1,10 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 {
   # Opinionated Niri Setup - https://yalter.github.io/niri/Important-Software.html
   # Consider: https://github.com/sodiboo/niri-flake
@@ -27,7 +33,7 @@
   # Notification Daemon
   #services.mako.enable = true;
   #services.mako.settings.default-timeout = 3000;
-  
+
   # Portal - https://wiki.archlinux.org/title/XDG_Desktop_Portal#List_of_backends_and_interfaces
 
   # Xwayland

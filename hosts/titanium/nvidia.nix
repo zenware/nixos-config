@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   # GPU Things
   # NOTE: The following command can be helpful when diagnosing GPU issues:
   # `nix shell nixpkgs#vulkan-tools -c vulkaninfo --summary`

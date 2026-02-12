@@ -1,33 +1,37 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   retroarchWithCores = (
     pkgs.retroarch.withCores (
       cores: with cores; [
         # Multi-Emulators
-        mame  # Atari / Nintendo / Sega / etc.
+        mame # Atari / Nintendo / Sega / etc.
 
         # Sega
-        genesis-plus-gx  # Sega Genesis
+        genesis-plus-gx # Sega Genesis
 
         # Nintendo
-        mesen  # NES
-        bsnes  # Super Nintendo
+        mesen # NES
+        bsnes # Super Nintendo
         mupen64plus # Nintendo 64 - Maybe simple64 some day.
-        dolphin  # GameCube
-        mgba  # GameBoy / Color / Advance
+        dolphin # GameCube
+        mgba # GameBoy / Color / Advance
         #melonds  # Nintendo DS
         #citra  # Nintendo 3DS
 
-
         # Sony
-        swanstation  #duckstation  # PlayStation
+        swanstation # duckstation  # PlayStation
         beetle-psx-hw
-        pcsx2  # PlayStation 2 -- Is actually "LRPS2"
+        pcsx2 # PlayStation 2 -- Is actually "LRPS2"
         #rpcs3  # PlayStation 3
-        ppsspp  # PlayStation Portable
+        ppsspp # PlayStation Portable
 
         # Commodore
-        vice-x64  # C64
+        vice-x64 # C64
       ]
     )
   );
@@ -40,8 +44,8 @@ in
     pkgs.gnome-bluetooth
   ];
 
-  hardware.xone.enable = true;  # Xbox Controller Driver
-  hardware.xpadneo.enable = true;  # Xbox Controller Driver
+  hardware.xone.enable = true; # Xbox Controller Driver
+  hardware.xpadneo.enable = true; # Xbox Controller Driver
   hardware.enableAllFirmware = true;
   hardware.bluetooth = {
     enable = true;

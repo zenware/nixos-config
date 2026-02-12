@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   # For real-time audio/production consider: https://github.com/musnix/musnix
   security.rtkit.enable = lib.mkDefault true;

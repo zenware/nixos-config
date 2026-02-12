@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   #sops.defaultSopsFile = ./secrets/common.yaml;
   networking.hostName = "lithium";
@@ -8,6 +13,6 @@
     zfs
   ];
   services.openssh.enable = true;
-  programs.mosh.enable = true; 
+  programs.mosh.enable = true;
   system.stateVersion = "25.05";
 }

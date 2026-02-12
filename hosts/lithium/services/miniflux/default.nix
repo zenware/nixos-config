@@ -2,7 +2,7 @@
 let
   homelabDomain = config.networking.domain;
   svcDomain = "feeds.${homelabDomain}";
-  svcPort = "8081";  # Prevent a Conflict
+  svcPort = "8081"; # Prevent a Conflict
 in
 {
   services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
@@ -14,17 +14,17 @@ in
     group = "miniflux";
     createHome = false;
   };
-  users.groups.miniflux = {};
+  users.groups.miniflux = { };
   #services.kanidm.provision = {
-    #groups = {};
-    #systems.oauth2.miniflux = {
-      #displayName = "Miniflux Feed Reader";
-      #originUrl = "https://${fqdn}/callback";
-      #public = true; # enforces PKCE
-      #preferShortUsername = true;
-      #scopeMaps.pages_users = ["openid" "email" "profile"];
-      #claimMaps."${permissionsMap}".valuesByGroup.pages_admin = ["admin"];
-    #};
+  #groups = {};
+  #systems.oauth2.miniflux = {
+  #displayName = "Miniflux Feed Reader";
+  #originUrl = "https://${fqdn}/callback";
+  #public = true; # enforces PKCE
+  #preferShortUsername = true;
+  #scopeMaps.pages_users = ["openid" "email" "profile"];
+  #claimMaps."${permissionsMap}".valuesByGroup.pages_admin = ["admin"];
+  #};
   #};
   # NOTE: Currently requires some web-interface configuration
   services.miniflux = {
@@ -32,7 +32,7 @@ in
     #adminCredentialsFile = config.sops.secrets.miniflux_env.path;
     config = {
       BASE_URL = "https://${svcDomain}";
-      CREATE_ADMIN = 0;  # NOTE: Override this to 1 in secrets
+      CREATE_ADMIN = 0; # NOTE: Override this to 1 in secrets
       #DISABLE_LOCAL_AUTH = 1;
       OAUTH2_PROVIDER = "oidc";
       OAUTH2_CLIENT_ID = "miniflux";
@@ -45,7 +45,6 @@ in
     };
   };
 
-  
   services.kanidm.provision.systems.oauth2.miniflux = {
     displayName = "miniflux";
     originUrl = "https://${svcDomain}/oauth2/oidc/callback";

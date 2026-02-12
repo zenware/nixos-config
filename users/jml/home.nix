@@ -361,10 +361,10 @@
         nix = {
           enable = true;
           lsp.enable = true;
-          lsp.server = "nixd";
+          lsp.servers = [ "nixd" ];
           extraDiagnostics.enable = true;
           format.enable = true;
-          format.type = "nixfmt";
+          format.type = [ "nixfmt" ];
           treesitter.enable = true;
         };
         markdown.enable = true;
@@ -380,13 +380,13 @@
           # TODO: null_ls is now deprecated.
           # https://github.com/NotAShelf/nvf/issues/1175
           # https://github.com/NotAShelf/nvf/blob/main/.github/CONTRIBUTING.md
-          crates.enable = true;
+          extensions.crates-nvim.enable = true;
         };
         go.enable = true;
-        zig.enable = true;
+        # zig.enable = true; # TODO: Add Zig packages?
 
         ts.enable = true;
-        html.enable = true;
+        #html.enable = true; # TODO: Add HTML packages?
         css.enable = true;
         sql.enable = true;
       };
@@ -532,6 +532,10 @@
     # profiles.default.userSettings = {
     #   "[nix]"."editor.tabSize" = 2;
     # };
+  };
+  home.file.".vscode/argv.json".text = builtins.toJSON {
+    password-store = "keepassxc";
+    enable-crash-reporter = false;
   };
   # services.podman.enable = true;
 

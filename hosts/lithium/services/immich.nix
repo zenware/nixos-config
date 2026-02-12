@@ -1,4 +1,10 @@
-{ inputs, config, pkgs, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   svcDomain = "photos.${config.networking.domain}";
   immichMediaDir = "/tank/shares/immich-media";
@@ -48,9 +54,14 @@ in
     users.users.immich = {
       isSystemUser = true;
     };
-    users.groups.immich = {};
+    users.groups.immich = { };
     # NOTE: the users group gets us into /mnt/shares
-    users.users.immich.extraGroups = [ "video" "render" "media" "users" ];
+    users.users.immich.extraGroups = [
+      "video"
+      "render"
+      "media"
+      "users"
+    ];
     # TODO: There may be a slightly more nixy way of doing this tmpfiles rule.
     # https://github.com/nixos-bsd/nixbsd/blob/e393e147e3c30f6424c2a32c5362241c004b5156/modules/services/web-apps/immich.nix#L293C14-L293C27
     # systemd.tmpfiles.rules = [

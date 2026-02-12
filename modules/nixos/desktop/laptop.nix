@@ -13,7 +13,7 @@
     # Brightness Control
     environment.systemPackages = with pkgs; [
       brightnessctl
-    ]
+    ];
 
     # Enable location services (optional, useful for night light)
     services.geoclue2.enable = lib.mkDefault true;

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     ./calibre.nix
@@ -36,7 +41,6 @@
     displayManager.startx.enable = lib.mkDefault false;
   };
 
-
   # https://wiki.archlinux.org/title/XDG_Desktop_Portal#List_of_backends_and_interfaces
   services.dbus.enable = true;
   xdg.portal = {
@@ -53,7 +57,8 @@
   security.polkit.enable = lib.mkDefault true;
 
   # Keyring for storing secrets
-  services.gnome.gnome-keyring.enable = true;
+  # NOTE: Instead of gnome-keyring, I'm using KeePassXC
+  services.gnome.gnome-keyring.enable = lib.mkForce false;
 
   # Thumbnail support for file managers
   services.tumbler.enable = true;
@@ -65,9 +70,8 @@
 
   environment.systemPackages = with pkgs; [
     # System Utilities
-    networkmanagerapplet  # Tray Icon for managing network connections
+    networkmanagerapplet # Tray Icon for managing network connections
     yubikey-personalization
-
 
     # Display Manager Configuration Tools (for laptops)
     wlr-randr # A CLI tool for configuring monitors on Wayland (e.g., Hyprland)
@@ -83,7 +87,7 @@
 
     # Status bar (if not using compositors built-in)
     waybar
-    
+
     # Wallpaper managers
     swww
 
@@ -137,5 +141,5 @@
   # Allow users to mount filesystems without root
   programs.fuse.userAllowOther = true;
 
-  services.avahi.enable = lib.mkDefault true;  # zeroconf/mDNS(.local)
+  services.avahi.enable = lib.mkDefault true; # zeroconf/mDNS(.local)
 }

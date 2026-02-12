@@ -80,7 +80,10 @@
           ];
         };
       };
-      pkgs = import nixpkgs { inherit system; overlays = import ./overlays { inherit nixpkgs inputs; }; };
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = import ./overlays { inherit nixpkgs inputs; };
+      };
     in
     {
       lib = {
@@ -134,6 +137,7 @@
       # `home-manager switch --flake .#jml`
       # https://nix-community.github.io/home-manager/options.xhtml
       homeConfigurations = mkHomeConfigs homeUserProfiles;
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
       topology =
         let
         in

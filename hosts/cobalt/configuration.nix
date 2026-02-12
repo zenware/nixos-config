@@ -9,7 +9,6 @@
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
 
-
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -20,7 +19,6 @@
     nerd-fonts.iosevka
     atkinson-hyperlegible
   ];
-
 
   system.stateVersion = "25.05";
 }
