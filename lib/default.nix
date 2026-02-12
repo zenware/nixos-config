@@ -41,8 +41,16 @@ in
     in
     nixpkgs.lib.nixosSystem {
       inherit system;
-      modules = [ hostModule ] ++ userModules ++ extraModules ++ (if inputs ? nix-topology then [ inputs.nix-topology.nixosModules.default ] else []);
-      specialArgs = { inherit inputs hostname; } // extraSpecialArgs;
+      modules = [
+        hostModule
+      ]
+      ++ userModules
+      ++ extraModules
+      ++ (if inputs ? nix-topology then [ inputs.nix-topology.nixosModules.default ] else [ ]);
+      specialArgs = {
+        inherit inputs hostname;
+      }
+      // extraSpecialArgs;
     };
 
   /**

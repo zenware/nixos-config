@@ -15,9 +15,14 @@
         lib.mkDefault "/Users/jml"
       else
         abort "Unsupported OS";
-  } // lib.optionalAttrs pkgs.stdenv.isLinux {
+  }
+  // lib.optionalAttrs pkgs.stdenv.isLinux {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "samba" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "samba"
+    ];
     initialHashedPassword = "$y$j9T$R9y36VAOEudqmyVVgyYLD1$xQktVMaRP9qiARiJ6KATvyH6VAL1IKSJoPAo7k4YNZ.";
   };
 }

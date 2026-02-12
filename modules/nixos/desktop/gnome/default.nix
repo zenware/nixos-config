@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   services.desktopManager.gnome.enable = true;
   services.displayManager.sddm.enable = lib.mkForce false;

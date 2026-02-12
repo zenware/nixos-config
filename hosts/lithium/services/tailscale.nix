@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 #let
-  #hostName = config.networking.hostName;
-  #tailnetName = "tail79151.ts.net";
-  #svcDomain = "${hostName}.${tailnetName}";
+#hostName = config.networking.hostName;
+#tailnetName = "tail79151.ts.net";
+#svcDomain = "${hostName}.${tailnetName}";
 #in
 {
   # NOTE: This does require a manual step of creating a tailscale account if
@@ -13,7 +13,7 @@
 
   # NOTE: Use Caddy to create and manage SSL Certs for Tailscale
   #services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
-    #reverse_proxy :<port>
+  #reverse_proxy :<port>
   #'';
   services.tailscale = {
     enable = true;

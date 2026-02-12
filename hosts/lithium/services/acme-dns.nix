@@ -9,9 +9,11 @@ in
   sops.secrets."cloudflare/dns_api_token" = {
     mode = "0440";
     group = config.services.caddy.group;
-    restartUnits = [ "caddy.service" "ddclient.service" ];
+    restartUnits = [
+      "caddy.service"
+      "ddclient.service"
+    ];
   };
-
 
   # TODO: Consider defining reverse proxy all in one location.
   # All the ports and domains would be visible in one place.
@@ -28,7 +30,7 @@ in
       };
       group = config.services.caddy.group;
       #reloadServices = [ "caddy" ];
-      email = "admin+acme@${homelabDomain}";  # NOTE: This email is /dev/null;
+      email = "admin+acme@${homelabDomain}"; # NOTE: This email is /dev/null;
       #keyType = "ec384";
     };
   };
@@ -50,7 +52,7 @@ in
       "feeds.${homelabDomain}"
       "git.${homelabDomain}"
       "tv.${homelabDomain}"
-      "demo.${homelabDomain}"  # Testing to see if the DNS record is set.
+      "demo.${homelabDomain}" # Testing to see if the DNS record is set.
     ];
   };
 

@@ -2,12 +2,12 @@
 {
   # NOTE: We do need to guarantee this group exists.
   # and manually provision users with `sudo smbpasswd -a $username`
-  users.groups.samba = {};
+  users.groups.samba = { };
   services.samba = {
     enable = true;
     openFirewall = true;
 
-    nmbd.enable = false;  # NOTE: Disable NetBIOS responses.
+    nmbd.enable = false; # NOTE: Disable NetBIOS responses.
     # usershares.enable = true;  # NOTE: Members of group "samba" can create usershares.
 
     # NOTE: Refer to https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
@@ -34,7 +34,7 @@
         writable = "yes";
         "read only" = "no";
         "guest ok" = "no";
-        "valid users" = "%S"; 
+        "valid users" = "%S";
         path = "/tank/shares/personal/%S";
       };
 
@@ -70,9 +70,9 @@
     openFirewall = true;
   };
   #services.avahi = {
-    #enable = true;
-    #openFirewall = true;
-    #publish.enable = true;
-    #publish.userServices = true;
+  #enable = true;
+  #openFirewall = true;
+  #publish.enable = true;
+  #publish.userServices = true;
   #};
 }

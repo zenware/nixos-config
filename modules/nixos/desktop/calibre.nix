@@ -1,13 +1,18 @@
-{ config, lib, pkgs, ... }:
 {
-  imports = [];
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  imports = [ ];
 
   options = {
     zw.calibre = {
       enable = lib.mkEnableOption "Enable Calibre";
     };
   };
-  
+
   config = {
     # NOTE: Without unrar support we can't open ".cbr" files.
     environment.systemPackages = with pkgs; [

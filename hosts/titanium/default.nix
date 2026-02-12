@@ -4,7 +4,7 @@ let
 in
 {
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.overlays = (import (../../overlays) {inherit nixpkgs;});
+  nixpkgs.overlays = (import (../../overlays) { inherit nixpkgs; });
   imports = [
     ../../modules/nixos/base.nix
     ../../modules/nixos/audio.nix
@@ -27,8 +27,8 @@ in
 
   # Added uv/uvx so I could use github/spec-kit, global specify CLI might be better.
   environment.systemPackages = [
-    pkgs.uv  # Python uv/uvx
-    pkgs.spec-kit  # Just directly add spec-kit then and see if that's any good.
+    pkgs.uv # Python uv/uvx
+    pkgs.spec-kit # Just directly add spec-kit then and see if that's any good.
   ];
 
   stylix = {

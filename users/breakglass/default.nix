@@ -8,7 +8,8 @@
         lib.mkDefault "/Users/breakglass"
       else
         abort "Unsupported OS";
-  } // lib.optionalAttrs pkgs.stdenv.isLinux {
+  }
+  // lib.optionalAttrs pkgs.stdenv.isLinux {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     # NOTE: Generated with `mkpasswd`

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   #imports = [];
   options = {
@@ -10,7 +15,7 @@
     environment.systemPackages = with pkgs; [
       mangohud
       protonup-qt
-      lutris  # TODO: Having an issue after flake update
+      lutris # TODO: Having an issue after flake update
       bottles
       heroic
     ];

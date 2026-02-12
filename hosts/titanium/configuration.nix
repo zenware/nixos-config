@@ -1,15 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   powerManagement.enable = false;
   networking.hostName = "titanium";
   networking.networkmanager.enable = true;
   environment.systemPackages = with pkgs; [
-    sbctl  # Secure-Boot
-    helix nil  # nice for editing '.nix'
+    sbctl # Secure-Boot
+    helix
+    nil # nice for editing '.nix'
     (discord.override { withVencord = true; })
     signal-desktop
     obs-studio
-    halloy  # IRC
+    halloy # IRC
     gimp3
     # nyxt # browser - Was accidentally defaulting?
   ];

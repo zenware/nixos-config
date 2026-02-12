@@ -1,4 +1,9 @@
-{ inputs, config, pkgs, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
 let
   svcDomain = "grafana.${config.networking.domain}";
   svcPort = config.services.grafana.settings.server.http_port;
@@ -18,7 +23,7 @@ in
         enable_gzip = true;
         domain = svcDomain;
       };
-      analytics.reporting_enabled = false;  # NOTE: Disable Telemetry
+      analytics.reporting_enabled = false; # NOTE: Disable Telemetry
     };
   };
 }
