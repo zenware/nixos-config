@@ -25,9 +25,9 @@ in
     # NOTE: DNS provider settings
     # https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148
     globalConfig = ''
-      # acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+      # acme_dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
       dynamic_dns {
-        provider cloudflare {env.CLOUDFLARE_API_TOKEN}
+        provider cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
         domains {
           ${config.networking.domain} @
         }
