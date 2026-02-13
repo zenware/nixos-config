@@ -57,8 +57,7 @@
   security.polkit.enable = lib.mkDefault true;
 
   # Keyring for storing secrets
-  # NOTE: Instead of gnome-keyring, I'm using KeePassXC
-  services.gnome.gnome-keyring.enable = lib.mkForce false;
+  services.gnome.gnome-keyring.enable = true;
 
   # Thumbnail support for file managers
   services.tumbler.enable = true;
@@ -96,8 +95,9 @@
     wezterm
 
     # File manager
-    xfce.thunar
-    xfce.thunar-volman # Removable Media
+    # TODO: Switch back to nautilus/gnome files?
+    thunar
+    thunar-volman # Removable Media
     gvfs # Trash support and more
 
     # Wayland Utilities
