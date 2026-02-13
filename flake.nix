@@ -30,10 +30,10 @@
       # inputs.quickshell.follows = "quickshell";
     };
 
-    # niri = {
-    #   url = "github:sodiboo/niri-flake";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     llm-agents.url = "github:numtide/llm-agents.nix";
     microvm.url = "github:astro/microvm.nix";
     microvm.inputs.nixpkgs.follows = "nixpkgs";
@@ -52,7 +52,7 @@
       stylix,
       nvf,
       noctalia,
-      #niri,
+      niri,
       llm-agents,
       determinate,
       nix-topology,
@@ -76,7 +76,7 @@
           extraModules = [
             nvf.homeManagerModules.default
             noctalia.homeModules.default
-            #niri.homeModules.niri
+            niri.homeModules.niri
           ];
         };
       };
@@ -100,7 +100,7 @@
           extraModules = [
             #(import ./overlays)
             stylix.nixosModules.stylix
-            #niri.nixosModules.niri
+            niri.nixosModules.niri
             determinate.nixosModules.default
           ];
         };
@@ -117,6 +117,10 @@
         cobalt = mkSystem {
           hostname = "cobalt";
           users = [ "jml" ];
+          extraModules = [
+            stylix.nixosModules.stylix
+            niri.nixosModules.niri
+          ];
         };
         neon = mkSystem {
           hostname = "neon";
