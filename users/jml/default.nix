@@ -5,7 +5,9 @@
   environment.systemPackages = [
     pkgs.home-manager
     pkgs.telegram-desktop
+    pkgs.libsecret # Used for secrets daemon /w keepassxc
   ];
+  nix.settings.trusted-users = lib.mkAfter [ "jml" ];
   users.users.jml = {
     shell = pkgs.fish;
     home =
