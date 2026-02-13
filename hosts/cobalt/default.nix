@@ -4,7 +4,7 @@
     ./boot.nix
     ../../modules/nixos/base.nix
     ../../modules/nixos/audio.nix
-    #../../modules/nixos/desktop.nix
+    ../../modules/nixos/desktop
     # https://github.com/NixOS/nixos-hardware/blob/master/README.md#using-nix-flakes-support
     # TODO: This module doesn't exist yet.
     #inputs.nixos-hardware.nixosModules.asus-zenbook-ux390u
@@ -12,7 +12,7 @@
     ./hardware-configuration.nix
     ./configuration.nix
     ../../modules/nixos/gaming.nix
-    ../../modules/nixos/desktop/xfce
+    #../../modules/nixos/desktop/xfce
     #../../modules/nixos/desktop/niri
   ];
 
