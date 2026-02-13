@@ -12,6 +12,10 @@
     (pkgs.sddm-astronaut.override {
       embeddedTheme = "pixel_sakura";
     })
+    # NOTE: Packages below here may be consumed by themes.
+    pkgs.kdePackages.qtbase
+    pkgs.kdePackages.qtwayland
+    pkgs.kdePackages.qtmultimedia
   ];
   services.displayManager.defaultSession = "niri";
 
@@ -22,6 +26,6 @@
     wayland.enable = true;
     #theme = "catppuccin-mocha-teal";
     theme = "sddm-astronaut-theme";
-    extraPackages = [ ];
+    # extraPackages = [ ];
   };
 }

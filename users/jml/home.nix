@@ -534,7 +534,7 @@
     # };
   };
   home.file.".vscode/argv.json".text = builtins.toJSON {
-    password-store = "keepassxc";
+    password-store = "gnome-libsecret";
     enable-crash-reporter = false;
   };
   # services.podman.enable = true;
