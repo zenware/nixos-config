@@ -38,6 +38,8 @@
     microvm.url = "github:astro/microvm.nix";
     microvm.inputs.nixpkgs.follows = "nixpkgs";
     nix-topology.url = "github:oddlama/nix-topology";
+    antigravity-nix.url = "github:jacopone/antigravity-nix";
+    antigravity-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
   outputs =
@@ -56,6 +58,7 @@
       llm-agents,
       determinate,
       nix-topology,
+      antigravity-nix,
       ...
     }:
     let
@@ -77,6 +80,8 @@
             nvf.homeManagerModules.default
             noctalia.homeModules.default
             niri.homeModules.niri
+            # Minor kludge to avoid wiring the packages through to `users/*/home/*.nix`
+            { home.packages = [ antigravity-nix.packages.x86_64-linux.default ]; }
           ];
         };
       };
@@ -102,6 +107,7 @@
             stylix.nixosModules.stylix
             niri.nixosModules.niri
             determinate.nixosModules.default
+            microvm.nixosModules.host
           ];
         };
         lithium = mkSystem {

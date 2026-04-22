@@ -42,25 +42,26 @@
 
   console.font = null; # Kernel will automatically choose a font.
   console.keyMap = "us";
+  # TODO: Consider removing this or wrapping it in something to prevent it from being set when stylix is enabled.
   # 4-bit ANSI -> Catpuccin Mocha Colors: https://catppuccin.com/palette/
-  console.colors = [
-    "11111b" # black               -> crust
-    "f38ba8" # red                 -> red
-    "a6e3a1" # green               -> green
-    "fab387" # yellow              -> peach
-    "89b4fa" # blue                -> blue
-    "cba6f7" # magenta             -> mauve
-    "74c7ec" # cyan                -> sapphire
-    "6c7086" # white               -> overlay 0
-    "313244" # bright black (gray) -> surface 0
-    "eba0ac" # bright red          -> maroon
-    "94e2d5" # bright green        -> teal
-    "f9e2af" # bright yellow       -> yellow
-    "b4befe" # bright blue         -> lavender
-    "f5c2e7" # bright magenta      -> pink
-    "89dceb" # bright cyan         -> sky
-    "cdd6f4" # bright white        -> text
-  ];
+  # console.colors = [
+  #   "11111b" # black               -> crust
+  #   "f38ba8" # red                 -> red
+  #   "a6e3a1" # green               -> green
+  #   "fab387" # yellow              -> peach
+  #   "89b4fa" # blue                -> blue
+  #   "cba6f7" # magenta             -> mauve
+  #   "74c7ec" # cyan                -> sapphire
+  #   "6c7086" # white               -> overlay 0
+  #   "313244" # bright black (gray) -> surface 0
+  #   "eba0ac" # bright red          -> maroon
+  #   "94e2d5" # bright green        -> teal
+  #   "f9e2af" # bright yellow       -> yellow
+  #   "b4befe" # bright blue         -> lavender
+  #   "f5c2e7" # bright magenta      -> pink
+  #   "89dceb" # bright cyan         -> sky
+  #   "cdd6f4" # bright white        -> text
+  # ];
 
   # TODO: Consider zsh for default shell.
   #users.defaultUserShell = pkgs.zsh;

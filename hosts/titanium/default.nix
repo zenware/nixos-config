@@ -3,6 +3,14 @@ let
   nixpkgs = inputs.nixpkgs;
 in
 {
+  nix.settings = {
+    substituters = [
+      "https://cache.nixos-cuda.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
+    ];
+  };
   nixpkgs.config.allowUnfree = true;
   nixpkgs.overlays = (import (../../overlays) { inherit nixpkgs; });
   imports = [
@@ -21,6 +29,7 @@ in
     ./game-emulation.nix
     #./meetings.nix
     #./llm-agents.nix
+    ./kindle.nix # TODO: Get the kindle plugin working.
   ];
 
   zw.gaming.enable = true;
@@ -29,7 +38,18 @@ in
   environment.systemPackages = [
     pkgs.uv # Python uv/uvx
     pkgs.spec-kit # Just directly add spec-kit then and see if that's any good.
+    pkgs.gnome-software
   ];
+  
+  # export XDG_DATA_DIRS=$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share
+  services.flatpak.enable = true;
+  systemd.services.flatpak-repo = {
+    wantedBy = [ "multi-user.target" ];
+    path = [ pkgs.flatpak ];
+    script = ''
+      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    '';
+  };
 
   stylix = {
     enable = true;

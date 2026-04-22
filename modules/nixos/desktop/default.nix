@@ -6,7 +6,7 @@
 }:
 {
   imports = [
-    ./calibre.nix
+    ./calibre.nix # TODO: currently having build issues
     #../base.nix imported by the host
     ../audio.nix
     ../fonts.nix
@@ -14,7 +14,7 @@
     ../gaming.nix
     # Desktop Environments
     ./display-manager.nix
-    ./hyprland
+    #./hyprland
     ./niri
     ./xfce
   ];
@@ -88,7 +88,7 @@
     waybar
 
     # Wallpaper managers
-    swww
+    awww
 
     # Terminal Emulators
     alacritty

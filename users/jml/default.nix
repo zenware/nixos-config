@@ -6,6 +6,7 @@
     pkgs.home-manager
     pkgs.telegram-desktop
     pkgs.libsecret # Used for secrets daemon /w keepassxc
+    pkgs.brave # TODO: Probably remove this... why is it required that chromium browsers are installed at System Level?
   ];
   nix.settings.trusted-users = lib.mkAfter [ "jml" ];
   users.users.jml = {
