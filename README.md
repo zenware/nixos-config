@@ -109,7 +109,7 @@ nix build .#topology.x86_64-linux.config.output
 ├── users
 │   ├── <username>
 │   │   ├── default.nix  # entrypoint for user configuration
-│   │   └── home.nix     # imports from ../../modules/home/
+│   │   └── home/default.nix     # imports from ../../modules/home/
 ├── modules    # Reusable NixOS and Home-Manager Modules
 │   ├── nixos  # host configuration modules
 │   └── home   # home-manager modules

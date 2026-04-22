@@ -65,7 +65,7 @@ in
     let
       pkgs_with_overlays = getPkgs system;
       moduleList = [
-        (import ../users/${username}/home.nix {
+        (import ../users/${username}/home {
           inherit inputs username;
           pkgs = pkgs_with_overlays;
           lib = nixpkgs.lib;
