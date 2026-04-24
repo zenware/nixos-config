@@ -1,4 +1,9 @@
 { pkgs, ... }:
+let
+    custom-astronaut-theme = pkgs.sddm-astronaut.override {
+      embeddedTheme = "pixel_sakura";
+    };
+in
 {
   environment.systemPackages = [
     (pkgs.catppuccin-sddm.override {
@@ -9,9 +14,7 @@
       #background = "${./wallpaper.png}";
       loginBackground = true;
     })
-    (pkgs.sddm-astronaut.override {
-      embeddedTheme = "pixel_sakura";
-    })
+    custom-astronaut-theme
     # NOTE: Packages below here may be consumed by themes.
     pkgs.kdePackages.qtbase
     pkgs.kdePackages.qtwayland
@@ -26,6 +29,6 @@
     wayland.enable = true;
     #theme = "catppuccin-mocha-teal";
     theme = "sddm-astronaut-theme";
-    # extraPackages = [ ];
+    extraPackages = [ custom-astronaut-theme ];
   };
 }

@@ -3,6 +3,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    
     nixos-hardware.url = "github:nixos/nixos-hardware";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -42,8 +44,10 @@
     antigravity-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
+
   outputs =
     inputs@{
+      flake-parts,
       self,
       nixpkgs,
       nixos-hardware,
@@ -61,36 +65,38 @@
       antigravity-nix,
       ...
     }:
-    let
-      zwLib = import ./lib {
-        inherit nixpkgs home-manager inputs;
-      };
-      mkSystem = zwLib.mkSystem;
-      mkHome = zwLib.mkHome;
-      mkHomeConfigs = zwLib.mkHomeConfigs;
+  let
+    zwLib = import ./lib {
+      inherit nixpkgs home-manager inputs;
+    };
+    mkSystem = zwLib.mkSystem;
+    mkHome = zwLib.mkHome;
+    mkHomeConfigs = zwLib.mkHomeConfigs;
 
-      # NOTE: Currently these are exclusively user-profiles which use home-manager.
-      # Their home-manager specific declarations are at ../users/${username}/home.nix
-      system = "x86_64-linux"; # TODO: Improve this from only static x86 to dynamic.
-      homeUserProfiles = {
-        jml = mkHome {
-          inherit system; # inputs;
-          username = "jml";
-          extraModules = [
-            nvf.homeManagerModules.default
-            noctalia.homeModules.default
-            niri.homeModules.niri
-            # Minor kludge to avoid wiring the packages through to `users/*/home/*.nix`
-            { home.packages = [ antigravity-nix.packages.x86_64-linux.default ]; }
-          ];
-        };
+    # NOTE: Currently these are exclusively user-profiles which use home-manager.
+    # Their home-manager specific declarations are at ../users/${username}/home.nix
+    system = "x86_64-linux"; # TODO: Improve this from only static x86 to dynamic.
+    homeUserProfiles = {
+      jml = mkHome {
+        inherit system; # inputs;
+        username = "jml";
+        extraModules = [
+          nvf.homeManagerModules.default
+          noctalia.homeModules.default
+          niri.homeModules.niri
+          # Minor kludge to avoid wiring the packages through to `users/*/home/*.nix`
+          { home.packages = [ antigravity-nix.packages.x86_64-linux.default ]; }
+        ];
       };
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = import ./overlays { inherit nixpkgs inputs; };
-      };
-    in
-    {
+    };
+    pkgs = import nixpkgs {
+      inherit system;
+      overlays = import ./overlays { inherit nixpkgs inputs; };
+    };
+  in
+  flake-parts.lib.mkFlake { inherit inputs; } (top@{ config, withSystem, moduleWithSystem, ...}: {
+    imports = [];
+    flake = {
       lib = {
         mkSystem = mkSystem;
       };
@@ -149,8 +155,6 @@
       homeConfigurations = mkHomeConfigs homeUserProfiles;
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
       topology =
-        let
-        in
         {
           ${system} = import nix-topology {
             inherit pkgs;
@@ -172,4 +176,14 @@
       };
       defaultTemplate = self.templates.secrets;
     };
+    systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
+    perSystem = { config, pkgs, ... }: {
+      # Recommended: move all package definitions here.
+      # e.g. (assuming you have a nixpkgs input)
+      # packages.foo = pkgs.callPackage ./foo/package.nix {};
+      # packages.bar = pkgs.callPackage ./bar/package.nix {
+      #   foo = config.packages.foo;
+      # };
+    };
+  });
 }
