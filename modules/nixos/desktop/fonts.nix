@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+  # NOTE: I probably don't care about fonts unless I have a desktop environment.
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [

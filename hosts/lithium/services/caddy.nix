@@ -20,9 +20,7 @@ in
         "github.com/mholt/caddy-dynamicdns@v0.0.0-20250430031602-b846b9e8fb83"
         "github.com/caddy-dns/cloudflare@v0.2.1"
       ];
-
-      # NOTE: Built on 2026-02-11
-      hash = "sha256-W67Jbu9e0RssVmMeY72ceTKBJ4iPZPqNkLWrsdn5ADk=";
+      hash = "sha256-ItRva/R6RijYzVBKmc+9e2pzXhAWsM9YxQIVswkgZgU=";
     };
     # NOTE: Use Staging CA while testing, check `systemctl status caddy`
     # to see if everything is working.
