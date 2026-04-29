@@ -7,9 +7,9 @@ in
   nixpkgs.overlays = (import (../../overlays) { inherit nixpkgs; });
   imports = [
     ../../modules/nixos/base.nix
-    ../../modules/nixos/audio.nix
     ../../modules/nixos/desktop
     ../../modules/nixos/gaming.nix
+    ../../modules/nixos/bluetooth.nix
     inputs.nixos-hardware.nixosModules.asus-rog-strix-x570e
     ./hardware.nix
     ./configuration.nix
@@ -22,9 +22,13 @@ in
     #./meetings.nix
     #./llm-agents.nix
     ./kindle.nix # TODO: Get the kindle plugin working.
+    ../../modules/nixos/calibre.nix
   ];
 
   zw.gaming.enable = true;
+  zw.desktop.enable = true;
+  zw.calibre.enable = true;
+  zw.bluetooth.enable = true;
 
   # Added uv/uvx so I could use github/spec-kit, global specify CLI might be better.
   environment.systemPackages = [
@@ -32,7 +36,7 @@ in
     pkgs.spec-kit # Just directly add spec-kit then and see if that's any good.
     pkgs.gnome-software
   ];
-  
+
   # export XDG_DATA_DIRS=$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share
   services.flatpak.enable = true;
   systemd.services.flatpak-repo = {
@@ -44,6 +48,7 @@ in
   };
 
   stylix = {
+    targets.gtksourceview.enable = false;
     enable = true;
     polarity = "dark";
     # catppuccin-mocha

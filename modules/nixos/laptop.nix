@@ -1,10 +1,15 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   options = {
     zw.laptop.enable = lib.mkEnableOption "Enable Laptop";
   };
 
-  config = lib.mkIf config.zw.gaming.enable {
+  config = lib.mkIf config.zw.laptop.enable {
     # Power management (especially important for laptops)
     services.power-profiles-daemon.enable = lib.mkDefault true;
     # OR use tlp instead:
@@ -20,5 +25,5 @@
 
     # Laptop-specific hardware
     services.upower.enable = true;
-  }
+  };
 }
