@@ -1,30 +1,37 @@
-{ config, pkgs, ... }:
 {
-  programs.hyprland = {
-    enable = true;
-    withUWSM = true;
-    xwayland.enable = true;
-  };
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
+  config = lib.mkIf (config.zw.desktop.enable && config.zw.desktop.compositor == "hyprland") {
+    programs.hyprland = {
+      enable = true;
+      withUWSM = true;
+      xwayland.enable = true;
+    };
 
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+    xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
 
-  xdg.portal.config.hyprland = {
-    default = [
-      "hyprland"
-      "gtk"
+    xdg.portal.config.hyprland = {
+      default = [
+        "hyprland"
+        "gtk"
+      ];
+      "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
+      "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
+    };
+
+    environment.systemPackages = with pkgs; [
+      xdg-desktop-portal-hyprland
+      kitty # Hyprland default term
+      # Hyprland-specific tools
+      hyprpaper
+      hypridle
+      hyprlock
     ];
-    "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
-    "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
+
+    programs.hyprlock.enable = true;
   };
-
-  environment.systemPackages = with pkgs; [
-    xdg-desktop-portal-hyprland
-    kitty # Hyprland default term
-    # Hyprland-specific tools
-    hyprpaper
-    hypridle
-    hyprlock
-  ];
-
-  programs.hyprlock.enable = true;
 }

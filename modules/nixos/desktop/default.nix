@@ -6,18 +6,18 @@
 }:
 {
   imports = [
-    #../base.nix imported by the host
     ./audio.nix
     ./fonts.nix
     # Desktop Environments
     ./display-manager.nix
-    #./hyprland
+    ./hyprland
     ./niri
     ./xfce
   ];
 
   options.zw.desktop = {
     enable = lib.mkEnableOption "Enable Desktop";
+    # TODO: Make sure this compositor option is actually doing something (i.e. selecting the correct one.)
     compositor = lib.mkOption {
       type = lib.types.enum [
         "hyprland"
