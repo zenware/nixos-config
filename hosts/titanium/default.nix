@@ -18,7 +18,7 @@ in
     ./secure-boot.nix
     inputs.disko.nixosModules.disko
     ./disko.nix
-    ./game-emulation.nix
+    ../../modules/nixos/game-emulation.nix
     #./meetings.nix
     #./llm-agents.nix
     ./kindle.nix # TODO: Get the kindle plugin working.
@@ -26,6 +26,7 @@ in
   ];
 
   zw.gaming.enable = true;
+  zw.game-emulation.enable = true;
   zw.desktop.enable = true;
   zw.calibre.enable = true;
   zw.bluetooth.enable = true;

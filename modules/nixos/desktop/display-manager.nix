@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
-    custom-astronaut-theme = pkgs.sddm-astronaut.override {
-      embeddedTheme = "pixel_sakura";
-    };
+  custom-astronaut-theme = pkgs.sddm-astronaut.override {
+    embeddedTheme = "pixel_sakura";
+  };
 in
 {
   environment.systemPackages = [
@@ -20,7 +20,7 @@ in
     pkgs.kdePackages.qtwayland
     pkgs.kdePackages.qtmultimedia
   ];
-  services.displayManager.defaultSession = "niri";
+  services.displayManager.defaultSession = config.zw.desktop.compositor;
 
   # TODO: Figure out how to add a session selector to sddm-astronaut-theme.
   services.displayManager.sddm = {
