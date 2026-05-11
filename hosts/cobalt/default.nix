@@ -2,6 +2,8 @@
 {
   imports = [
     ./boot.nix
+    ../../modules/nixos
+    ../../modules/nixos/tailscale.nix
     # https://github.com/NixOS/nixos-hardware/blob/master/README.md#using-nix-flakes-support
     # TODO: This module doesn't exist yet.
     #inputs.nixos-hardware.nixosModules.asus-zenbook-ux390u
