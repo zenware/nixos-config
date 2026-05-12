@@ -4,7 +4,7 @@
     enable = lib.mkEnableOption "Enable Bluetooth";
   };
 
-  config = {
+  config = lib.mkIf config.zw.bluetooth.enable {
     hardware.bluetooth = {
       enable = lib.mkDefault true;
       #powerOnBoot = lib.mkDefault true;
