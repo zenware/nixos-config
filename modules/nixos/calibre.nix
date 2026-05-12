@@ -13,7 +13,7 @@
     };
   };
 
-  config = {
+  config = lib.mkIf config.zw.calibre.enable {
     # NOTE: Without unrar support we can't open ".cbr" files.
     environment.systemPackages = with pkgs; [
       calibre
