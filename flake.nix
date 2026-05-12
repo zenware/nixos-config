@@ -156,7 +156,12 @@
               specialArgs = { inherit inputs; };
             };
           };
-
+          darwinConfigurations = {
+            m5mbp = nix-darwin.lib.darwinSystem {
+              modules = [ ./hosts/m5mbp/configuration.nix ];
+              specialArgs = { inherit inputs; };
+            };
+          };
           # For Debugging: `home-manager build --flake .` or `nix build .#homeConfigurations."jml".activationPackage`
           # `home-manager switch --flake .#jml`
           # https://nix-community.github.io/home-manager/options.xhtml
