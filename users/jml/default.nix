@@ -4,13 +4,20 @@
   # not sure I've actually worked out where that delineation is best made yet.
   environment.systemPackages = [
     pkgs.home-manager
-    pkgs.telegram-desktop
+    #pkgs.telegram-desktop
     pkgs.libsecret # Used for secrets daemon /w keepassxc
     pkgs.brave # TODO: Probably remove this... why is it required that chromium browsers are installed at System Level?
+    #pkgs.signal-desktop
   ];
   nix.settings.trusted-users = lib.mkAfter [ "jml" ];
   users.users.jml = {
-    shell = pkgs.fish;
+    shell =
+      if pkgs.stdenv.isLinux then
+        pkgs.fish
+      else if pkgs.stdenv.isDarwin then
+        pkgs.zsh
+      else
+        abort "Unsupported OS";
     home =
       if pkgs.stdenv.isLinux then
         lib.mkDefault "/home/jml"
