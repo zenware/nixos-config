@@ -7,10 +7,9 @@
 let
   homelabDomain = config.networking.domain;
   svcDomain = "git.${homelabDomain}";
-  theme = pkgs.fetchzip {
+  theme = builtins.fetchTarball {
     url = "https://github.com/catppuccin/gitea/releases/download/v1.0.2/catppuccin-gitea.tar.gz";
-    hash = "sha256-rZHLORwLUfIFcB6K9yhrzr+UwdPNQVSadsw6rg8Q7gs=";
-    stripRoot = false;
+    sha256 = "sha256-rZHLORwLUfIFcB6K9yhrzr+UwdPNQVSadsw6rg8Q7gs=";
   };
   svcHttpPort = config.services.forgejo.settings.server.HTTP_PORT;
   assetsDir = "${config.services.forgejo.stateDir}/custom/public/assets";
