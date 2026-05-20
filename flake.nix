@@ -103,7 +103,10 @@
         ...
       }:
       {
-        imports = [ ];
+        imports = [
+          inputs.flake-parts.flakeModules.modules
+          inputs.nix-topology.flakeModule
+        ];
         flake = {
           lib = {
             mkSystem = mkSystem;
@@ -166,20 +169,6 @@
           # `home-manager switch --flake .#jml`
           # https://nix-community.github.io/home-manager/options.xhtml
           homeConfigurations = mkHomeConfigs homeUserProfiles;
-          formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
-          topology = {
-            ${system} = import nix-topology {
-              inherit pkgs;
-              modules = [
-                ./topology
-                {
-                  nixosConfigurations = nixpkgs.lib.filterAttrs (
-                    name: _: name != "installIso"
-                  ) self.nixosConfigurations;
-                }
-              ];
-            };
-          };
           templates = {
             secrets = {
               path = ./templates/nixos-secrets;
@@ -194,14 +183,22 @@
           "aarch64-darwin"
         ];
         perSystem =
-          { config, pkgs, ... }:
+          { config, pkgs, system, ... }:
           {
-            # Recommended: move all package definitions here.
-            # e.g. (assuming you have a nixpkgs input)
-            # packages.foo = pkgs.callPackage ./foo/package.nix {};
-            # packages.bar = pkgs.callPackage ./bar/package.nix {
-            #   foo = config.packages.foo;
-            # };
+            _module.args.pkgs = import inputs.nixpkgs {
+              inherit system;
+              overlays = [] ++
+                import ./overlays { inherit nixpkgs inputs; };
+            };
+            formatter = pkgs.nixfmt-tree;
+            topology.modules = [
+              ./topology
+              {
+                nixosConfigurations = nixpkgs.lib.filterAttrs (
+                  name: _: name != "installIso"
+                ) self.nixosConfigurations;
+              }
+            ];
           };
       }
     );
