@@ -1,7 +1,4 @@
-{
-  nixpkgs,
-  inputs ? null,
-}:
+{ nixpkgs, inputs }:
 let
   fixCmake =
     pkg:
@@ -51,13 +48,11 @@ let
       });
     };
   };
-  topologyOverlay =
-    if inputs == null || !inputs ? nix-topology then null else inputs.nix-topology.overlays.default;
 in
 (
   [
     cmake3Overlay
     libretroCmake3Overlay
+    inputs.nix-topology.overlays.default
   ]
-  ++ (nixpkgs.lib.optional (topologyOverlay != null) topologyOverlay)
 )

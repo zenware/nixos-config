@@ -4,7 +4,7 @@ let
 in
 {
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.overlays = (import (../../overlays) { inherit nixpkgs; });
+  nixpkgs.overlays = (import (../../overlays) { inherit nixpkgs inputs; });
   imports = [
     ../../modules/nixos/base.nix
     ../../modules/nixos/desktop
