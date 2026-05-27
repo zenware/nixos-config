@@ -87,6 +87,29 @@ umount mnt
 
 # Generate Service and Network Topology Diagrams
 nix build .#topology.x86_64-linux.config.output
+
+# Build a top-level system for validation
+nix build .#nixosConfigurations.${hostname}.config.system.build.toplevel
+```
+
+### Setup a macbook
+
+This is different from standard NixOS systems in that... it's literally not NixOS, and also
+becuase the Lix distribution is better in this scenario.
+
+Lix has a nicer install/uninstall cycle if you need that.
+```bash
+# https://lix.systems/install/#on-any-other-linuxmacos-system
+curl -sSf -L https://install.lix.systems/lix | sh -s -- install
+
+# https://git.lix.systems/lix-project/lix-installer#uninstalling
+/nix/lix-installer uninstall
+
+# First run of nix-darwin
+sudo -H nix run nix-darwin/master#darwin-rebuild -- switch --flake .#m5mbp
+
+# Subsequent runs of nix-darwin
+sudo -H darwin-rebuild switch --flake .#m5mbp
 ```
 
 ## Design Goals

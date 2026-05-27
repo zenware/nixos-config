@@ -6,6 +6,7 @@
   ...
 }:
 {
+  # TODO: Alter this so that it's better
   nixpkgs.config.allowUnfree = true;
   # The following line is needed if I start using hyprland Home Manager Module
   # NOTE: This file contains options that resolve under home-manager.users.<username>
@@ -50,8 +51,8 @@
     ]);
 
   programs = {
-    fish.enable = true;
     home-manager.enable = true;
+    fish.enable = true;
     bat.enable = true;
     fzf.enable = true;
     jq.enable = true;
@@ -64,10 +65,8 @@
 
     # Additions from Windows
     obsidian.enable = true;
-    obs-studio.enable = true;
     keepassxc.enable = true;
     wezterm.enable = true;
-    ghostty.enable = true;
     gpg.enable = true;
     # onedrive.enable = true;
     # thunderbird.enable = true;
@@ -85,6 +84,8 @@
       enableGitIntegration = true;
       enableJujutsuIntegration = true;
     };
+    obs-studio.enable = pkgs.stdenv.isLinux; # TODO: Issue on aarch64-darwin;
+    ghostty.enable = pkgs.stdenv.isLinux; # TODO: Issue on aarch64-darwin;
   };
 
   programs.starship = {
@@ -325,7 +326,7 @@
         go.enable = true;
         # zig.enable = true; # TODO: Add Zig packages?
 
-        ts.enable = true;
+        typescript.enable = true;
         #html.enable = true; # TODO: Add HTML packages?
         css.enable = true;
         sql.enable = true;
@@ -411,7 +412,7 @@
       # TODO: Get Obsidian Working.
       notes = {
         # obsidian.enable = true; # neovim fails to build with this enabled.
-        mind-nvim.enable = true;
+        # mind-nvim.enable = true; NOTE: mind.nvim is totally decommissioned
         todo-comments.enable = true;
       };
 
@@ -486,9 +487,13 @@
   # TODO: Manually import necessary modules.
   # home-manager.minimal = true;
 
+  # Is there any way of doing home-manager separately from nixosConfig/darwinConfig
+  # and yet still reference the contents of the nixosConfig to decide whether to enable
+  # noctalia-shell?
   # https://docs.noctalia.dev/getting-started/nixos/#config-ref
   programs.noctalia-shell = {
-    enable = true;
+    # Enable if linux
+    enable = pkgs.stdenv.isLinux;
     settings = {
       bar = {
         density = "compact";
@@ -569,7 +574,7 @@
 
   # TODO: A weird amount of work if I actually care to get Zed running.
   # https://wiki.nixos.org/wiki/Zed
-  targets.genericLinux.nixGL.vulkan.enable = true;
+  targets.genericLinux.nixGL.vulkan.enable = pkgs.stdenv.isLinux;
   programs.zed-editor = {
     enable = true;
     extensions = [

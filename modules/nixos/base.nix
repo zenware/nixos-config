@@ -137,6 +137,7 @@
     };
   };
 
+  # TODO: Make the priority compatible with building ISOs and servers.
   services.openssh.enable = lib.mkDefault false;
   # services.openssh = {
   #   enable = true;
