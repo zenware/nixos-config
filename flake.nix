@@ -43,6 +43,8 @@
     nix-topology.url = "github:oddlama/nix-topology";
     antigravity-nix.url = "github:jacopone/antigravity-nix";
     antigravity-nix.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin.url = "github:nix-darwin/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
 
@@ -64,47 +66,70 @@
       determinate,
       nix-topology,
       antigravity-nix,
+      nix-darwin,
       ...
     }:
     let
       zwLib = import ./lib {
-        inherit nixpkgs home-manager inputs;
+        inherit nixpkgs inputs;
       };
       mkSystem = zwLib.mkSystem;
-      mkHome = zwLib.mkHome;
-      mkHomeConfigs = zwLib.mkHomeConfigs;
+      mkHomeModules = zwLib.mkHomeModules;
 
       # NOTE: Currently these are exclusively user-profiles which use home-manager.
       # Their home-manager specific declarations are at ../users/${username}/home.nix
-      system = "x86_64-linux"; # TODO: Improve this from only static x86 to dynamic.
       homeUserProfiles = {
-        jml = mkHome {
-          inherit system; # inputs;
+        jml = {
           username = "jml";
-          extraModules = [
-            nvf.homeManagerModules.default
-            noctalia.homeModules.default
-            niri.homeModules.niri
-            # Minor kludge to avoid wiring the packages through to `users/*/home/*.nix`
-            { home.packages = [ antigravity-nix.packages.x86_64-linux.default ]; }
-          ];
+          extraModules =
+            { pkgs, lib, ... }:
+            [
+              nvf.homeManagerModules.default
+              noctalia.homeModules.default
+            ]
+            ++ lib.optionals pkgs.stdenv.isLinux [ niri.homeModules.niri ];
         };
       };
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = import ./overlays { inherit nixpkgs inputs; };
-      };
-    in
-    flake-parts.lib.mkFlake { inherit inputs; } (
-      top@{
-        config,
-        withSystem,
-        moduleWithSystem,
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
+      baseFlake = flake-parts.lib.mkFlake { inherit inputs; } (
+        top@{
         ...
       }:
+      let
+        mkProfileExtraModules =
+          profile:
+          { pkgs, system }:
+          if builtins.isFunction profile.extraModules then
+            profile.extraModules {
+              inherit pkgs system;
+              lib = nixpkgs.lib;
+            }
+          else
+            profile.extraModules or [ ];
+
+        mkPerSystemHomeConfigs =
+          system: pkgs:
+          nixpkgs.lib.mapAttrs
+            (_: profile:
+              home-manager.lib.homeManagerConfiguration {
+                inherit pkgs;
+                modules = mkHomeModules {
+                  username = profile.username;
+                  inherit pkgs;
+                  extraModules = mkProfileExtraModules profile { inherit pkgs system; };
+                };
+              }
+            )
+            homeUserProfiles;
+      in
       {
         imports = [
           inputs.flake-parts.flakeModules.modules
+          inputs.home-manager.flakeModules.home-manager
           inputs.nix-topology.flakeModule
         ];
         flake = {
@@ -168,7 +193,6 @@
           # For Debugging: `home-manager build --flake .` or `nix build .#homeConfigurations."jml".activationPackage`
           # `home-manager switch --flake .#jml`
           # https://nix-community.github.io/home-manager/options.xhtml
-          homeConfigurations = mkHomeConfigs homeUserProfiles;
           templates = {
             secrets = {
               path = ./templates/nixos-secrets;
@@ -177,20 +201,19 @@
           };
           defaultTemplate = self.templates.secrets;
         };
-        systems = [
-          "x86_64-linux"
-          "aarch64-linux"
-          "aarch64-darwin"
-        ];
+        inherit systems;
         perSystem =
           { config, pkgs, system, ... }:
-          {
-            _module.args.pkgs = import inputs.nixpkgs {
+          let
+            pkgsWithOverlays = import inputs.nixpkgs {
               inherit system;
-              overlays = [] ++
-                import ./overlays { inherit nixpkgs inputs; };
+              overlays = import ./overlays { inherit nixpkgs inputs; };
             };
-            formatter = pkgs.nixfmt-tree;
+          in
+          {
+            _module.args.pkgs = pkgsWithOverlays;
+            legacyPackages.homeConfigurations = mkPerSystemHomeConfigs system pkgsWithOverlays;
+            formatter = pkgsWithOverlays.nixfmt-tree;
             topology.modules = [
               ./topology
               {
@@ -201,5 +224,15 @@
             ];
           };
       }
-    );
+      );
+      homeConfigPackages = nixpkgs.lib.genAttrs systems (
+        system: {
+          homeConfigurations = baseFlake.legacyPackages.${system}.homeConfigurations;
+        }
+      );
+    in
+    baseFlake
+    // {
+      packages = nixpkgs.lib.recursiveUpdate (baseFlake.packages or { }) homeConfigPackages;
+    };
 }

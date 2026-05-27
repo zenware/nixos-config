@@ -1,17 +1,10 @@
 {
   nixpkgs,
-  home-manager,
   inputs,
   ...
 }:
 let
   allOverlays = import (../overlays) { inherit nixpkgs inputs; };
-  getPkgs =
-    system:
-    import nixpkgs {
-      inherit system;
-      overlays = allOverlays;
-    };
 in
 {
   mkSystem =
@@ -53,33 +46,17 @@ in
       // extraSpecialArgs;
     };
 
-  /**
-    This function returns an attribute set { module, config }.
-  */
-  mkHome =
+  mkHomeModules =
     {
       username,
-      system ? "x86_64-linux",
+      pkgs,
       extraModules ? [ ],
     }:
-    let
-      pkgs_with_overlays = getPkgs system;
-      moduleList = [
-        (import ../users/${username}/home {
-          inherit inputs username;
-          pkgs = pkgs_with_overlays;
-          lib = nixpkgs.lib;
-        })
-      ]
-      ++ extraModules;
-    in
-    {
-      module = moduleList;
-      config = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgs_with_overlays;
-        modules = moduleList;
-      };
-    };
-
-  mkHomeConfigs = userProfiles: nixpkgs.lib.mapAttrs (username: profile: profile.config) userProfiles;
+    [
+      (import ../users/${username}/home {
+        inherit inputs username pkgs;
+        lib = nixpkgs.lib;
+      })
+    ]
+    ++ extraModules;
 }

@@ -55,7 +55,7 @@ in
     hardware.xone.enable = true; # Xbox Controller Driver
     hardware.xpadneo.enable = true; # Xbox Controller Driver
     hardware.enableAllFirmware = true;
-    hardware.bluetooth = {
+    hardware.bluetooth = lib.mkIf config.zw.bluetooth.enable {
       enable = true;
       powerOnBoot = true;
       settings = {
