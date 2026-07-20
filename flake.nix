@@ -23,15 +23,8 @@
       #inputs.obsidian-nvim.follows = "obsidian-nvim";
     };
 
-    # quickshell = {
-    #   url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-      # inputs.quickshell.follows = "quickshell";
-    };
+    # NOTE: Explicitly not following nixpkgs to use the cache.
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
 
     niri = {
       url = "github:sodiboo/niri-flake";
@@ -47,7 +40,10 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
   # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
-
+  nixConfig = {
+    extra-substituters = [ "https://noctalia.cachix.org" ];
+    extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+  };
   outputs =
     inputs@{
       flake-parts,

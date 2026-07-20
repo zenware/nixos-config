@@ -85,10 +85,6 @@
       # Wallpaper managers
       awww
 
-      # Terminal Emulators
-      alacritty
-      wezterm
-
       # File manager
       # TODO: Switch back to nautilus/gnome files?
       thunar

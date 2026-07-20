@@ -12,6 +12,8 @@
   # NOTE: This file contains options that resolve under home-manager.users.<username>
   imports = [
     ./browsers.nix
+    ./noctalia.nix
+    ./email.nix
   ];
 
   home = {
@@ -66,7 +68,7 @@
     # Additions from Windows
     obsidian.enable = true;
     keepassxc.enable = true;
-    wezterm.enable = true;
+    #wezterm.enable = true;
     gpg.enable = true;
     # onedrive.enable = true;
     # thunderbird.enable = true;
@@ -78,7 +80,7 @@
 
     difftastic.enable = true;
     difftastic.git.enable = true;
-    difftastic.git.diffToolMode = true;
+    difftastic.git.mode = "both";
     mergiraf = {
       enable = true;
       enableGitIntegration = true;
@@ -465,7 +467,7 @@
     };
   };
 
-  programs.gemini-cli.enable = true;
+  programs.antigravity-cli.enable = true;
 
   programs.vscode = {
     enable = true;
@@ -486,91 +488,6 @@
   # services.home-manager.autoUpgrade.flakeDir = <here-ish>;
   # TODO: Manually import necessary modules.
   # home-manager.minimal = true;
-
-  # Is there any way of doing home-manager separately from nixosConfig/darwinConfig
-  # and yet still reference the contents of the nixosConfig to decide whether to enable
-  # noctalia-shell?
-  # https://docs.noctalia.dev/getting-started/nixos/#config-ref
-  programs.noctalia-shell = {
-    # Enable if linux
-    enable = pkgs.stdenv.isLinux;
-    settings = {
-      bar = {
-        density = "compact";
-        position = "right";
-        showCapsule = false;
-        widgets = {
-          left = [
-            {
-              id = "SidePanelToggle";
-              useDistroLogo = true;
-            }
-            { id = "WiFi"; }
-            { id = "Bluetooth"; }
-          ];
-          center = [
-            {
-              id = "Workspace";
-              hideUnoccupied = false;
-              labelMode = "none";
-            }
-          ];
-          right = [
-            {
-              id = "Battery";
-              alwaysShowPercentage = false;
-              warningThreshold = 30;
-            }
-            {
-              id = "Clock";
-              formatHorizontal = "HH:mm";
-              formatVertical = "HH mm";
-              useMonospacedFont = true;
-              usePrimaryColor = true;
-            }
-          ];
-        };
-      };
-      colorSchemes.predefinedScheme = "Monochrome";
-      general = {
-        avatarImage = "/home/jml/.face";
-        radiusRatio = 0.5;
-      };
-      ui = {
-        fontDefault = "Noto Sans";
-        fontFixed = "Noto Sans Mono";
-      };
-      location = {
-        name = "Madison, Wisconsin";
-        useFahrenheit = true;
-        monthBeforeDay = true;
-      };
-      # wallpaper = {};
-      appLauncher = {
-        # TODO: Select a different terminal (Ghostty)
-        terminalCommand = "xterm -e";
-      };
-    };
-  };
-
-  # NOTE: Manually linking a niri config because my kludges have borked the
-  # ability to conveniently use the niri-flake.
-  home.file.".config/niri/config.kdl".source = ./niri/config.kdl;
-  # programs.niri = {
-  #   settings = {
-  #     spawn-at-startup = [
-  #       {
-  #         command = [ "noctalia-shell" ];
-  #       }
-  #     ];
-  #     # binds = with config.lib.niri.actions; {
-  #     binds = with lib.niri.actions; {
-  #       "Mod+Space".action.spawn = [
-  #         "noctalia-shell" "ipc" "call" "launcher" "toggle"
-  #       ];
-  #     };
-  #   };
-  # };
 
   # TODO: A weird amount of work if I actually care to get Zed running.
   # https://wiki.nixos.org/wiki/Zed
