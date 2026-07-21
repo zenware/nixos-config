@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [
     ./boot.nix
@@ -17,6 +17,18 @@
     )
     ./hardware-configuration.nix
     ./configuration.nix
+  ];
+
+  #nixpkgs.config.allowUnfree = true;
+  #nixpkgs.config.android_sdk.accept_license = true;
+  environment.systemPackages = with pkgs; [
+    godot
+    # android-studio
+    # android-tools
+    # androidenv.androidPkgs.androidsdk
+    # androidenv.androidPkgs.emulator
+    # androidenv.androidPkgs.ndk-bundle
+    # jdk # Java
   ];
 
   zw.desktop.enable = true;
