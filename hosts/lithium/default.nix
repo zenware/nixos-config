@@ -2,7 +2,6 @@
 {
   imports = [
     ./boot.nix
-    ../../modules/nixos/base.nix
     ./hardware.nix
     ./configuration.nix
     ./services/caddy.nix

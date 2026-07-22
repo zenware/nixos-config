@@ -6,10 +6,6 @@ in
   nixpkgs.config.allowUnfree = true;
   nixpkgs.overlays = (import (../../overlays) { inherit nixpkgs inputs; });
   imports = [
-    ../../modules/nixos/base.nix
-    ../../modules/nixos/desktop
-    ../../modules/nixos/gaming.nix
-    ../../modules/nixos/bluetooth.nix
     inputs.nixos-hardware.nixosModules.asus-rog-strix-x570e
     ./hardware.nix
     ./configuration.nix
@@ -18,11 +14,9 @@ in
     ./secure-boot.nix
     inputs.disko.nixosModules.disko
     ./disko.nix
-    ../../modules/nixos/game-emulation.nix
     #./meetings.nix
     #./llm-agents.nix
     ./kindle.nix # TODO: Get the kindle plugin working.
-    ../../modules/nixos/calibre.nix
   ];
 
   zw.gaming.enable = true;

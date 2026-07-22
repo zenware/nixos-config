@@ -47,9 +47,9 @@
   outputs =
     inputs@{ flake-parts, nixpkgs, ... }:
     let
-      # NOTE: Every *.nix file under ./modules/flake is a flake-parts module,
+      # NOTE: Every *.nix file under ./modules is a flake-parts module,
       # auto-imported by import-tree. Paths with a `_` component are skipped.
-      baseFlake = flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules/flake);
+      baseFlake = flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
       # NOTE: homeConfigurations are exposed under packages so that
       # `home-manager switch --flake .#jml` keeps working per-system.
       homeConfigPackages = nixpkgs.lib.genAttrs (builtins.attrNames baseFlake.legacyPackages) (system: {
