@@ -5,7 +5,7 @@
   ...
 }:
 let
-  homelabDomain = config.networking.domain;
+  homelabDomain = config.zw.homelab.domain;
   svcDomain = "git.${homelabDomain}";
   theme = builtins.fetchTarball {
     url = "https://github.com/catppuccin/gitea/releases/download/v1.0.2/catppuccin-gitea.tar.gz";

@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  svcDomain = "status.${config.networking.domain}";
+  svcDomain = "status.${config.zw.homelab.domain}";
   svcPort = config.services.uptime-kuma.settings.PORT;
 in
 {

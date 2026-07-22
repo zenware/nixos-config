@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  svcDomain = "tv.${config.networking.domain}";
+  svcDomain = "tv.${config.zw.homelab.domain}";
 in
 {
   services.caddy.virtualHosts."${svcDomain}".extraConfig = ''

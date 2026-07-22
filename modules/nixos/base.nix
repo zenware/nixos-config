@@ -32,8 +32,8 @@
     ];
   };
 
-  # https://datatracker.ietf.org/doc/html/rfc8375
-  networking.domain = lib.mkDefault "home.arpa";
+  # NOTE: networking.domain defaults to zw.homelab.domain,
+  # declared in modules/flake/homelab.nix.
 
   # TODO: Consider enabling automatic-timezoned on laptops that move between TZs
   time.timeZone = lib.mkDefault "America/Chicago";

@@ -29,7 +29,10 @@
           ];
           extraModules = [
             sops-nix.nixosModules.sops
-            { networking.domain = nixpkgs.lib.mkForce "example.com"; }
+            # NOTE: zw.homelab.domain is declared in nixos-config
+            # (modules/flake/homelab.nix); set your real domain here to keep
+            # it out of the public configuration.
+            { zw.homelab.domain = "example.com"; }
             ./modules/nixos/private-config
           ];
         };

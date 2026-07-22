@@ -6,7 +6,7 @@
   ...
 }:
 let
-  certDir = config.security.acme.certs."${config.networking.domain}".directory;
+  certDir = config.security.acme.certs."${config.zw.homelab.domain}".directory;
 in
 {
   services.nginx.enable = lib.mkForce false;
@@ -33,7 +33,7 @@ in
       dynamic_dns {
         provider cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
         domains {
-          ${config.networking.domain} @
+          ${config.zw.homelab.domain} @
         }
         dynamic_domains
       }
