@@ -1,3 +1,7 @@
+# NOTE: Parked (underscore-prefixed = not imported by import-tree).
+# `programs.waybar.settings` is a home-manager option, not a NixOS one — this
+# was never imported and would not evaluate as a NixOS module. Keep it around
+# to migrate into home-manager config later.
 { pkgs, ... }:
 {
   programs.waybar = {

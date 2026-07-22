@@ -1,11 +1,11 @@
 { inputs, pkgs, ... }:
 {
+  # NOTE: Only host-specific concerns (hardware, boot, quirks) are imported
+  # here. Shared roles (base, desktop, bluetooth, laptop, ...) are
+  # auto-imported on every host from modules/roles/ and toggled via the
+  # zw.* options below.
   imports = [
     ./boot.nix
-    ../../modules/nixos/base.nix
-    ../../modules/nixos/desktop
-    ../../modules/nixos/bluetooth.nix
-    ../../modules/nixos/laptop.nix
     # https://github.com/NixOS/nixos-hardware/blob/master/README.md#using-nix-flakes-support
     inputs.nixos-hardware.nixosModules.gpd-pocket-3
     # override from nixos-hardware

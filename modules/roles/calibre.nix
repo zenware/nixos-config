@@ -1,0 +1,27 @@
+{
+  flake.modules.nixos.calibre =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    {
+      options = {
+        zw.calibre = {
+          enable = lib.mkEnableOption "Enable Calibre";
+        };
+      };
+
+      config = lib.mkIf config.zw.calibre.enable {
+        # NOTE: Without unrar support we can't open ".cbr" files.
+        environment.systemPackages = with pkgs; [
+          calibre
+        ];
+
+        services.udisks2.enable = true; # Required for eReader Support
+      };
+      # NOTE: Consider adding https://github.com/nydragon/calibre-plugins
+      # especially for DeDRM
+    };
+}
