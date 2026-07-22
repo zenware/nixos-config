@@ -95,7 +95,7 @@ in
 
   services.kanidm = {
     # NOTE: This upgrade probably bones everything, but it's all boned anyway.
-    package = pkgs.kanidmWithSecretProvisioning_1_8;
+    package = pkgs.kanidmWithSecretProvisioning_1_10;
     server.enable = true;
     server.settings = {
       # NOTE: Required to start the server: https://kanidm.github.io/kanidm/stable/server_configuration.html
