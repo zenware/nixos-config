@@ -6,7 +6,7 @@
   ...
 }:
 let
-  svcDomain = "photos.${config.networking.domain}";
+  svcDomain = "photos.${config.zw.homelab.domain}";
   immichMediaDir = "/tank/shares/immich-media";
   svcPort = config.services.immich.port;
   # https://docs.immich.app/install/config-file/

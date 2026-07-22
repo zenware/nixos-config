@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  homelabDomain = config.networking.domain;
+  homelabDomain = config.zw.homelab.domain;
   svcDomain = "feeds.${homelabDomain}";
   svcPort = "8081"; # Prevent a Conflict
 in

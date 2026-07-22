@@ -5,7 +5,7 @@
   ...
 }:
 let
-  svcDomain = "grafana.${config.networking.domain}";
+  svcDomain = "grafana.${config.zw.homelab.domain}";
   svcPort = config.services.grafana.settings.server.http_port;
 in
 {

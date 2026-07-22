@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  homelabDomain = config.networking.domain;
+  homelabDomain = config.zw.homelab.domain;
   certDir = config.security.acme.certs."${homelabDomain}".directory;
 in
 {

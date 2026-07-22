@@ -6,7 +6,7 @@
   ...
 }:
 let
-  svcDomain = "id.${config.networking.domain}";
+  svcDomain = "id.${config.zw.homelab.domain}";
   kanidmCertDir = "/var/lib/kanidm/certs";
   caddyCertStore = "${config.services.caddy.dataDir}/.local/share/caddy/certificates/acme-v02.api.letsencrypt.org-directory/${svcDomain}";
   #kcertloc = "${caddyCertsStore}/${svcDomain}/";

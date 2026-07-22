@@ -7,8 +7,8 @@
 {
   #sops.defaultSopsFile = ./secrets/common.yaml;
   networking.hostName = "lithium";
-  # NOTE: networking.domain should likely be overridden in `nixos-secrets` for this host.
-  # networking.domain = lib.mkForce config.vars.domain;
+  # NOTE: zw.homelab.domain (see modules/flake/homelab.nix) is set to the
+  # real domain in `nixos-secrets`; here it stays on the home.arpa default.
   environment.systemPackages = with pkgs; [
     zfs
   ];

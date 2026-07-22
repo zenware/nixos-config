@@ -1,6 +1,7 @@
 {
   nixpkgs,
   inputs,
+  sharedModules ? [ ],
   ...
 }:
 let
@@ -37,6 +38,7 @@ in
       modules = [
         hostModule
       ]
+      ++ sharedModules
       ++ userModules
       ++ extraModules
       ++ (if inputs ? nix-topology then [ inputs.nix-topology.nixosModules.default ] else [ ]);
