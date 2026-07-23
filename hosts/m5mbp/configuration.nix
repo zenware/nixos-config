@@ -6,6 +6,9 @@
   nixpkgs.config.allowUnfree = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # NOTE: Matches zw.base (modules/roles/base.nix); m5mbp bypasses mkSystem's
+  # sharedModules seam, so it doesn't get the role and must set this itself.
+  nix.settings.accept-flake-config = true;
   # Bitwarden, Signal, Raycast? Terminal
   # Zed, Ripgrep
   environment.systemPackages = [

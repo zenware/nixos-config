@@ -33,6 +33,11 @@
             "flakes"
           ];
 
+          # NOTE: Trusted users are otherwise prompted (y/N) for every
+          # nixConfig setting a flake declares (e.g. the cachix substituters
+          # below), which hangs non-interactive invocations.
+          accept-flake-config = true;
+
           substituters = [
             "https://cache.nixos.org"
             "https://cache.nixos-cuda.org"
