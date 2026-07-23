@@ -114,13 +114,13 @@ in
       #trust_x_forwarded_for = true;
     };
 
-    enableClient = true;
-    clientSettings.uri = config.services.kanidm.serverSettings.origin;
+    client.enable = true;
+    client.settings.uri = config.services.kanidm.server.settings.origin;
 
     # NOTE: POSIX accounts bound to LDAP assume 'anonymous' permissions.
     # https://kanidm.github.io/kanidm/stable/integrations/pam_and_nsswitch.html
-    enablePam = true;
-    unixSettings = {
+    unix.enable = true;
+    unix.settings = {
       kanidm.pam_allowed_login_groups = [
         "unix.admins"
       ];
