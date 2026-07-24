@@ -36,6 +36,7 @@ in
     nixpkgs.lib.nixosSystem {
       inherit system;
       modules = [
+        { nixpkgs.overlays = allOverlays; }
         hostModule
       ]
       ++ sharedModules

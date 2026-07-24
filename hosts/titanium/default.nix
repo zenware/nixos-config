@@ -1,10 +1,6 @@
 { inputs, pkgs, ... }:
-let
-  nixpkgs = inputs.nixpkgs;
-in
 {
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.overlays = (import (../../overlays) { inherit nixpkgs inputs; });
   imports = [
     inputs.nixos-hardware.nixosModules.asus-rog-strix-x570e
     ./hardware.nix
