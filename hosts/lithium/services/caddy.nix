@@ -29,7 +29,11 @@ in
     # NOTE: DNS provider settings
     # https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148
     globalConfig = ''
-      # acme_dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
+      # NOTE: DNS-01 for every managed cert. Issuance no longer depends on
+      # inbound 80/443 reachability (HTTP-01/TLS-ALPN-01 broke when LE
+      # couldn't connect in), and pairs with the wildcard vhost below so only
+      # `*.${config.zw.homelab.domain}` ever appears in CT logs.
+      acme_dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
       dynamic_dns {
         provider cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
         domains {
@@ -39,6 +43,16 @@ in
       }
     '';
   };
+
+  # NOTE: Single wildcard site; each service module appends a `handle` block
+  # guarded by a host matcher (extraConfig is `lines`, so definitions merge).
+  # The matcher-less handle is the fallback for unmatched subdomains; Caddy
+  # evaluates handle blocks in order, so mkAfter keeps it textually last.
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkAfter ''
+    handle {
+      abort
+    }
+  '';
   networking.firewall.allowedTCPPorts = [
     80
     443

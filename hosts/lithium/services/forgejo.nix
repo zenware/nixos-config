@@ -33,8 +33,11 @@ in
   #sopsFile = ../secrets/forgejo.yaml;
   #};
 
-  services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
-    reverse_proxy :${toString svcHttpPort}
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
+    @git host ${svcDomain}
+    handle @git {
+      reverse_proxy :${toString svcHttpPort}
+    }
   '';
 
   services.forgejo = {

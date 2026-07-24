@@ -4,8 +4,11 @@ let
   svcPort = config.services.uptime-kuma.settings.PORT;
 in
 {
-  services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
-    reverse_proxy :${svcPort}
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
+    @status host ${svcDomain}
+    handle @status {
+      reverse_proxy :${svcPort}
+    }
   '';
   # NOTE: Currently requires some web-interface configuration
   # User must set up an admin account, monitors, and status pages manually.

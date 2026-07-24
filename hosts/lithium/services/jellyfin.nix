@@ -3,8 +3,11 @@ let
   svcDomain = "tv.${config.zw.homelab.domain}";
 in
 {
-  services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
-    reverse_proxy :8096
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
+    @tv host ${svcDomain}
+    handle @tv {
+      reverse_proxy :8096
+    }
   '';
   services.jellyfin = {
     enable = true;

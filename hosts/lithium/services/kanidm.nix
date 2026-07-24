@@ -8,13 +8,15 @@
 let
   svcDomain = "id.${config.zw.homelab.domain}";
   kanidmCertDir = "/var/lib/kanidm/certs";
-  caddyCertStore = "${config.services.caddy.dataDir}/.local/share/caddy/certificates/acme-v02.api.letsencrypt.org-directory/${svcDomain}";
+  # NOTE: Caddy stores the wildcard cert under `wildcard_.<domain>`.
+  wildcardCertName = "wildcard_.${config.zw.homelab.domain}";
+  caddyCertStore = "${config.services.caddy.dataDir}/.local/share/caddy/certificates/acme-v02.api.letsencrypt.org-directory/${wildcardCertName}";
   #kcertloc = "${caddyCertsStore}/${svcDomain}/";
   certRenewalScript = pkgs.writeShellScript "copy-kanidm-cert-hook" ''
     set -Eeuo pipefail
     mkdir -p ${kanidmCertDir}
-    cp ${caddyCertStore}/${svcDomain}.crt ${kanidmCertDir}/cert.pem
-    cp ${caddyCertStore}/${svcDomain}.key ${kanidmCertDir}/key.pem
+    cp ${caddyCertStore}/${wildcardCertName}.crt ${kanidmCertDir}/cert.pem
+    cp ${caddyCertStore}/${wildcardCertName}.key ${kanidmCertDir}/key.pem
 
     chown kanidm:kanidm ${kanidmCertDir}/*.pem
 
@@ -37,12 +39,15 @@ in
   # https://github.com/marcusramberg/nix-config/blob/e558914dd3705150511c5ef76278fc50bb4604f3/nixos/kanidm.nix#L3
 
   # TODO: If possible, consider specifying the cert location here instead of the following kludge.
-  services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
-    reverse_proxy :8443 {
-      header_up Host {host}
-      header_up X-Real-IP {http.request.header.CF-Connecting-IP}
-      transport http {
-        tls_server_name ${svcDomain}
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
+    @id host ${svcDomain}
+    handle @id {
+      reverse_proxy :8443 {
+        header_up Host {host}
+        header_up X-Real-IP {http.request.header.CF-Connecting-IP}
+        transport http {
+          tls_server_name ${svcDomain}
+        }
       }
     }
   '';
