@@ -7,6 +7,17 @@ let
         (nixpkgs.lib.cmakeFeature "CMAKE_POLICY_VERSION_MINIMUM" "3.10")
       ];
     });
+  cheetah3Overlay = final: prev: {
+    pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+      (_pythonFinal: pythonPrev: {
+        cheetah3 = pythonPrev.cheetah3.overrideAttrs {
+          # The upstream distribution is named "ct3"; "cheetah3" is only
+          # the Nix package attribute and repository name.
+          pname = "ct3";
+        };
+      })
+    ];
+  };
   cmake3Overlay =
     final: prev:
     nixpkgs.lib.mapAttrs
@@ -49,10 +60,9 @@ let
     };
   };
 in
-(
-  [
-    cmake3Overlay
-    libretroCmake3Overlay
-    inputs.nix-topology.overlays.default
-  ]
-)
+([
+  cheetah3Overlay
+  cmake3Overlay
+  libretroCmake3Overlay
+  inputs.nix-topology.overlays.default
+])
