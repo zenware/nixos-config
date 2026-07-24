@@ -19,7 +19,8 @@ in
   services.grafana = {
     enable = true;
     settings = {
-      security.secret_key = "SW2YcwTIb9zpOOhoPsMm"; # TODO: REPLACE KEY
+      # NOTE: security.secret_key is supplied via sops in nixos-secrets
+      # (grafana/secret_key); the nixpkgs default here is overridden there.
       server = {
         http_addr = "127.0.0.1";
         http_port = 3001;
