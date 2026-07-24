@@ -9,8 +9,11 @@ let
   svcPort = config.services.grafana.settings.server.http_port;
 in
 {
-  services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
-    reverse_proxy :${toString svcPort}
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
+    @grafana host ${svcDomain}
+    handle @grafana {
+      reverse_proxy :${toString svcPort}
+    }
   '';
 
   services.grafana = {

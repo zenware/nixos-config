@@ -5,8 +5,11 @@ let
   svcPort = "8081"; # Prevent a Conflict
 in
 {
-  services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
-    reverse_proxy :${svcPort}
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
+    @feeds host ${svcDomain}
+    handle @feeds {
+      reverse_proxy :${svcPort}
+    }
   '';
   # NOTE: Ensure the user exists ahead of trying to give secret permissions to that user.
   users.users.miniflux = {

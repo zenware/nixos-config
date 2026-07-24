@@ -21,8 +21,11 @@ in
   users.users.calibre-web.extraGroups = [ "media" ];
   users.groups.media = { };
 
-  services.caddy.virtualHosts."${svcDomain}".extraConfig = ''
-    reverse_proxy localhost:8883
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
+    @books host ${svcDomain}
+    handle @books {
+      reverse_proxy localhost:8883
+    }
   '';
 
   # reverse_proxy :${toString svcHttpPort}
