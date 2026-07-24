@@ -19,6 +19,15 @@
       };
 
       config = lib.mkIf config.zw.base.enable {
+        # NOTE: Userborn manages users/groups as a systemd unit instead of the
+        # `users` activation script. This moves us onto the systemd-based
+        # activation path ahead of NixOS deprecating activation scripts
+        # (restart/reload from activation is removed in 26.11; see
+        # https://github.com/NixOS/nixpkgs/issues/475305), and lets sops-nix
+        # install secrets via its systemd unit rather than the activation
+        # script.
+        services.userborn.enable = lib.mkDefault true;
+
         nixpkgs.config.allowUnfree = true;
         # TODO: Consider adding a randomized delay.
         nix.gc = {
