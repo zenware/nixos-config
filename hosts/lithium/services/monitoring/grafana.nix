@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -21,6 +22,7 @@ in
     settings = {
       # NOTE: security.secret_key is supplied via sops in nixos-secrets
       # (grafana/secret_key); the nixpkgs default here is overridden there.
+      security.secret_key = lib.mkDefault "SW2YcwTIb9zpOOhoPsMm";
       server = {
         http_addr = "127.0.0.1";
         http_port = 3001;
