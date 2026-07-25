@@ -16,11 +16,15 @@ in
     enable = true;
     package = pkgs.caddy.withPlugins {
       # NOTE: Occasionally specify @latest and update the new versions, and the result hash.
+      # Realistically, some sort of automation should be setup for this.
       plugins = [
-        "github.com/mholt/caddy-dynamicdns@v0.0.0-20250430031602-b846b9e8fb83"
-        "github.com/caddy-dns/cloudflare@v0.2.1"
+        # NOTE: v0.2.4+ required for new-format Cloudflare `cfat_`/`cfut_`
+        # API tokens (caddy-dns/cloudflare#123); older versions reject them
+        # with "API token appears invalid".
+        "github.com/mholt/caddy-dynamicdns@v0.0.0-20260711161133-a5890c9df68c"
+        "github.com/caddy-dns/cloudflare@v0.2.4"
       ];
-      hash = "sha256-ItRva/R6RijYzVBKmc+9e2pzXhAWsM9YxQIVswkgZgU=";
+      hash = "sha256-eRgpncvTIPwzxEKk5E3sBvA2zp9EULkI5GvbmGGaExA="; # lib.fakeHash;
     };
     # NOTE: Use Staging CA while testing, check `systemctl status caddy`
     # to see if everything is working.
