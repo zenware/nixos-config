@@ -15,6 +15,7 @@
     ./services/calibre-web.nix
     ./services/immich.nix
     ./services/monitoring/grafana.nix
+    ./services/palworld.nix
   ];
 
   zw.llm-agents.enable = true;
