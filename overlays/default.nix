@@ -64,5 +64,6 @@ in
   cheetah3Overlay
   cmake3Overlay
   libretroCmake3Overlay
+  inputs.flux.overlays.default
   inputs.nix-topology.overlays.default
 ])
