@@ -11,7 +11,6 @@
     inputs.disko.nixosModules.disko
     ./disko.nix
     #./meetings.nix
-    #./llm-agents.nix
     ./kindle.nix # TODO: Get the kindle plugin working.
   ];
 
@@ -20,6 +19,7 @@
   zw.desktop.enable = true;
   zw.calibre.enable = true;
   zw.bluetooth.enable = true;
+  zw.llm-agents.enable = true;
 
   # Added uv/uvx so I could use github/spec-kit, global specify CLI might be better.
   environment.systemPackages = [
