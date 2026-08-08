@@ -22,6 +22,16 @@
 
         environment.systemPackages = with inputs.llm-agents.packages.${pkgs.system}; [
           gemini-cli
+          copilot-cli
+          goose-cli
+          opencode
+          nanocoder
+          crush
+          jules
+          pi
+          vix
+          hermes-agent
+          spec-kit
         ];
       };
     };
