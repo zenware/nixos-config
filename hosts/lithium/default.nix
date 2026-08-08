@@ -16,4 +16,6 @@
     ./services/immich.nix
     ./services/monitoring/grafana.nix
   ];
+
+  zw.llm-agents.enable = true;
 }
