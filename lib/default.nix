@@ -2,12 +2,22 @@
   nixpkgs,
   inputs,
   sharedModules ? [ ],
+  sharedHomeModules ? { },
   ...
 }:
 let
   allOverlays = import (../overlays) { inherit nixpkgs inputs; };
+  mkPkgs =
+    system:
+    import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+      overlays = allOverlays;
+    };
 in
 {
+  inherit mkPkgs;
+
   mkSystem =
     {
       hostname,
@@ -17,26 +27,18 @@ in
       extraSpecialArgs ? { },
     }:
     let
-      pkgs_with_overlays = import nixpkgs {
-        inherit system;
-        overlays = allOverlays;
-      };
+      pkgs_with_overlays = mkPkgs system;
       hostModule = import ../hosts/${hostname} {
         inherit inputs;
         pkgs = pkgs_with_overlays;
       };
-      userModules = map (
-        name:
-        import ../users/${name} {
-          pkgs = pkgs_with_overlays;
-          lib = nixpkgs.lib;
-        }
-      ) users;
+      userModules = map (name: import ../users/${name}) users;
     in
     nixpkgs.lib.nixosSystem {
       inherit system;
       modules = [
         { nixpkgs.overlays = allOverlays; }
+        inputs.home-manager.nixosModules.home-manager
         hostModule
       ]
       ++ sharedModules
@@ -45,21 +47,8 @@ in
       ++ (if inputs ? nix-topology then [ inputs.nix-topology.nixosModules.default ] else [ ]);
       specialArgs = {
         inherit inputs hostname;
+        homeManagerModules = sharedHomeModules;
       }
       // extraSpecialArgs;
     };
-
-  mkHomeModules =
-    {
-      username,
-      pkgs,
-      extraModules ? [ ],
-    }:
-    [
-      (import ../users/${username}/home {
-        inherit inputs username pkgs;
-        lib = nixpkgs.lib;
-      })
-    ]
-    ++ extraModules;
 }

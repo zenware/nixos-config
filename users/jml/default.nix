@@ -1,14 +1,37 @@
-{ pkgs, lib, ... }:
+{
+  config,
+  inputs,
+  options,
+  pkgs,
+  lib,
+  homeManagerModules,
+  ...
+}:
+let
+  isDesktop = lib.attrByPath [ "zw" "desktop" "enable" ] pkgs.stdenv.isDarwin config;
+in
 {
   # NOTE: Some software should follow my user, rather than being deployed to a specific system.
   # not sure I've actually worked out where that delineation is best made yet.
   environment.systemPackages = [
     pkgs.home-manager
-    #pkgs.telegram-desktop
-    pkgs.libsecret # Used for secrets daemon /w keepassxc
-    pkgs.brave # TODO: Probably remove this... why is it required that chromium browsers are installed at System Level?
-    #pkgs.signal-desktop
   ];
+
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    extraSpecialArgs = {
+      inherit inputs;
+      username = "jml";
+    };
+    users.jml.imports = [
+      homeManagerModules.jml
+    ]
+    ++ lib.optional isDesktop homeManagerModules.jml-desktop
+    ++ lib.optional (isDesktop && pkgs.stdenv.isLinux) homeManagerModules.jml-linux-desktop
+    ++ lib.optional (isDesktop && lib.hasAttrByPath [ "stylix" "enable" ] options) inputs.stylix.homeModules.stylix;
+  };
+
   nix.settings.trusted-users = lib.mkAfter [ "jml" ];
   users.users.jml = {
     shell =

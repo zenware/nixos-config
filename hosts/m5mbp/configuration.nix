@@ -1,6 +1,7 @@
 { pkgs, lib, inputs, ... }:
 {
   imports = [
+    inputs.home-manager.darwinModules.home-manager
     ../../users/jml
   ];
   nixpkgs.config.allowUnfree = true;

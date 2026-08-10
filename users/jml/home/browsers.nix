@@ -1,6 +1,6 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
-  programs.nyxt.enable = true;
+  programs.nyxt.enable = pkgs.stdenv.isLinux;
   programs.firefox = {
     configPath = "${config.xdg.configHome}/mozilla/firefox";
     enable = true;

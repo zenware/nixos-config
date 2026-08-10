@@ -14,6 +14,7 @@ in
       extraModules = [
         #(import ../../overlays)
         inputs.stylix.nixosModules.stylix
+        { stylix.homeManagerIntegration.autoImport = false; }
         inputs.niri.nixosModules.niri
         inputs.determinate.nixosModules.default
         inputs.microvm.nixosModules.host
@@ -34,6 +35,7 @@ in
       users = [ "jml" ];
       extraModules = [
         inputs.stylix.nixosModules.stylix
+        { stylix.homeManagerIntegration.autoImport = false; }
         inputs.niri.nixosModules.niri
       ];
     };
@@ -57,7 +59,10 @@ in
   flake.darwinConfigurations = {
     m5mbp = inputs.nix-darwin.lib.darwinSystem {
       modules = [ ../../hosts/m5mbp/configuration.nix ];
-      specialArgs = { inherit inputs; };
+      specialArgs = {
+        inherit inputs;
+        homeManagerModules = config.flake.modules.homeManager;
+      };
     };
   };
 }

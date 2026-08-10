@@ -7,6 +7,7 @@ let
     # imported into every mkSystem host (public and nixos-secrets alike),
     # so hosts opt in/out via the options those modules declare.
     sharedModules = builtins.attrValues config.flake.modules.nixos;
+    sharedHomeModules = config.flake.modules.homeManager;
   };
 in
 {
