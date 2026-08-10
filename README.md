@@ -92,6 +92,23 @@ nix build .#topology.x86_64-linux.config.output
 nix build .#nixosConfigurations.${hostname}.config.system.build.toplevel
 ```
 
+### Home Manager
+
+NixOS and nix-darwin hosts include Home Manager in their system
+configurations. On those machines, applying the system configuration also
+applies the matching home configuration.
+
+Standalone targets remain available for systems where NixOS or nix-darwin is
+not managed by this flake, such as corporate-managed machines and WSL:
+
+```bash
+home-manager switch --flake .#jml@lithium
+home-manager switch --flake .#jml@titanium
+```
+
+Do not use a standalone target and an integrated Home Manager configuration as
+independent owners of the same home directory.
+
 ### Setup a macbook
 
 This is different from standard NixOS systems in that... it's literally not NixOS, and also

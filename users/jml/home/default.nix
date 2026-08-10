@@ -1,19 +1,18 @@
 {
-  username,
+  config,
+  username ? "jml",
   pkgs,
   lib,
-  inputs,
   ...
 }:
+let
+  desktop = config.zw.home.desktop.enable;
+in
 {
-  # TODO: Alter this so that it's better
-  nixpkgs.config.allowUnfree = true;
-  # The following line is needed if I start using hyprland Home Manager Module
-  # NOTE: This file contains options that resolve under home-manager.users.<username>
+  # NOTE: This file contains options that resolve under home-manager.users.<username>.
   imports = [
-    ./browsers.nix
-    ./noctalia.nix
-    ./email.nix
+    ./options.nix
+    ./email-linux.nix
   ];
 
   home = {
@@ -62,12 +61,12 @@
     zellij.enable = true;
 
     # Matrix Chat Apps
-    element-desktop.enable = true;
+    element-desktop.enable = desktop;
     #nheko.settings = true;
 
     # Additions from Windows
-    obsidian.enable = true;
-    keepassxc.enable = true;
+    obsidian.enable = desktop;
+    keepassxc.enable = desktop;
     #wezterm.enable = true;
     gpg.enable = true;
     # onedrive.enable = true;
@@ -86,8 +85,8 @@
       enableGitIntegration = true;
       enableJujutsuIntegration = true;
     };
-    obs-studio.enable = pkgs.stdenv.isLinux; # TODO: Issue on aarch64-darwin;
-    ghostty.enable = pkgs.stdenv.isLinux; # TODO: Issue on aarch64-darwin;
+    obs-studio.enable = desktop && pkgs.stdenv.isLinux; # TODO: Issue on aarch64-darwin;
+    ghostty.enable = desktop && pkgs.stdenv.isLinux; # TODO: Issue on aarch64-darwin;
   };
 
   programs.starship = {
@@ -349,13 +348,13 @@
         lualine = {
           # Fancy Status Line
           enable = true;
-          theme = "catppuccin";
+          theme = lib.mkForce "catppuccin";
         };
       };
 
       theme = {
         enable = true;
-        name = "catppuccin";
+        name = lib.mkForce "catppuccin";
         style = "mocha";
         transparent = false;
       };
@@ -470,15 +469,17 @@
   programs.antigravity-cli.enable = true;
 
   programs.vscode = {
-    enable = true;
+    enable = desktop;
     mutableExtensionsDir = true; # mutually exclusive to programs.vscode.profiles
     # profiles.default.userSettings = {
     #   "[nix]"."editor.tabSize" = 2;
     # };
   };
-  home.file.".vscode/argv.json".text = builtins.toJSON {
-    password-store = "gnome-libsecret";
-    enable-crash-reporter = false;
+  home.file.".vscode/argv.json" = lib.mkIf desktop {
+    text = builtins.toJSON {
+      password-store = "gnome-libsecret";
+      enable-crash-reporter = false;
+    };
   };
   # services.podman.enable = true;
 
@@ -491,9 +492,9 @@
 
   # TODO: A weird amount of work if I actually care to get Zed running.
   # https://wiki.nixos.org/wiki/Zed
-  targets.genericLinux.nixGL.vulkan.enable = pkgs.stdenv.isLinux;
+  targets.genericLinux.nixGL.vulkan.enable = desktop && pkgs.stdenv.isLinux;
   programs.zed-editor = {
-    enable = true;
+    enable = desktop;
     extensions = [
       "nix"
       "toml"

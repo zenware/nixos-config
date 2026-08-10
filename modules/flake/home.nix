@@ -1,53 +1,84 @@
-{ inputs, ... }:
+{ config, inputs, ... }:
 let
+  lib = inputs.nixpkgs.lib;
   zwLib = import ../../lib {
     inherit inputs;
     inherit (inputs) nixpkgs;
   };
 
-  # NOTE: Currently these are exclusively user-profiles which use home-manager.
-  # Their home-manager specific declarations are at ../../users/${username}/home.nix
-  homeUserProfiles = {
+  homeProfiles = {
+    # Backwards-compatible desktop alias.
     jml = {
-      username = "jml";
-      extraModules =
-        { pkgs, lib, ... }:
-        [
-          inputs.nvf.homeManagerModules.default
-          inputs.noctalia.homeModules.default
-        ]
-        ++ lib.optionals pkgs.stdenv.isLinux [ inputs.niri.homeModules.niri ];
+      system = "x86_64-linux";
+      isDesktop = true;
+    };
+    "jml@lithium" = {
+      system = "x86_64-linux";
+      isDesktop = false;
+    };
+    "jml@titanium" = {
+      system = "x86_64-linux";
+      isDesktop = true;
+    };
+    "jml@cobalt" = {
+      system = "x86_64-linux";
+      isDesktop = true;
+    };
+    "jml@neon" = {
+      system = "x86_64-linux";
+      isDesktop = true;
+    };
+    "jml@m5mbp" = {
+      system = "aarch64-darwin";
+      isDesktop = true;
     };
   };
 
-  mkProfileExtraModules =
-    profile:
-    { pkgs, system }:
-    if builtins.isFunction profile.extraModules then
-      profile.extraModules {
-        inherit pkgs system;
-        lib = inputs.nixpkgs.lib;
-      }
-    else
-      profile.extraModules or [ ];
+  mkHomeConfiguration =
+    {
+      system,
+      isDesktop,
+    }:
+    inputs.home-manager.lib.homeManagerConfiguration {
+      pkgs = zwLib.mkPkgs system;
+      extraSpecialArgs = {
+        inherit inputs;
+        username = "jml";
+      };
+      modules = [
+        config.flake.modules.homeManager.jml
+      ]
+      ++ lib.optional isDesktop config.flake.modules.homeManager.jml-desktop
+      ++ lib.optional (
+        isDesktop && lib.hasSuffix "-linux" system
+      ) config.flake.modules.homeManager.jml-linux-desktop-standalone;
+    };
 in
 {
-  # For Debugging: `home-manager build --flake .` or `nix build .#homeConfigurations."jml".activationPackage`
-  # `home-manager switch --flake .#jml`
+  flake.modules.homeManager.jml = {
+    imports = [
+      ../../users/jml/home
+      inputs.nvf.homeManagerModules.default
+    ];
+  };
+  flake.modules.homeManager.jml-desktop = ../../users/jml/home/desktop.nix;
+  flake.modules.homeManager.jml-linux-desktop = {
+    imports = [
+      ../../users/jml/home/noctalia.nix
+      inputs.noctalia.homeModules.default
+    ];
+  };
+  flake.modules.homeManager.jml-linux-desktop-standalone = {
+    imports = [
+      ../../users/jml/home/niri-standalone.nix
+      ../../users/jml/home/noctalia-standalone.nix
+      config.flake.modules.homeManager.jml-linux-desktop
+    ];
+  };
+
+  # Standalone targets:
+  # `home-manager switch --flake .#jml@lithium`
+  # `home-manager switch --flake .#jml@titanium`
   # https://nix-community.github.io/home-manager/options.xhtml
-  perSystem =
-    { pkgs, system, ... }:
-    {
-      legacyPackages.homeConfigurations = inputs.nixpkgs.lib.mapAttrs (
-        _: profile:
-        inputs.home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = zwLib.mkHomeModules {
-            username = profile.username;
-            inherit pkgs;
-            extraModules = mkProfileExtraModules profile { inherit pkgs system; };
-          };
-        }
-      ) homeUserProfiles;
-    };
+  flake.homeConfigurations = lib.mapAttrs (_: mkHomeConfiguration) homeProfiles;
 }

@@ -95,6 +95,9 @@
           };
 
           environment.systemPackages = with pkgs; [
+            brave
+            libsecret # Used for the desktop KeepassXC integration.
+
             # System Utilities
             networkmanagerapplet # Tray Icon for managing network connections
             yubikey-personalization
