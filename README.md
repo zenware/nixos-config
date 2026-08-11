@@ -102,8 +102,16 @@ Standalone targets remain available for systems where NixOS or nix-darwin is
 not managed by this flake, such as corporate-managed machines and WSL:
 
 ```bash
-home-manager switch --flake .#jml@lithium
-home-manager switch --flake .#jml@titanium
+home-manager switch --flake .#jml          # Linux desktop
+home-manager switch --flake .#jml-headless # headless Linux or WSL
+home-manager switch --flake .#jml-darwin   # standalone macOS
+```
+
+For managed hosts such as `lithium`, use the system configuration. The
+integrated Home Manager configuration is applied by `nixos-rebuild`:
+
+```bash
+sudo nixos-rebuild switch --flake .#lithium
 ```
 
 Do not use a standalone target and an integrated Home Manager configuration as

@@ -6,29 +6,17 @@ let
     inherit (inputs) nixpkgs;
   };
 
-  homeProfiles = {
-    # Backwards-compatible desktop alias.
+  standaloneProfiles = {
+    # Standalone Linux desktop profile.
     jml = {
       system = "x86_64-linux";
       isDesktop = true;
     };
-    "jml@lithium" = {
+    jml-headless = {
       system = "x86_64-linux";
       isDesktop = false;
     };
-    "jml@titanium" = {
-      system = "x86_64-linux";
-      isDesktop = true;
-    };
-    "jml@cobalt" = {
-      system = "x86_64-linux";
-      isDesktop = true;
-    };
-    "jml@neon" = {
-      system = "x86_64-linux";
-      isDesktop = true;
-    };
-    "jml@m5mbp" = {
+    jml-darwin = {
       system = "aarch64-darwin";
       isDesktop = true;
     };
@@ -77,8 +65,9 @@ in
   };
 
   # Standalone targets:
-  # `home-manager switch --flake .#jml@lithium`
-  # `home-manager switch --flake .#jml@titanium`
+  # `home-manager switch --flake .#jml`
+  # `home-manager switch --flake .#jml-headless`
+  # `home-manager switch --flake .#jml-darwin`
   # https://nix-community.github.io/home-manager/options.xhtml
-  flake.homeConfigurations = lib.mapAttrs (_: mkHomeConfiguration) homeProfiles;
+  flake.homeConfigurations = lib.mapAttrs (_: mkHomeConfiguration) standaloneProfiles;
 }
