@@ -99,8 +99,7 @@ in
   ];
 
   services.kanidm = {
-    # NOTE: This upgrade probably bones everything, but it's all boned anyway.
-    package = pkgs.kanidmWithSecretProvisioning_1_10;
+    package = pkgs.kanidmWithSecretProvisioning_1_11;
     server.enable = true;
     server.settings = {
       # NOTE: Required to start the server: https://kanidm.github.io/kanidm/stable/server_configuration.html
@@ -133,10 +132,10 @@ in
       home_alias = "name";
     };
 
-    # TODO: Migrate the secrets from here to `nixos-secrets`
-    # NOTE: There are manual steps required as root to allow a user to set
-    # their own credentials, or to confiugre an account as posix. As-is this
-    # module doesn't support provisioning a complete user /w credentials.
+    # NOTE: Provisioning does not create user credentials or POSIX attributes.
+    # Run local `kanidmd` maintenance as the `kanidm` service user; run
+    # `kanidm` client operations as a logged-in human administrator. See the
+    # lithium README and private deployment runbook for the commands.
     # Adding an account to `idm_high_privilege` prevents an account from being
     # tampered with by any other admin accounts.
     # https://kanidm.github.io/kanidm/stable/accounts/authentication_and_credentials.html#onboarding-a-new-person--resetting-credentials
