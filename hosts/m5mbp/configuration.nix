@@ -19,6 +19,7 @@
     pkgs.bitwarden-desktop
     pkgs.zed-editor
     pkgs.ripgrep
+    pkgs.ghostty-bin
   ];
 
   programs = {

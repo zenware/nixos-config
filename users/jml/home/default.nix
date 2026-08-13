@@ -86,7 +86,17 @@ in
       enableJujutsuIntegration = true;
     };
     obs-studio.enable = desktop && pkgs.stdenv.isLinux; # TODO: Issue on aarch64-darwin;
-    ghostty.enable = desktop && pkgs.stdenv.isLinux; # TODO: Issue on aarch64-darwin;
+    ghostty.enable = desktop; # TODO: Issue on aarch64-darwin;
+    ghostty.package =
+      if pkgs.stdenv.isLinux then
+        pkgs.ghostty
+      else if pkgs.stdenv.isDarwin then
+        pkgs.ghostty-bin
+      else
+        abort "Unsupported OS";
+    ghostty.enableBashIntegration = true;
+    ghostty.enableZshIntegration = true;
+    ghostty.enableFishIntegration = true;
   };
 
   programs.starship = {
