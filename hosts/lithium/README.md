@@ -16,6 +16,48 @@ still some actions that need to be taken manually.
 - tailscale auth key
 - jellyfin configuration via web-ui
 
+## Kanidm Administration
+
+NixOS declares the Kanidm service account and state directory, but standalone
+commands do not inherit the systemd service account. Keep the command types
+separate:
+
+- `kanidmd` performs local database maintenance; run it as `kanidm`.
+- `kanidm` is the remote client; run it as a human administrator.
+- `systemctl` and `journalctl` are host administration commands; use `sudo`.
+
+For commands that inspect or lock the local database, stop the service first:
+
+```sh
+sudo systemctl stop kanidm.service
+sudo -u kanidm -- kanidmd domain upgrade-check
+sudo -u kanidm -- kanidmd configtest -c /etc/kanidm/server.toml
+sudo systemctl start kanidm.service
+sudo journalctl -u kanidm.service -b
+```
+
+An administrator normally establishes a client session before managing
+accounts:
+
+```sh
+kanidm login --name idm_admin
+kanidm reauth -D idm_admin
+kanidm person get <account_id> --name idm_admin
+kanidm person credential create-reset-token <account_id> --name idm_admin
+kanidm person credential update <account_id> --name idm_admin
+kanidm person posix set --name idm_admin <account_id>
+kanidm person posix set-password --name idm_admin <account_id>
+kanidm person posix show --name anonymous <account_id>
+kanidm person validity expire-at <account_id> now --name idm_admin
+kanidm person validity expire-at <account_id> clear --name idm_admin
+```
+
+Prefer a reset token when onboarding or recovering a user so they can enroll
+their own credentials. Use account expiry to disable an account rather than
+deleting credentials. The declarative provisioning configuration manages
+account metadata and group membership, not users' passkeys, passwords, MFA
+credentials, or POSIX attributes/passwords.
+
 ## Secrets and "Private Information"
 
 Originally I had used two providers of secrets, `sops-nix` and `git-agecrypt`,
