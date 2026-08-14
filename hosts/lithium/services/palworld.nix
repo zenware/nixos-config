@@ -24,7 +24,7 @@ in
     type = lib.types.path;
     default = pkgs.writeText "palworld-settings.ini" ''
       [/Script/Pal.PalGameWorldSettings]
-      OptionSettings=(ServerName="lithium Palworld",ServerDescription="Palworld server",ServerPassword="FAKE-PALWORLD-SERVER-PASSWORD",AdminPassword="FAKE-PALWORLD-ADMIN-PASSWORD",PublicPort=8211,RCONEnabled=False)
+      OptionSettings=(ServerName="lithium Palworld",ServerDescription="Palworld server",ServerPassword="FAKE-PALWORLD-SERVER-PASSWORD",AdminPassword="FAKE-PALWORLD-ADMIN-PASSWORD",PublicPort=${toString config.zw.servicePorts.udp.palworldGame},RCONEnabled=False)
     '';
     description = "PalWorldSettings.ini installed before the Palworld server starts.";
   };
@@ -37,9 +37,9 @@ in
     };
     users.groups.flux = { };
 
-    networking.firewall.allowedUDPPorts = [
-      8211
-      27015
+    networking.firewall.allowedUDPPorts = with config.zw.servicePorts.udp; [
+      palworldGame
+      palworldQuery
     ];
 
     systemd.services.palworld = {

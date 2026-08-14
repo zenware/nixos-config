@@ -2,7 +2,7 @@
 let
   homelabDomain = config.zw.homelab.domain;
   svcDomain = "feeds.${homelabDomain}";
-  svcPort = "8081"; # Prevent a Conflict
+  svcPort = toString config.zw.servicePorts.tcp.miniflux;
 in
 {
   services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''

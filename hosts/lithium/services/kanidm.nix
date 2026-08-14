@@ -42,7 +42,7 @@ in
   services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
     @id host ${svcDomain}
     handle @id {
-      reverse_proxy :8443 {
+      reverse_proxy :${toString config.zw.servicePorts.tcp.kanidmHttps} {
         header_up Host {host}
         header_up X-Real-IP {http.request.header.CF-Connecting-IP}
         transport http {
@@ -113,7 +113,7 @@ in
 
       # NOTE: Optional Settings
       # TODO: Configure the rest of the binding properly, should be 363 and maybe 8443
-      ldapbindaddress = "127.0.0.1:3636"; # For Jellyfin LDAP integration.
+      ldapbindaddress = "127.0.0.1:${toString config.zw.servicePorts.tcp.kanidmLdap}"; # For Jellyfin LDAP integration.
 
       #trust_x_forwarded_for = true;
     };
