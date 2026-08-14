@@ -108,6 +108,10 @@
 
         networking.firewall.enable = true;
 
+        # Fill up the terminfo db, and keep terminfo details on sudo.
+        environment.enableAllTerminfo = true;
+        security.sudo.keepTerminfo = true;
+
         # Installed on every NixOS Host.
         environment.systemPackages = with pkgs; [
           wget
