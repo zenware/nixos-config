@@ -24,7 +24,7 @@ in
   services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
     @books host ${svcDomain}
     handle @books {
-      reverse_proxy localhost:8883
+      reverse_proxy localhost:${toString svcHttpPort}
     }
   '';
 
@@ -41,7 +41,7 @@ in
   # ssh -f -N -L localhost:8883:localhost:8883 jml@lithium
   services.calibre-web = {
     enable = true;
-    listen.port = 8883;
+    listen.port = config.zw.servicePorts.tcp.calibreWeb;
     # NOTE: Don't need to open calibre-web port, it's served by reverse_proxy
     openFirewall = true; # TODO: Temporarily opened to allow configuration from inside my network.
 

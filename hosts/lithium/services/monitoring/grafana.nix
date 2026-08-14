@@ -7,7 +7,7 @@
 }:
 let
   svcDomain = "grafana.${config.zw.homelab.domain}";
-  svcPort = config.services.grafana.settings.server.http_port;
+  svcPort = config.zw.servicePorts.tcp.grafana;
 in
 {
   services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
@@ -25,7 +25,7 @@ in
       security.secret_key = lib.mkDefault "SW2YcwTIb9zpOOhoPsMm";
       server = {
         http_addr = "127.0.0.1";
-        http_port = 3001;
+        http_port = svcPort;
         enforce_domain = true;
         enable_gzip = true;
         domain = svcDomain;

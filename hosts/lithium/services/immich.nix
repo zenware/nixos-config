@@ -8,7 +8,8 @@
 let
   svcDomain = "photos.${config.zw.homelab.domain}";
   immichMediaDir = "/tank/shares/immich-media";
-  svcPort = config.services.immich.port;
+  svcPort = config.zw.servicePorts.tcp.immich;
+  machineLearningPort = config.zw.servicePorts.tcp.immichMachineLearning;
   # https://docs.immich.app/install/config-file/
   jsonSettings = {
     server.externalDomain = "https://${svcDomain}";
@@ -78,15 +79,19 @@ in
     services.immich = {
       enable = true;
       openFirewall = true;
-      port = 2283; # default
+      port = svcPort;
       #secretsFile = config.sops.secrets.immich_env.path;
 
       # TODO: Build this directory with permissions for the immich user.
       mediaLocation = lib.toString immichMediaDir;
       environment = {
+        IMMICH_MACHINE_LEARNING_URL = lib.mkForce "http://localhost:${toString machineLearningPort}";
         #IMMICH_CONFIG_FILE = config.sops.templates."immich.json".path;
       };
     };
+    services.immich.machine-learning.environment.IMMICH_PORT = lib.mkForce (
+      toString machineLearningPort
+    );
 
     # services.kanidm.provision.systems.oauth2.immich = {
     #   displayName = "immich";

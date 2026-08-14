@@ -1,11 +1,11 @@
-{ ... }:
+{ config, ... }:
 {
   # NOTE: We do need to guarantee this group exists.
   # and manually provision users with `sudo smbpasswd -a $username`
   users.groups.samba = { };
   services.samba = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
 
     nmbd.enable = false; # NOTE: Disable NetBIOS responses.
     # usershares.enable = true;  # NOTE: Members of group "samba" can create usershares.
@@ -67,8 +67,18 @@
   # NOTE: This is used to advertise shares to Windows hosts.
   services.samba-wsdd = {
     enable = true;
-    openFirewall = true;
+    openFirewall = false;
   };
+  networking.firewall.allowedTCPPorts = with config.zw.servicePorts.tcp; [
+    sambaNetbiosSession
+    sambaSmb
+    sambaWsdd
+  ];
+  networking.firewall.allowedUDPPorts = with config.zw.servicePorts.udp; [
+    sambaNetbiosNs
+    sambaNetbiosDgm
+    sambaWsdd
+  ];
   #services.avahi = {
   #enable = true;
   #openFirewall = true;

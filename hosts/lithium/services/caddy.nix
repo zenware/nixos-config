@@ -9,7 +9,8 @@ let
   certDir = config.security.acme.certs."${config.zw.homelab.domain}".directory;
 in
 {
-  services.nginx.enable = lib.mkForce false;
+  # Nextcloud uses Nginx as a loopback-only HTTP backend.
+  services.nginx.enable = lib.mkDefault false;
 
   # TODO: Add Metrics with Prometheus & Grafana
   services.caddy = {
@@ -57,8 +58,8 @@ in
       abort
     }
   '';
-  networking.firewall.allowedTCPPorts = [
-    80
-    443
+  networking.firewall.allowedTCPPorts = with config.zw.servicePorts.tcp; [
+    caddyHttp
+    caddyHttps
   ];
 }

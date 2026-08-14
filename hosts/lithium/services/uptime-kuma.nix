@@ -1,13 +1,13 @@
 { config, pkgs, ... }:
 let
   svcDomain = "status.${config.zw.homelab.domain}";
-  svcPort = config.services.uptime-kuma.settings.PORT;
+  svcPort = config.zw.servicePorts.tcp.uptimeKuma;
 in
 {
   services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
     @status host ${svcDomain}
     handle @status {
-      reverse_proxy :${svcPort}
+      reverse_proxy :${toString svcPort}
     }
   '';
   # NOTE: Currently requires some web-interface configuration
@@ -17,7 +17,7 @@ in
     # NOTE: NixOS Attributes here resolve into these ENV vars:
     # https://github.com/louislam/uptime-kuma/wiki/Environment-Variables
     settings = {
-      PORT = "3002";
+      PORT = toString svcPort;
     };
   };
 }

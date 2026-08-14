@@ -11,7 +11,7 @@ let
     url = "https://github.com/catppuccin/gitea/releases/download/v1.0.2/catppuccin-gitea.tar.gz";
     sha256 = "sha256-rZHLORwLUfIFcB6K9yhrzr+UwdPNQVSadsw6rg8Q7gs=";
   };
-  svcHttpPort = config.services.forgejo.settings.server.HTTP_PORT;
+  svcHttpPort = config.zw.servicePorts.tcp.forgejo;
   assetsDir = "${config.services.forgejo.stateDir}/custom/public/assets";
 in
 {
@@ -48,7 +48,7 @@ in
       server = {
         DOMAIN = svcDomain;
         ROOT_URL = "https://${svcDomain}";
-        HTTP_PORT = 3000;
+        HTTP_PORT = svcHttpPort;
       };
       # NOTE: Actions support is based on: https://github.com/nektos/act
       #actions = {
