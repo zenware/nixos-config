@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 let
   homelabDomain = config.zw.homelab.domain;
   svcDomain = "paperless.${homelabDomain}";
@@ -6,6 +6,12 @@ let
   dataDir = "/tank/services/paperless";
   mediaDir = "/tank/shares/documents";
   consumptionDir = "${mediaDir}/consume";
+  paperlessUnits = [
+    "paperless-scheduler"
+    "paperless-web"
+    "paperless-consumer"
+    "paperless-task-queue"
+  ];
 in
 {
   services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
@@ -21,6 +27,14 @@ in
     "d ${mediaDir} 0750 paperless paperless -"
     "d ${consumptionDir} 0770 paperless paperless -"
   ];
+
+  users.users.paperless.extraGroups = [ "users" ];
+  systemd.services = lib.genAttrs paperlessUnits (_: {
+    serviceConfig.SupplementaryGroups = lib.mkForce [
+      "redis-paperless"
+      "users"
+    ];
+  });
 
   services.paperless = {
     enable = true;
