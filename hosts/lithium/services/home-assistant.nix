@@ -20,6 +20,14 @@ in
   services.home-assistant = {
     enable = true;
     configDir = "/tank/services/home-assistant";
+    extraComponents = [
+      "august"
+      "awair"
+      "cast"
+      "hue"
+      "midea"
+      "yalexs_ble"
+    ];
     config = {
       homeassistant = {
         name = "Home";
