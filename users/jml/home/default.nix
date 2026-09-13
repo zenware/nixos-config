@@ -23,9 +23,9 @@ in
     };
 
     homeDirectory =
-      if pkgs.stdenv.isLinux then
+      if pkgs.stdenv.hostPlatform.isLinux then
         lib.mkDefault "/home/${username}"
-      else if pkgs.stdenv.isDarwin then
+      else if pkgs.stdenv.hostPlatform.isDarwin then
         lib.mkDefault "/Users/${username}"
       else
         abort "Unsupported OS";
@@ -35,18 +35,18 @@ in
     [ devenv ]
     # linux only
     # TODO: Add a test for linux + desktop environment
-    ++ (lib.optionals pkgs.stdenv.isLinux [
+    ++ (lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       cfspeedtest
       helix
       nil
     ])
     # linux + desktop manager
-    #++ (lib.optionals (pkgs.stdenv.isLinux && osConfig.services.desktopManager.enabled != null)
+    #++ (lib.optionals (pkgs.stdenv.HostPlatform.isLinux && osConfig.services.desktopManager.enabled != null)
     #[
     #  firefox
     #])
     # darwin only
-    ++ (lib.optionals pkgs.stdenv.isDarwin [
+    ++ (lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       cfspeedtest
       ripgrep
     ]);
@@ -85,12 +85,12 @@ in
       enableGitIntegration = true;
       enableJujutsuIntegration = true;
     };
-    obs-studio.enable = desktop && pkgs.stdenv.isLinux; # TODO: Issue on aarch64-darwin;
+    obs-studio.enable = desktop && pkgs.stdenv.hostPlatform.isLinux; # TODO: Issue on aarch64-darwin;
     ghostty.enable = desktop; # TODO: Issue on aarch64-darwin;
     ghostty.package =
-      if pkgs.stdenv.isLinux then
+      if pkgs.stdenv.hostPlatform.isLinux then
         pkgs.ghostty
-      else if pkgs.stdenv.isDarwin then
+      else if pkgs.stdenv.hostPlatform.isDarwin then
         pkgs.ghostty-bin
       else
         abort "Unsupported OS";
@@ -502,7 +502,7 @@ in
 
   # TODO: A weird amount of work if I actually care to get Zed running.
   # https://wiki.nixos.org/wiki/Zed
-  targets.genericLinux.nixGL.vulkan.enable = desktop && pkgs.stdenv.isLinux;
+  targets.genericLinux.nixGL.vulkan.enable = desktop && pkgs.stdenv.hostPlatform.isLinux;
   programs.zed-editor = {
     enable = desktop;
     extensions = [
