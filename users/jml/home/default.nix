@@ -274,7 +274,7 @@ in
   };
 
   # TODO: Implement support for at least
-  # Nix, Python, Rust, Golang
+  # Nix, Python, Rust, Golang, TypeScript
   # TODO: Sort out why TF, `.nix` files tabs are cooked in neovim rn.
   # It corrects things on document save, but this line for example started with an 8-long tabstop
   programs.nvf = {
@@ -358,7 +358,11 @@ in
         lualine = {
           # Fancy Status Line
           enable = true;
-          theme = lib.mkForce "catppuccin";
+          setupOpts.options.theme = lib.mkForce "catppuccin";
+          integrations.breadcrumbs = {
+            nvim-navic.enable = true;
+            navbuddy.enable = true;
+          };
         };
       };
 
@@ -393,7 +397,7 @@ in
 
       # TODO: Consider switching to `minimap-nvim` for rust-based minimap.
       # codewindow may be tightly integrated with treesitter though...
-      minimap.codewindow.enable = true;
+      # minimap.codewindow.enable = true;
       dashboard.alpha.enable = true; # Greeter
       notify.nvim-notify.enable = true; # Fancy Configurable Notification Manager
       projects.project-nvim.enable = true;
@@ -440,10 +444,6 @@ in
         colorizer.enable = true;
         modes-nvim.enable = false; # this looks terrible with catppuccin
         illuminate.enable = true;
-        breadcrumbs = {
-          enable = true;
-          navbuddy.enable = true;
-        };
         smartcolumn = {
           enable = true;
           setupOpts.custom_colorcolumn = {
