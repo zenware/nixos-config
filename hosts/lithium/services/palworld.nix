@@ -13,10 +13,10 @@ let
     src = pkgs.fetchSteam {
       inherit name;
       appId = "2394010";
-      hash = "sha256-KmcPZNI4KzoY86MT6F4yjeEiBrctcln59syeiYTesyI=";
+      hash = "sha256-KXXmCO0Siv+pcIMuwnEPTdLkftefemd0QpBaf9Q4MXo=";
     };
     startCmd = "PalServer.sh";
-    hash = "sha256-KmcPZNI4KzoY86MT6F4yjeEiBrctcln59syeiYTesyI=";
+    hash = "sha256-KXXmCO0Siv+pcIMuwnEPTdLkftefemd0QpBaf9Q4MXo=";
   };
 in
 {
