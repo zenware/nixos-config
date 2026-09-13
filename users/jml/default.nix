@@ -8,7 +8,7 @@
   ...
 }:
 let
-  isDesktop = lib.attrByPath [ "zw" "desktop" "enable" ] pkgs.stdenv.isDarwin config;
+  isDesktop = lib.attrByPath [ "zw" "desktop" "enable" ] pkgs.stdenv.hostPlatform.isDarwin config;
 in
 {
   # NOTE: Some software should follow my user, rather than being deployed to a specific system.
@@ -28,28 +28,28 @@ in
       homeManagerModules.jml
     ]
     ++ lib.optional isDesktop homeManagerModules.jml-desktop
-    ++ lib.optional (isDesktop && pkgs.stdenv.isLinux) homeManagerModules.jml-linux-desktop
+    ++ lib.optional (isDesktop && pkgs.stdenv.hostPlatform.isLinux) homeManagerModules.jml-linux-desktop
     ++ lib.optional (isDesktop && lib.hasAttrByPath [ "stylix" "enable" ] options) inputs.stylix.homeModules.stylix;
   };
 
   nix.settings.trusted-users = lib.mkAfter [ "jml" ];
   users.users.jml = {
     shell =
-      if pkgs.stdenv.isLinux then
+      if pkgs.stdenv.hostPlatform.isLinux then
         pkgs.fish
-      else if pkgs.stdenv.isDarwin then
+      else if pkgs.stdenv.hostPlatform.isDarwin then
         pkgs.zsh
       else
         abort "Unsupported OS";
     home =
-      if pkgs.stdenv.isLinux then
+      if pkgs.stdenv.hostPlatform.isLinux then
         lib.mkDefault "/home/jml"
-      else if pkgs.stdenv.isDarwin then
+      else if pkgs.stdenv.hostPlatform.isDarwin then
         lib.mkDefault "/Users/jml"
       else
         abort "Unsupported OS";
   }
-  // lib.optionalAttrs pkgs.stdenv.isLinux {
+  // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     isNormalUser = true;
     extraGroups = [
       "networkmanager"

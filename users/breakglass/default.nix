@@ -2,14 +2,14 @@
 {
   users.users.breakglass = {
     home =
-      if pkgs.stdenv.isLinux then
+      if pkgs.stdenv.hostPlatform.isLinux then
         lib.mkDefault "/home/breakglass"
-      else if pkgs.stdenv.isDarwin then
+      else if pkgs.stdenv.hostPlatform.isDarwin then
         lib.mkDefault "/Users/breakglass"
       else
         abort "Unsupported OS";
   }
-  // lib.optionalAttrs pkgs.stdenv.isLinux {
+  // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     # NOTE: Generated with `mkpasswd`
