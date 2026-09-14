@@ -1,5 +1,16 @@
 {
   description = "Configuration for NixOS";
+  # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
+  nixConfig = {
+    extra-substituters = [
+      "https://noctalia.cachix.org"
+      "https://cache.numtide.com"
+    ];
+    extra-trusted-public-keys = [
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+    ];
+  };
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
@@ -40,17 +51,6 @@
     antigravity-nix.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "github:nix-darwin/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-  };
-  # https://nix.dev/tutorials/nix-language.html#named-attribute-set-argument
-  nixConfig = {
-    extra-substituters = [
-      "https://noctalia.cachix.org"
-      "https://cache.numtide.com"
-    ];
-    extra-trusted-public-keys = [
-      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
-      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
-    ];
   };
   outputs =
     inputs@{ flake-parts, ... }:
