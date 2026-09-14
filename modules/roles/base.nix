@@ -117,8 +117,11 @@
           wget
           curl
           ripgrep
+          comma
         ];
         programs = {
+          nh.enable = true;
+
           # direnv?
           direnv = {
             enable = true;
