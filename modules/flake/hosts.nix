@@ -16,6 +16,13 @@ in
         inputs.stylix.nixosModules.stylix
         { stylix.homeManagerIntegration.autoImport = false; }
         inputs.niri.nixosModules.niri
+        {
+          home-manager.users.jml = {
+            imports = [
+              config.flake.modules.homeManager.jml-niri
+            ];
+          };
+        }
         inputs.determinate.nixosModules.default
         inputs.microvm.nixosModules.host
       ];
