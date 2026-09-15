@@ -18,18 +18,21 @@ in
   ];
 
   home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
     extraSpecialArgs = {
       inherit inputs;
       username = "jml";
     };
-    users.jml.imports = [
-      homeManagerModules.jml
-    ]
-    ++ lib.optional isDesktop homeManagerModules.jml-desktop
-    ++ lib.optional (isDesktop && pkgs.stdenv.hostPlatform.isLinux) homeManagerModules.jml-linux-desktop
-    ++ lib.optional (isDesktop && lib.hasAttrByPath [ "stylix" "enable" ] options) inputs.stylix.homeModules.stylix;
+    users.jml = {
+      nixpkgs.config.allowUnfree = true;
+      imports = [
+        homeManagerModules.jml
+      ]
+      ++ lib.optional isDesktop homeManagerModules.jml-desktop
+      ++ lib.optional (isDesktop && pkgs.stdenv.hostPlatform.isLinux) homeManagerModules.jml-linux-desktop
+      ++ lib.optional (
+        isDesktop && lib.hasAttrByPath [ "stylix" "enable" ] options
+      ) inputs.stylix.homeModules.stylix;
+    };
   };
 
   nix.settings.trusted-users = lib.mkAfter [ "jml" ];
