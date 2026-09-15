@@ -13,7 +13,6 @@
   # Bitwarden, Signal, Raycast? Terminal
   # Zed, Ripgrep
   environment.systemPackages = [
-    pkgs.home-manager
     pkgs.signal-desktop
     pkgs.obsidian
     pkgs.bitwarden-desktop

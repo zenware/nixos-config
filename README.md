@@ -94,28 +94,14 @@ nix build .#nixosConfigurations.${hostname}.config.system.build.toplevel
 
 ### Home Manager
 
-NixOS and nix-darwin hosts include Home Manager in their system
-configurations. On those machines, applying the system configuration also
-applies the matching home configuration.
-
-Standalone targets remain available for systems where NixOS or nix-darwin is
-not managed by this flake, such as corporate-managed machines and WSL:
-
-```bash
-home-manager switch --flake .#jml          # Linux desktop
-home-manager switch --flake .#jml-headless # headless Linux or WSL
-home-manager switch --flake .#jml-darwin   # standalone macOS
-```
-
-For managed hosts such as `lithium`, use the system configuration. The
-integrated Home Manager configuration is applied by `nixos-rebuild`:
+NixOS and nix-darwin hosts include Home Manager directly in their system
+configurations (see `users/jml/default.nix`). There is no standalone
+`home-manager switch` target; applying the system configuration always
+applies the matching home configuration too:
 
 ```bash
 sudo nixos-rebuild switch --flake .#lithium
 ```
-
-Do not use a standalone target and an integrated Home Manager configuration as
-independent owners of the same home directory.
 
 ### Setup a macbook
 

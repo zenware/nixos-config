@@ -11,12 +11,6 @@ let
   isDesktop = lib.attrByPath [ "zw" "desktop" "enable" ] pkgs.stdenv.hostPlatform.isDarwin config;
 in
 {
-  # NOTE: Some software should follow my user, rather than being deployed to a specific system.
-  # not sure I've actually worked out where that delineation is best made yet.
-  environment.systemPackages = [
-    pkgs.home-manager
-  ];
-
   home-manager = {
     extraSpecialArgs = {
       inherit inputs;
