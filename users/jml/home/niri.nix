@@ -96,6 +96,13 @@ in
   stylix = {
     enable = true;
     inherit (osConfig.stylix) base16Scheme polarity;
+    targets = {
+      firefox.profileNames = [ "default" ];
+
+      # TODO: Re-enable when Stylix uses
+      # `vim.statusline.lualine.setupOpts.options.theme`.
+      nvf.enable = false;
+    };
   };
 
   programs.niri.settings = {
