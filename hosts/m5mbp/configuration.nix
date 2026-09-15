@@ -20,10 +20,37 @@
     pkgs.zed-editor
     pkgs.ripgrep
     pkgs.ghostty-bin
+    pkgs.github-copilot-cli
+    pkgs.vulkan-tools
+    pkgs.aseprite
+    pkgs.blender
+    pkgs.famistudio
   ];
 
   programs = {
     zsh.enable = true;
+  };
+
+  services = {
+    tailscale.enable = true;
+  };
+
+  homebrew = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    casks = [
+      "godot" # Vulkan Support
+      "slack"
+      "steam"
+      "krita"
+      "affinity"
+    ];
+    onActivation = {
+      autoUpdate = true;
+      upgrade = true;
+      cleanup = "uninstall";
+    };
   };
 
   # Auto upgrade nix pkg and daemon service
