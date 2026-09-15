@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   username ? "jml",
   pkgs,
   lib,
@@ -39,6 +40,7 @@ in
       cfspeedtest
       helix
       nil
+      nixfmt
     ])
     # linux + desktop manager
     #++ (lib.optionals (pkgs.stdenv.HostPlatform.isLinux && osConfig.services.desktopManager.enabled != null)
@@ -480,17 +482,68 @@ in
 
   programs.vscode = {
     enable = desktop;
-    mutableExtensionsDir = true; # mutually exclusive to programs.vscode.profiles
-    # profiles.default.userSettings = {
-    #   "[nix]"."editor.tabSize" = 2;
-    # };
-  };
-  home.file.".vscode/argv.json" = lib.mkIf desktop {
-    text = builtins.toJSON {
+    mutableExtensionsDir = false;
+    argvSettings = {
       password-store = "gnome-libsecret";
       enable-crash-reporter = false;
     };
+    profiles.default = {
+      enableExtensionUpdateCheck = false;
+      enableUpdateCheck = false;
+      extensions = inputs.nix4vscode.lib.${pkgs.stdenv.hostPlatform.system}.forVscode [
+        "jnoortheen.nix-ide"
+        "cordx56.rustowl-vscode"
+      ];
+      userSettings = {
+        "explorer.confirmDelete" = false;
+        "chat.agent.maxRequests" = 250;
+        "chat.allowAnonymousAccess" = true;
+        "chat.tools.terminal.autoApprove" = {
+          "git fetch" = true;
+          "/^\\(git ls-remote --heads origin 2>/dev/null \\| grep -E 'refs/heads/\\[0-9\\]\\+-early-access' \\|\\| echo \"No remote branches found\"\\) && \\(git branch 2>/dev/null \\| grep -E '\\^\\[\\* \\]\\*\\[0-9\\]\\+-early-access' \\|\\| echo \"No local branches found\"\\) && \\(find specs -maxdepth 1 -type d -name '\\[0-9\\]\\*-early-access' 2>/dev/null \\|\\| echo \"No specs directories found\"\\)$/" =
+            {
+              approve = true;
+              matchCommandLine = true;
+            };
+          awk = true;
+          "git rev-parse" = true;
+          "pnpm lint" = true;
+          "/^pnpm build 2>&1 \\| tail -30$/" = {
+            approve = true;
+            matchCommandLine = true;
+          };
+          "/^echo \"=== Tests ===\" && pnpm test 2>&1 \\| tail -15 && echo -e \"\\\\n=== Type Check ===\" && pnpm type-check 2>&1 && echo -e \"\\\\n=== Linting ===\" && pnpm lint 2>&1 && echo -e \"\\\\n✅ All quality checks passed!\"$/" =
+            {
+              approve = true;
+              matchCommandLine = true;
+            };
+          pnpm = true;
+          sed = true;
+          test = true;
+          "true" = true;
+          "/^bash \\.specify/scripts/bash/check-prerequisites\\.sh --json --require-tasks --include-tasks 2>&1 \\| head -100$/" =
+            {
+              approve = true;
+              matchCommandLine = true;
+            };
+        };
+        "terminal.integrated.defaultProfile.linux" = "bash";
+        "github.copilot.nextEditSuggestions.enabled" = true;
+        "workbench.startupEditor" = "none";
+        "explorer.confirmDragAndDrop" = false;
+
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = "nil";
+        "nix.serverSettings"."nil".formatting.command = [ "nixfmt" ];
+      };
+    };
   };
+
+  xdg.configFile."btop/btop.conf".force = true;
+  xdg.configFile."ghostty/config".force = lib.mkIf (desktop && pkgs.stdenv.hostPlatform.isLinux) true;
+  home.file."${config.xdg.configHome}/Code/User/settings.json".force = lib.mkIf (
+    desktop && pkgs.stdenv.hostPlatform.isLinux
+  ) true;
   # services.podman.enable = true;
 
   # TODO: Consider configuring MCP servers. and local-ai
