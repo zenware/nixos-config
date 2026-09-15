@@ -20,7 +20,7 @@
           ];
         };
 
-        environment.systemPackages = with inputs.llm-agents.packages.${pkgs.system}; [
+        environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
           gemini-cli
           copilot-cli
           goose-cli
