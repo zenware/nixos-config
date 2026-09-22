@@ -539,10 +539,6 @@ in
     };
   };
 
-  xdg.configFile."ghostty/config".force = lib.mkIf (desktop && pkgs.stdenv.hostPlatform.isLinux) true;
-  home.file."${config.xdg.configHome}/Code/User/settings.json".force = lib.mkIf (
-    desktop && pkgs.stdenv.hostPlatform.isLinux
-  ) true;
   # services.podman.enable = true;
 
   # TODO: Consider configuring MCP servers. and local-ai
