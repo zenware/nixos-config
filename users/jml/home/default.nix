@@ -539,7 +539,6 @@ in
     };
   };
 
-  xdg.configFile."btop/btop.conf".force = true;
   xdg.configFile."ghostty/config".force = lib.mkIf (desktop && pkgs.stdenv.hostPlatform.isLinux) true;
   home.file."${config.xdg.configHome}/Code/User/settings.json".force = lib.mkIf (
     desktop && pkgs.stdenv.hostPlatform.isLinux
