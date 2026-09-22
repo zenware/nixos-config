@@ -8,15 +8,16 @@ let
   cfg = config.zw.palworld;
   stateDir = "/var/lib/palworld";
   settingsDir = "${stateDir}/palworld/Pal/Saved/Config/LinuxServer";
+  palworldHash = "sha256-ndONrYWffYlR2pxDKji/GMJ1sNAVjiMJl8Cvjjw4ecI=";
   palworldServer = pkgs.mkSteamServer rec {
     name = "palworld";
     src = pkgs.fetchSteam {
       inherit name;
       appId = "2394010";
-      hash = "sha256-KXXmCO0Siv+pcIMuwnEPTdLkftefemd0QpBaf9Q4MXo=";
+      hash = "${palworldHash}";
     };
     startCmd = "PalServer.sh";
-    hash = "sha256-KXXmCO0Siv+pcIMuwnEPTdLkftefemd0QpBaf9Q4MXo=";
+    hash = "${palworldHash}";
   };
 in
 {
