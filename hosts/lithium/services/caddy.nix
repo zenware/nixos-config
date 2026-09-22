@@ -25,7 +25,7 @@ in
         "github.com/mholt/caddy-dynamicdns@v0.0.0-20260711161133-a5890c9df68c"
         "github.com/caddy-dns/cloudflare@v0.2.4"
       ];
-      hash = "sha256-eRgpncvTIPwzxEKk5E3sBvA2zp9EULkI5GvbmGGaExA="; # lib.fakeHash;
+      hash = "sha256-wK4Gk94MPxzjmNFaEI97pJJ8kMkp045Yj7p97gaN8O4="; # lib.fakeHash;
     };
     # NOTE: Use Staging CA while testing, check `systemctl status caddy`
     # to see if everything is working.
