@@ -28,7 +28,6 @@
               "hyprland"
               "niri"
               "xfce"
-              "gnome"
             ]
           );
           default = [ "niri" ];
@@ -43,7 +42,6 @@
             "hyprland"
             "niri"
             "xfce"
-            "gnome"
           ];
           default = "niri";
           description = "Session the display manager preselects. Must be one of zw.desktop.sessions.";
@@ -85,6 +83,7 @@
             security.polkit.enable = lib.mkDefault true;
 
             # Keyring for storing secrets
+            # TODO: Make this be KeePassXC, even if it's manual I definitely prefer that.
             services.gnome.gnome-keyring.enable = true;
 
             environment.sessionVariables = {
@@ -93,7 +92,7 @@
             };
 
             environment.systemPackages = with pkgs; [
-              brave
+              brave # NOTE: Kind of hate that this package needs to be installed at the system level, rather than the user level.
               libsecret # Used for the desktop KeepassXC integration.
 
               # System Utilities
@@ -195,7 +194,7 @@
             };
           }
 
-          # Display manager (SDDM; GDM takes over if the gnome session is enabled)
+          # Display manager (SDDM)
           {
             environment.systemPackages = [
               (pkgs.catppuccin-sddm.override {
@@ -296,31 +295,6 @@
               xterm.enable = false;
               xfce.enable = true;
             };
-          })
-
-          # Session: gnome
-          # NOTE: Enabling the gnome session replaces SDDM with GDM.
-          (lib.mkIf (sessionEnabled "gnome") {
-            services.desktopManager.gnome.enable = true;
-            services.displayManager.sddm.enable = lib.mkForce false;
-
-            services.xserver.displayManager.gdm = {
-              enable = true;
-              wayland = true;
-            };
-
-            environment.systemPackages = with pkgs; [
-              gnome-tweaks
-              dconf-editor
-            ];
-
-            environment.gnome.excludePackages = with pkgs; [
-              gnome-music
-              gnome-photos
-              gnome-tour
-              epiphany
-              geary
-            ];
           })
         ]
       );
