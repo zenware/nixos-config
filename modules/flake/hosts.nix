@@ -27,6 +27,8 @@ in
         inputs.microvm.nixosModules.host
       ];
     };
+    # The following command is a great recovery image for lithium.
+    # nixos-rebuild build-image --image-variant iso --flake .#lithium
     lithium = mkSystem {
       hostname = "lithium";
       #specialArgs = {inherit inputs;};
@@ -51,6 +53,7 @@ in
       users = [ "jml" ];
     };
     # `nix build .#nixosConfigurations.installIso.config.system.build.isoImage`
+    # nixos-rebuild build-image --image-variant iso --flake .#installIso
     # https://github.com/nix-community/nixos-generators
     installIso = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
