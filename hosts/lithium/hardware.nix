@@ -28,13 +28,21 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/12861f9f-ca29-444d-9af1-330699a79a78";
+    device = "/dev/disk/by-uuid/399808a5-06f4-4498-8413-32213f87c48a";
     fsType = "btrfs";
-    options = [ "subvol=root" ];
+    options = [ "subvol=@root" ];
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/2B64-2D7E";
+    device = "/dev/disk/by-uuid/3D79-5E7B";
+    fsType = "vfat";
+    options = [
+      "fmask=0077"
+      "dmask=0077"
+    ];
+  };
+  fileSystems."/boot-fallback" = {
+    device = "/dev/disk/by-uuid/3D3C-873C";
     fsType = "vfat";
     options = [
       "fmask=0077"
@@ -43,27 +51,30 @@
   };
 
   fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/12861f9f-ca29-444d-9af1-330699a79a78";
+    device = "/dev/disk/by-uuid/399808a5-06f4-4498-8413-32213f87c48a";
     fsType = "btrfs";
-    options = [ "subvol=home" ];
+    options = [ "subvol=@home" ];
   };
 
   fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/12861f9f-ca29-444d-9af1-330699a79a78";
+    device = "/dev/disk/by-uuid/399808a5-06f4-4498-8413-32213f87c48a";
     fsType = "btrfs";
-    options = [ "subvol=nix" ];
+    options = [ "subvol=@nix" ];
   };
 
-  swapDevices = [
-    { device = "/dev/disk/by-uuid/df457998-5ffc-422b-a3c9-6e5734c88a41"; }
-    { device = "/dev/disk/by-uuid/f970449e-2eee-450b-b19f-6361f4fb3c16"; }
-  ];
+  fileSystems."/persist" = {
+    device = "/dev/disk/by-uuid/399808a5-06f4-4498-8413-32213f87c48a";
+    fsType = "btrfs";
+    options = [ "subvol=@persist" ];
+  };
+
+  swapDevices = [];
 
   # Required despite not booting from zfs, in order to make zfs.ko available to modprobe.
   # https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/index.html#installation
+  networking.hostId = "97fd89d8";
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.forceImportRoot = false;
-  networking.hostId = "97fd89d8";
   boot.zfs.extraPools = [ "tank" ];
   services.zfs.autoScrub.enable = true;
 
