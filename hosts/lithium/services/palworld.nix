@@ -8,7 +8,7 @@ let
   cfg = config.zw.palworld;
   stateDir = "/var/lib/palworld";
   settingsDir = "${stateDir}/palworld/Pal/Saved/Config/LinuxServer";
-  palworldHash = "sha256-ndONrYWffYlR2pxDKji/GMJ1sNAVjiMJl8Cvjjw4ecI=";
+  palworldHash = "sha256-zx2mj6IYqkFjoKtrKWRAy7/J2G8WhdZX0xKY6MuabLY=";
   palworldServer = pkgs.mkSteamServer rec {
     name = "palworld";
     src = pkgs.fetchSteam {
