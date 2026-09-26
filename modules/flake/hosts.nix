@@ -52,13 +52,53 @@ in
       hostname = "neon";
       users = [ "jml" ];
     };
-    # `nix build .#nixosConfigurations.installIso.config.system.build.isoImage`
+    # https://nixos.org/manual/nixos/stable/#sec-image-nixos-rebuild-build-image
     # nixos-rebuild build-image --image-variant iso --flake .#installIso
-    # https://github.com/nix-community/nixos-generators
+    # TODO: Enable nix-command and flakes system-wide
     installIso = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+        {
+          hardware.enableRedistributableFirmware = true;
+
+          # Required despite not booting from zfs, in order to make zfs.ko available to modprobe.
+          # https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/index.html#installation
+          boot.supportedFilesystems = [ "zfs" ];
+          boot.zfs.forceImportRoot = false;
+
+          # Kmods used on lithium, which is usually where I run this media..
+          boot.initrd.availableKernelModules = [
+              "xhci_pci"
+              "ahci"
+              "mpt3sas"
+              "nvme"
+              "usbhid"
+              "usb_storage"
+              "sd_mod"
+              "sr_mod"
+            ];
+            boot.initrd.kernelModules = [ ];
+            boot.kernelModules = [ "kvm-intel" ];
+            boot.extraModulePackages = [ ];
+
+          environment.systemPackages = with inputs.nixpkgs.legacyPackages.x86_64-linux; [
+            btrfs-progs
+            xfsprogs
+            e2fsprogs
+            dosfstools
+            zfs
+            mdadm
+            smartmontools
+            lvm2
+            tmux # NOTE: Consider zellij
+            ripgrep
+            ethtool
+          ];
+
+          services.getty.autologinUser = inputs.nixpkgs.lib.mkForce "root";
+          # TODO: Add Inbound SSH /w BreakGlass User, and pre calculated Keys/Hash
+        }
       ];
       specialArgs = { inherit inputs; };
     };
