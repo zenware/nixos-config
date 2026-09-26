@@ -1,11 +1,11 @@
 { ... }:
 {
-  # Default to systemd-boot
   boot.loader.efi.canTouchEfiVariables = false;
   boot.loader.grub = {
     enable = true;
     efiSupport = true;
     efiInstallAsRemovable = true;
+    copyKernels = true;
     mirroredBoots = [
       {
         path = "/boot";
