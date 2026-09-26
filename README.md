@@ -78,7 +78,7 @@ darwin-rebuild dry-run --flake .#hostname
 darwin-rebuild switch --flake .#hostname
 
 # Generate an Install ISO
-nix build .#nixosConfigurations.installIso.config.system.build.images.iso
+nixos-rebuild build-image --image-variant iso --flake .#installIso
 
 # Verify the ISO contents
 sudo mount -o loop result/iso/nixos-*.iso mnt
