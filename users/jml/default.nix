@@ -54,5 +54,8 @@ in
       "samba"
     ];
     initialHashedPassword = "$y$j9T$R9y36VAOEudqmyVVgyYLD1$xQktVMaRP9qiARiJ6KATvyH6VAL1IKSJoPAo7k4YNZ.";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGWnk0plf2FvpUm5nsOnR6wbY5xodV6hgdI1WpBvbroV jml@titanium"
+    ];
   };
 }
