@@ -2,6 +2,7 @@
 {
   boot.initrd.systemd.enable = true; # Wait for 'btrfs device ready'
   boot.initrd.systemd.emergencyAccess = true;
+  boot.kernel.sysctl."kernel.sysrq" = 1;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub = {
     enable = true;
