@@ -83,21 +83,64 @@ in
             boot.extraModulePackages = [ ];
 
           environment.systemPackages = with inputs.nixpkgs.legacyPackages.x86_64-linux; [
+            # Filesystems / RAID
             btrfs-progs
             xfsprogs
             e2fsprogs
             dosfstools
             zfs
             mdadm
-            smartmontools
             lvm2
-            tmux # NOTE: Consider zellij
-            ripgrep
+            gptfdisk
+            pardted
+
+            # Disk health / recovery
+            smartmontools
+            nvme-cli
+            hdparm
+            testdisk  # testdisk + photorec - partition/file recovery
+            gddrescue # ddrescue - imaging a failing disk sector-by-sector
+
+            # Hardware / bus inspection
+            pciutils  # lspci
+            usbutils  # lsusb
+            dmidecode # board/BIOS/RAM SPD info without rebooting into BIOS
+            lshw
+
+            # Networking / remote access
             ethtool
+            iproute2
+            curl
+            wget
+            socat
+
+            # Process/system diagnostics
+            strace
+            lsof
+            htop
+            file
+
+            # General / Comfort
+            zellij
+            ripgrep
+            git
+            jq
           ];
 
+          services.openssh = {
+            enable = true;
+            settings = {
+              PermitRootLogin = "yes";
+              PasswordAuthentication = false;
+            };
+          };
+          users.users.root = {
+            openssh.authorizedKeys = [
+              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGWnk0plf2FvpUm5nsOnR6wbY5xodV6hgdI1WpBvbroV jml@titanium"
+            ];
+          };
           services.getty.autologinUser = inputs.nixpkgs.lib.mkForce "root";
-          # TODO: Add Inbound SSH /w BreakGlass User, and pre calculated Keys/Hash
+          networking.firewall.enable = false; # trusted LAN, transient rescue/install media
         }
       ];
       specialArgs = { inherit inputs; };
