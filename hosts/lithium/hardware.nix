@@ -13,6 +13,15 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
+  boot.kernelParams = [
+    "boot.shell_on_fail"
+    "rootdelay=10"
+    "systemd.log_level=debug"
+    "systemd.log_target=console"
+  ];
+  boot.initrd.supportedFilesystems = [ "btrfs" ];
+  boot.initrd.systemd.enable = true; # Wait for 'btrfs device ready'
+  boot.initrd.systemd.emergencyAccess = true;
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "ahci"
@@ -22,6 +31,8 @@
     "usb_storage"
     "sd_mod"
     "sr_mod"
+    "dm_mod"
+    "btrfs"
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
