@@ -5,9 +5,11 @@
     ./hardware.nix
     ./configuration.nix
     ./service-ports.nix
-    ./services/caddy.nix
+    # TODO: Wrap Caddy in an option module so we can use it better with and without cloudflare secrets.
+    #./services/caddy.nix
     ./services/tailscale.nix
-    ./services/kanidm.nix
+    # TODO: Fix real issues with kanidm
+    #./services/kanidm.nix
     ./services/jellyfin.nix
     ./services/uptime-kuma.nix
     ./services/file-shares.nix
@@ -20,7 +22,8 @@
     ./services/paperless.nix
     ./services/vaultwarden.nix
     ./services/nextcloud.nix
-    ./services/syncthing.nix
+    # TODO: Get Syncthing working someday maybe?
+    #./services/syncthing.nix
     ./services/adguardhome.nix
     ./services/monitoring/grafana.nix
     ./services/palworld.nix

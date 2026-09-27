@@ -15,7 +15,8 @@ in
   services.vaultwarden = {
     enable = true;
     domain = svcDomain;
-    backupDir = "/tank/shares/backups/vaultwarden";
+    # TODO: Make Backup Dirs /w correct permissions and get this working.
+    #backupDir = "/tank/shares/backups/vaultwarden";
     config = {
       ROCKET_ADDRESS = "127.0.0.1";
       ROCKET_PORT = svcPort;

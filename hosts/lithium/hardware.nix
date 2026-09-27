@@ -16,8 +16,8 @@
   boot.kernelParams = [
     "boot.shell_on_fail"
     "rootdelay=30"
-    "systemd.log_level=debug"
-    "systemd.log_target=console"
+    #"systemd.log_level=debug"
+    #"systemd.log_target=console"
     "rd.systemd.debug_shell"
   ];
   boot.initrd.supportedFilesystems = [ "btrfs" "zfs" ];
