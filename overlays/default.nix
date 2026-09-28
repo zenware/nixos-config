@@ -1,12 +1,5 @@
 { nixpkgs, inputs }:
 let
-  fixCmake =
-    pkg:
-    pkg.overrideAttrs (old: {
-      cmakeFlakes = (old.cmakeFlags or [ ]) ++ [
-        (nixpkgs.lib.cmakeFeature "CMAKE_POLICY_VERSION_MINIMUM" "3.10")
-      ];
-    });
   cheetah3Overlay = final: prev: {
     pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
       (_pythonFinal: pythonPrev: {

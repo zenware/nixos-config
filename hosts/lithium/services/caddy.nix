@@ -1,13 +1,12 @@
 {
-  inputs,
   config,
   pkgs,
   lib,
   ...
 }:
-let
-  certDir = config.security.acme.certs."${config.zw.homelab.domain}".directory;
-in
+#let
+  #certDir = config.security.acme.certs."${config.zw.homelab.domain}".directory;
+#in
 {
   # NOTE: Options are given higher level names so the underlying software can
   # be swapped out while keeping the same interface.

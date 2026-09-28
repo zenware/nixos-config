@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 let
   svcDomain = "status.${config.zw.homelab.domain}";
   svcPort = config.zw.servicePorts.tcp.uptimeKuma;

@@ -3,8 +3,9 @@
   # Default to systemd-boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  # Fastboot/Hold a key to show bootloader choice.
+  boot.loader.timeout = 0;
 
-  
   boot = {
     # Visuals
     plymouth = {
@@ -25,7 +26,5 @@
       "udev.log_level=3"
       "systemd.show_status=auto"
     ];
-    # Hold a key to show bootloader choice.
-    loader.timeout = 0;
   };
 }

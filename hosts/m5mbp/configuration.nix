@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, ... }:
+{ pkgs, inputs, ... }:
 {
   imports = [
     inputs.home-manager.darwinModules.home-manager
@@ -66,7 +66,7 @@
     };
     NSGlobalDomain = {};
   };
- 
+
   # Necessary pieces, do not edit below this line.
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 6;

@@ -1,3 +1,10 @@
+# cobalt
+
+Decade Old Asus Zenbook 13
+
+This is the most sharable device so it should have at least a guest account &
+desktop environment of some kind on it, as well as come preloaded with the
+kinds of software a guest might need.
 
 Device Specific Hardware Details`
 ```shell

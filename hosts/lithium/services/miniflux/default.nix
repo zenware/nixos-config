@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 let
   homelabDomain = config.zw.homelab.domain;
   svcDomain = "feeds.${homelabDomain}";

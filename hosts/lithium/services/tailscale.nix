@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ ... }:
 #let
 #hostName = config.networking.hostName;
 #tailnetName = "tail79151.ts.net";

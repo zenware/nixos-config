@@ -1,7 +1,5 @@
 {
-  inputs,
   config,
-  pkgs,
   lib,
   ...
 }:
@@ -11,9 +9,9 @@ let
   svcPort = config.zw.servicePorts.tcp.immich;
   machineLearningPort = config.zw.servicePorts.tcp.immichMachineLearning;
   # https://docs.immich.app/install/config-file/
-  jsonSettings = {
-    server.externalDomain = "https://${svcDomain}";
-    # TODOL: Get this working without OAuth/OICD first, and then add it later...
+  # TODO: Figure out if I even want to setup the file this way, if these details are secret, when they should be built, etc.
+  #jsonSettings = { server.externalDomain = "https://${svcDomain}"; };
+    # TODO: Get this working without OAuth/OICD first, and then add it later...
     # oauth = {
     #   enabled = true;
     #   issuerUrl = "https://";  # TODO: the kanidm url?
@@ -28,7 +26,7 @@ let
     #   mobileOverrideEnabled = true;
     #   mobileRedirectUri = "https://${svcDomain}/api/oauth/mobile-redirect/";
     # };
-  };
+  #};
 in
 {
 

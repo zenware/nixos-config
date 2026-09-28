@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ ... }:
 {
   # Private overlay module.
   # Put private services and secret wiring here.
