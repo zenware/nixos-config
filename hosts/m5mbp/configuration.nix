@@ -27,6 +27,7 @@
     pkgs.aseprite
     pkgs.blender
     pkgs.famistudio
+    pkgs.element-desktop
   ];
 
   programs = {
