@@ -9,12 +9,13 @@ in
 
   config = {
     # TODO: Might be best to define some kind of function for this...
-    services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-      @adguard host ${svcDomain}
-      handle @adguard {
-        reverse_proxy 127.0.0.1:${toString webPort}
-      }
-    '';
+    services.caddy.virtualHosts."*.${homelabDomain}".extraConfig =
+      lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+        @adguard host ${svcDomain}
+        handle @adguard {
+          reverse_proxy 127.0.0.1:${toString webPort}
+        }
+      '';
 
     services.adguardhome = {
       enable = true;

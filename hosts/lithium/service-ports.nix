@@ -32,13 +32,17 @@ in
         tcp = lib.mkOption {
           type = lib.types.attrsOf lib.types.port;
           default = { };
-          example = { ssh = 2222; };
+          example = {
+            ssh = 2222;
+          };
         };
 
         udp = lib.mkOption {
           type = lib.types.attrsOf lib.types.port;
           default = { };
-          example = { dns = 53; };
+          example = {
+            dns = 53;
+          };
         };
       };
     };

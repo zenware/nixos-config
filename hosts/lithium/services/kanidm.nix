@@ -41,18 +41,19 @@ in
     # https://github.com/marcusramberg/nix-config/blob/e558914dd3705150511c5ef76278fc50bb4604f3/nixos/kanidm.nix#L3
 
     # TODO: If possible, consider specifying the cert location here instead of the following kludge.
-    services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-      @id host ${svcDomain}
-      handle @id {
-        reverse_proxy :${toString config.zw.servicePorts.tcp.kanidmHttps} {
-          header_up Host {host}
-          header_up X-Real-IP {http.request.header.CF-Connecting-IP}
-          transport http {
-            tls_server_name ${svcDomain}
+    services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig =
+      lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+        @id host ${svcDomain}
+        handle @id {
+          reverse_proxy :${toString config.zw.servicePorts.tcp.kanidmHttps} {
+            header_up Host {host}
+            header_up X-Real-IP {http.request.header.CF-Connecting-IP}
+            transport http {
+              tls_server_name ${svcDomain}
+            }
           }
         }
-      }
-    '';
+      '';
 
     # NOTE: Cleanup old rules
     # systemd.tmpfiles.rules = lib.filter(rule: ! (lib.strings.hasPrefix "C ${kanidmCertDir}" rule)) config.systemd.tmpfiles.rules;

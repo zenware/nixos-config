@@ -5,12 +5,13 @@ let
   svcPort = config.zw.servicePorts.tcp.vaultwarden;
 in
 {
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-    @vault host ${svcDomain}
-    handle @vault {
-      reverse_proxy 127.0.0.1:${toString svcPort}
-    }
-  '';
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig =
+    lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+      @vault host ${svcDomain}
+      handle @vault {
+        reverse_proxy 127.0.0.1:${toString svcPort}
+      }
+    '';
 
   services.vaultwarden = {
     enable = true;

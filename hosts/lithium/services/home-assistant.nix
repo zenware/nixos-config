@@ -5,12 +5,13 @@ let
   svcPort = config.zw.servicePorts.tcp.homeAssistant;
 in
 {
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-    @home host ${svcDomain}
-    handle @home {
-      reverse_proxy 127.0.0.1:${toString svcPort}
-    }
-  '';
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig =
+    lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+      @home host ${svcDomain}
+      handle @home {
+        reverse_proxy 127.0.0.1:${toString svcPort}
+      }
+    '';
 
   systemd.tmpfiles.rules = [
     "d /tank/services 0755 root root -"

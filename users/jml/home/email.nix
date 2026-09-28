@@ -35,21 +35,112 @@
       #nm_db_limit = "5000"; # Limits results in a query?
     };
     binds = [
-      { map = ["index" "pager"]; key = "\\Cj"; action = "sidebar-next"; }
-      { map = ["index" "pager"]; key = "\\Ck"; action = "sidebar-prev"; }
-      { map = ["index" "pager"]; key = "\\Co"; action = "sidebar-open"; }
-      { map = ["index" "pager"]; key = "B"; action = "sidebar-toggle-visible"; }
-      { map = ["index" "pager"]; key = "R"; action = "reply"; }
-      { map = ["index" "pager"]; key = "L"; action = "list-reply"; }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "\\Cj";
+        action = "sidebar-next";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "\\Ck";
+        action = "sidebar-prev";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "\\Co";
+        action = "sidebar-open";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "B";
+        action = "sidebar-toggle-visible";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "R";
+        action = "reply";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "L";
+        action = "list-reply";
+      }
     ];
     macros = [
-      { map = ["index" "pager"]; key = "ga"; action = "<modify-labels>-inbox -unread<enter>"; }
-      { map = ["index" "pager"]; key = "gs"; action = "<modify-labels>+flagged -inbox<enter>"; }
-      { map = ["index" "pager"]; key = "gd"; action = "<modify-labels>+trash -inbox -unread<enter>"; }
-      { map = ["index" "pager"]; key = "ge"; action = "<modify-labels>+reading -inbox<enter>"; }
-      { map = ["index" "pager"]; key = "gw"; action = "<modify-labels>+waiting -inbox<enter>"; }
-      { map = ["index" "pager"]; key = "gr"; action = "<modify-labels>+reply -inbox<enter>"; }
-      { map = ["index" "pager"]; key = "!"; action = "<modify-labels>+spam -inbox -unread<enter>"; }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "ga";
+        action = "<modify-labels>-inbox -unread<enter>";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "gs";
+        action = "<modify-labels>+flagged -inbox<enter>";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "gd";
+        action = "<modify-labels>+trash -inbox -unread<enter>";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "ge";
+        action = "<modify-labels>+reading -inbox<enter>";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "gw";
+        action = "<modify-labels>+waiting -inbox<enter>";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "gr";
+        action = "<modify-labels>+reply -inbox<enter>";
+      }
+      {
+        map = [
+          "index"
+          "pager"
+        ];
+        key = "!";
+        action = "<modify-labels>+spam -inbox -unread<enter>";
+      }
     ];
     extraConfig = ''
       set send_charset="us-ascii:utf-8"

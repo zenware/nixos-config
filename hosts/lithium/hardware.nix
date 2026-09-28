@@ -20,7 +20,10 @@
     #"systemd.log_target=console"
     "rd.systemd.debug_shell"
   ];
-  boot.initrd.supportedFilesystems = [ "btrfs" "zfs" ];
+  boot.initrd.supportedFilesystems = [
+    "btrfs"
+    "zfs"
+  ];
   boot.initrd.systemd.enable = true;
   boot.initrd.systemd.emergencyAccess = true;
   #boot.initrd.systemd.additionalUpstreamUnits = [ "debug-shell.service" ];
@@ -81,7 +84,7 @@
     options = [ "subvol=@persist" ];
   };
 
-  swapDevices = lib.mkForce [];
+  swapDevices = lib.mkForce [ ];
 
   # Required despite not booting from zfs, in order to make zfs.ko available to modprobe.
   # https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/index.html#installation

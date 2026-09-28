@@ -1,15 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   svcDomain = "tv.${config.zw.homelab.domain}";
   svcPort = config.zw.servicePorts.tcp.jellyfinHttp;
 in
 {
-  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-    @tv host ${svcDomain}
-    handle @tv {
-      reverse_proxy :${toString svcPort}
-    }
-  '';
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig =
+    lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+      @tv host ${svcDomain}
+      handle @tv {
+        reverse_proxy :${toString svcPort}
+      }
+    '';
   services.jellyfin = {
     enable = true;
     openFirewall = false;

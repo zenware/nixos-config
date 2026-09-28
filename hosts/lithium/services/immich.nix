@@ -11,21 +11,21 @@ let
   # https://docs.immich.app/install/config-file/
   # TODO: Figure out if I even want to setup the file this way, if these details are secret, when they should be built, etc.
   #jsonSettings = { server.externalDomain = "https://${svcDomain}"; };
-    # TODO: Get this working without OAuth/OICD first, and then add it later...
-    # oauth = {
-    #   enabled = true;
-    #   issuerUrl = "https://";  # TODO: the kanidm url?
-    #   clientId = "immich";
-    #   # NOTE: Why config.sops.placeholder was originally?
-    #   clientSecret = config.sops.secrets."immich/oauth2_client_secret".path;
-    #   scope = "openid email profile";
-    #   signingAlgorithm = "ES256";
-    #   storageLabelClaim = "email";
-    #   buttonText = "Login with Kanidm";
-    #   autoLaunch = true;
-    #   mobileOverrideEnabled = true;
-    #   mobileRedirectUri = "https://${svcDomain}/api/oauth/mobile-redirect/";
-    # };
+  # TODO: Get this working without OAuth/OICD first, and then add it later...
+  # oauth = {
+  #   enabled = true;
+  #   issuerUrl = "https://";  # TODO: the kanidm url?
+  #   clientId = "immich";
+  #   # NOTE: Why config.sops.placeholder was originally?
+  #   clientSecret = config.sops.secrets."immich/oauth2_client_secret".path;
+  #   scope = "openid email profile";
+  #   signingAlgorithm = "ES256";
+  #   storageLabelClaim = "email";
+  #   buttonText = "Login with Kanidm";
+  #   autoLaunch = true;
+  #   mobileOverrideEnabled = true;
+  #   mobileRedirectUri = "https://${svcDomain}/api/oauth/mobile-redirect/";
+  # };
   #};
 in
 {
@@ -33,12 +33,13 @@ in
   config = {
     # NOTE: The following repo contains a highly mature immich setup on nixos.
     # https://github.com/xinyangli/nixos-config/blob/a8b5bea68caea573801ccfdb8ceacb7a8f2b0190/machines/agate/services/immich.nix
-    services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-      @photos host ${svcDomain}
-      handle @photos {
-        reverse_proxy [::1]:${toString svcPort}
-      }
-    '';
+    services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig =
+      lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+        @photos host ${svcDomain}
+        handle @photos {
+          reverse_proxy [::1]:${toString svcPort}
+        }
+      '';
 
     # NOTE: Primarily to contain DB_PASSWORD to make it possible to backup and restore the DB.
     # sops.secrets.immich_env = {

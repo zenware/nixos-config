@@ -8,12 +8,13 @@ let
   svcPort = config.zw.servicePorts.tcp.grafana;
 in
 {
-  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-    @grafana host ${svcDomain}
-    handle @grafana {
-      reverse_proxy :${toString svcPort}
-    }
-  '';
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig =
+    lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+      @grafana host ${svcDomain}
+      handle @grafana {
+        reverse_proxy :${toString svcPort}
+      }
+    '';
 
   services.grafana = {
     enable = true;

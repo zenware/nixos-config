@@ -6,12 +6,13 @@ let
   dataDir = "/tank/shares/syncthing";
 in
 {
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-    @sync host ${svcDomain}
-    handle @sync {
-      reverse_proxy 127.0.0.1:${toString guiPort}
-    }
-  '';
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig =
+    lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+      @sync host ${svcDomain}
+      handle @sync {
+        reverse_proxy 127.0.0.1:${toString guiPort}
+      }
+    '';
 
   systemd.tmpfiles.rules = [
     "d ${dataDir} 0750 syncthing syncthing -"

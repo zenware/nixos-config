@@ -6,7 +6,10 @@
   ];
   nixpkgs.config.allowUnfree = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   # NOTE: Matches zw.base (modules/roles/base.nix); m5mbp bypasses mkSystem's
   # sharedModules seam, so it doesn't get the role and must set this itself.
   nix.settings.accept-flake-config = true;
@@ -58,13 +61,13 @@
 
   system.primaryUser = "jml";
   system.defaults = {
-    dock = {};
+    dock = { };
     finder = {
       AppleShowAllExtensions = true;
       ShowPathbar = true;
       FXEnableExtensionChangeWarning = false;
     };
-    NSGlobalDomain = {};
+    NSGlobalDomain = { };
   };
 
   # Necessary pieces, do not edit below this line.

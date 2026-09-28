@@ -4,12 +4,13 @@ let
   svcPort = config.zw.servicePorts.tcp.uptimeKuma;
 in
 {
-  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-    @status host ${svcDomain}
-    handle @status {
-      reverse_proxy :${toString svcPort}
-    }
-  '';
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig =
+    lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+      @status host ${svcDomain}
+      handle @status {
+        reverse_proxy :${toString svcPort}
+      }
+    '';
   # NOTE: Currently requires some web-interface configuration
   # User must set up an admin account, monitors, and status pages manually.
   services.uptime-kuma = {

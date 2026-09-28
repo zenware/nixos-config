@@ -5,7 +5,7 @@
   ...
 }:
 #let
-  #certDir = config.security.acme.certs."${config.zw.homelab.domain}".directory;
+#certDir = config.security.acme.certs."${config.zw.homelab.domain}".directory;
 #in
 {
   # NOTE: Options are given higher level names so the underlying software can
@@ -23,7 +23,6 @@
   config = lib.mkIf config.zw.homelab.reverse-proxy.enable {
     # Nextcloud uses Nginx as a loopback-only HTTP backend.
     services.nginx.enable = lib.mkDefault false;
-
 
     # TODO: There needs to be a zw.caddy or zw.reverse_proxy option to control
     # this, and caddy sections for other services too. With an additional option

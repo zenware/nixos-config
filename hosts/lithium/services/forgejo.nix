@@ -20,9 +20,9 @@ in
   #sopsFile = ../secrets/forgejo.yaml;
   #};
   options.zw.homelab.software-forge = {
-     enable = lib.mkEnableOption "software forge";
-     cicd.enable = lib.mkEnableOption "cicd";
-     secretsAreAvailable = lib.mkOption {
+    enable = lib.mkEnableOption "software forge";
+    cicd.enable = lib.mkEnableOption "cicd";
+    secretsAreAvailable = lib.mkOption {
       default = false;
       example = true;
       type = lib.types.bool;
@@ -30,12 +30,13 @@ in
     };
   };
   config = lib.mkIf config.zw.homelab.software-forge.enable {
-    services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-      @git host ${svcDomain}
-      handle @git {
-        reverse_proxy :${toString svcHttpPort}
-      }
-    '';
+    services.caddy.virtualHosts."*.${homelabDomain}".extraConfig =
+      lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+        @git host ${svcDomain}
+        handle @git {
+          reverse_proxy :${toString svcHttpPort}
+        }
+      '';
 
     services.forgejo = {
       enable = true;
@@ -50,14 +51,14 @@ in
         # NOTE: Periodically come update the catpuccin theme.
         # `-auto` will automatically switch between latte and mocha modes.
         ui = {
-            DEFAULT_THEME = "catpuccin-teal-auto";
-            THEMES = builtins.concatStringsSep "," (
-              [ "auto" ]
-              ++ (map (name: lib.removePrefix "theme-" (lib.removeSuffix ".css" name)) (
-                builtins.attrNames (builtins.readDir theme)
-              ))
-            );
-          };
+          DEFAULT_THEME = "catpuccin-teal-auto";
+          THEMES = builtins.concatStringsSep "," (
+            [ "auto" ]
+            ++ (map (name: lib.removePrefix "theme-" (lib.removeSuffix ".css" name)) (
+              builtins.attrNames (builtins.readDir theme)
+            ))
+          );
+        };
         # NOTE: Actions support is based on: https://github.com/nektos/act
         #actions = {
         #ENABLED = true;
@@ -101,28 +102,30 @@ in
     };
 
     # TODO: Finish Configuring the kandim oauth for forgejo....
-    services.kanidm.provision.systems.oauth2.forgejo = lib.mkIf config.zw.homelab.identity-management.enable {
-      displayName = "forgejo";
-      # TODO: Get this from Forgejo
-      # originUrl = "https://git.${homelabDomain}/user/oauth2/${homelabDomain}/callback";
-      originUrl = "${config.services.forgejo.settings.server.ROOT_URL}/user/oauth2/kanidm/callback";
-      originLanding = "https://git.${homelabDomain}/";
-      #basicSecretFile = "TODO!SETME";
-      scopeMaps."git.users" = [
-        "openid"
-        "email"
-        "profile"
-        "groups"
-      ];
-      # WARNING: PKCE is currently not supported by gitea/forgejo,
-      # see https://github.com/go-gitea/gitea/issues/21376
-      allowInsecureClientDisablePkce = true;
-      preferShortUsername = true;
-      claimMaps.groups = {
-        joinType = "array";
-        valuesByGroup."git.admins" = [ "admin" ];
-      };
-    };
+    services.kanidm.provision.systems.oauth2.forgejo =
+      lib.mkIf config.zw.homelab.identity-management.enable
+        {
+          displayName = "forgejo";
+          # TODO: Get this from Forgejo
+          # originUrl = "https://git.${homelabDomain}/user/oauth2/${homelabDomain}/callback";
+          originUrl = "${config.services.forgejo.settings.server.ROOT_URL}/user/oauth2/kanidm/callback";
+          originLanding = "https://git.${homelabDomain}/";
+          #basicSecretFile = "TODO!SETME";
+          scopeMaps."git.users" = [
+            "openid"
+            "email"
+            "profile"
+            "groups"
+          ];
+          # WARNING: PKCE is currently not supported by gitea/forgejo,
+          # see https://github.com/go-gitea/gitea/issues/21376
+          allowInsecureClientDisablePkce = true;
+          preferShortUsername = true;
+          claimMaps.groups = {
+            joinType = "array";
+            valuesByGroup."git.admins" = [ "admin" ];
+          };
+        };
 
     systemd.services.forgejo = {
       preStart =

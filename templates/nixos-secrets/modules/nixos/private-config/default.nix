@@ -9,7 +9,6 @@
     ./sops-secrets
   ];
 
-
   # NOTE: zw.homelab.domain is declared in nixos-config
   # (modules/roles/homelab.nix); set your real domain here to keep
   # it out of the public configuration.

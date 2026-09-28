@@ -19,12 +19,13 @@ in
   users.users.calibre-web.extraGroups = [ "media" ];
   users.groups.media = { };
 
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-    @books host ${svcDomain}
-    handle @books {
-      reverse_proxy localhost:${toString svcHttpPort}
-    }
-  '';
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig =
+    lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+      @books host ${svcDomain}
+      handle @books {
+        reverse_proxy localhost:${toString svcHttpPort}
+      }
+    '';
 
   # reverse_proxy :${toString svcHttpPort}
   #   encode {

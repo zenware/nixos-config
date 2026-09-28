@@ -69,18 +69,18 @@ in
 
           # Kmods used on lithium, which is usually where I run this media..
           boot.initrd.availableKernelModules = [
-              "xhci_pci"
-              "ahci"
-              "mpt3sas"
-              "nvme"
-              "usbhid"
-              "usb_storage"
-              "sd_mod"
-              "sr_mod"
-            ];
-            boot.initrd.kernelModules = [ ];
-            boot.kernelModules = [ "kvm-intel" ];
-            boot.extraModulePackages = [ ];
+            "xhci_pci"
+            "ahci"
+            "mpt3sas"
+            "nvme"
+            "usbhid"
+            "usb_storage"
+            "sd_mod"
+            "sr_mod"
+          ];
+          boot.initrd.kernelModules = [ ];
+          boot.kernelModules = [ "kvm-intel" ];
+          boot.extraModulePackages = [ ];
 
           environment.systemPackages = with inputs.nixpkgs.legacyPackages.x86_64-linux; [
             # Filesystems / RAID
@@ -98,12 +98,12 @@ in
             smartmontools
             nvme-cli
             hdparm
-            testdisk  # testdisk + photorec - partition/file recovery
+            testdisk # testdisk + photorec - partition/file recovery
             gddrescue # ddrescue - imaging a failing disk sector-by-sector
 
             # Hardware / bus inspection
-            pciutils  # lspci
-            usbutils  # lsusb
+            pciutils # lspci
+            usbutils # lsusb
             dmidecode # board/BIOS/RAM SPD info without rebooting into BIOS
             lshw
 

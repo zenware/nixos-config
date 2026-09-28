@@ -11,12 +11,13 @@ let
   stateDir = "/tank/services/nextcloud";
 in
 {
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
-    @cloud host ${svcDomain}
-    handle @cloud {
-      reverse_proxy 127.0.0.1:${toString backendPort}
-    }
-  '';
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig =
+    lib.mkIf config.zw.homelab.reverse-proxy.enable ''
+      @cloud host ${svcDomain}
+      handle @cloud {
+        reverse_proxy 127.0.0.1:${toString backendPort}
+      }
+    '';
 
   systemd.tmpfiles.rules = [
     "d /tank/services 0755 root root -"
