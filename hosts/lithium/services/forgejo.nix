@@ -15,25 +15,13 @@ let
   assetsDir = "${config.services.forgejo.stateDir}/custom/public/assets";
 in
 {
-  # NOTE: Periodically come update the catpuccin theme.
-  # `-auto` will automatically switch between latte and mocha modes.
-  services.forgejo.settings.ui = {
-    DEFAULT_THEME = "catpuccin-teal-auto";
-    THEMES = builtins.concatStringsSep "," (
-      [ "auto" ]
-      ++ (map (name: lib.removePrefix "theme-" (lib.removeSuffix ".css" name)) (
-        builtins.attrNames (builtins.readDir theme)
-      ))
-    );
-  };
-
-  # TODO: Setup a PostgreSQL Server.
+  # TODO: Under what criteria should I a PostgreSQL Server for forgejo?
   # Inspiration here: https://github.com/nyawox/arcanum/blob/4629dfba1bc6d4dd2f4cf45724df81289230b61a/nixos/servers/forgejo.nix#L64
   #sops-secrets.postgres-forgejo = {
   #sopsFile = ../secrets/forgejo.yaml;
   #};
 
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
     @git host ${svcDomain}
     handle @git {
       reverse_proxy :${toString svcHttpPort}
@@ -50,6 +38,17 @@ in
         ROOT_URL = "https://${svcDomain}";
         HTTP_PORT = svcHttpPort;
       };
+      # NOTE: Periodically come update the catpuccin theme.
+      # `-auto` will automatically switch between latte and mocha modes.
+      ui = {
+          DEFAULT_THEME = "catpuccin-teal-auto";
+          THEMES = builtins.concatStringsSep "," (
+            [ "auto" ]
+            ++ (map (name: lib.removePrefix "theme-" (lib.removeSuffix ".css" name)) (
+              builtins.attrNames (builtins.readDir theme)
+            ))
+          );
+        };
       # NOTE: Actions support is based on: https://github.com/nektos/act
       #actions = {
       #ENABLED = true;
@@ -93,7 +92,7 @@ in
   };
 
   # TODO: Finish Configuring the kandim oauth for forgejo....
-  services.kanidm.provision.systems.oauth2.forgejo = {
+  services.kanidm.provision.systems.oauth2.forgejo = lib.mkIf config.zw.homelab.identity.enable {
     displayName = "forgejo";
     # TODO: Get this from Forgejo
     # originUrl = "https://git.${homelabDomain}/user/oauth2/${homelabDomain}/callback";

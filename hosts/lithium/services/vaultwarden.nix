@@ -1,11 +1,11 @@
-{ config, ... }:
+{ config, lib, ... }:
 let
   homelabDomain = config.zw.homelab.domain;
   svcDomain = "vault.${homelabDomain}";
   svcPort = config.zw.servicePorts.tcp.vaultwarden;
 in
 {
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
     @vault host ${svcDomain}
     handle @vault {
       reverse_proxy 127.0.0.1:${toString svcPort}

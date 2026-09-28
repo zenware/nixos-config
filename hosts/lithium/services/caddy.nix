@@ -9,57 +9,77 @@ let
   certDir = config.security.acme.certs."${config.zw.homelab.domain}".directory;
 in
 {
-  # Nextcloud uses Nginx as a loopback-only HTTP backend.
-  services.nginx.enable = lib.mkDefault false;
-
-  # TODO: Add Metrics with Prometheus & Grafana
-  services.caddy = {
-    enable = true;
-    package = pkgs.caddy.withPlugins {
-      # NOTE: Occasionally specify @latest and update the new versions, and the result hash.
-      # Realistically, some sort of automation should be setup for this.
-      plugins = [
-        # NOTE: v0.2.4+ required for new-format Cloudflare `cfat_`/`cfut_`
-        # API tokens (caddy-dns/cloudflare#123); older versions reject them
-        # with "API token appears invalid".
-        "github.com/mholt/caddy-dynamicdns@v0.0.0-20260711161133-a5890c9df68c"
-        "github.com/caddy-dns/cloudflare@v0.2.4"
-      ];
-      hash = "sha256-wK4Gk94MPxzjmNFaEI97pJJ8kMkp045Yj7p97gaN8O4="; # lib.fakeHash;
+  # NOTE: Options are given higher level names so the underlying software can
+  # be swapped out while keeping the same interface.
+  options.zw.homelab.reverse-proxy = {
+    enable = lib.mkEnableOption "homelab reverse proxy";
+    secretsAreAvailable = lib.mkOption {
+      default = false;
+      example = true;
+      type = lib.types.bool;
+      description = "Whether the homelab reverse proxy can be built using secrets.";
     };
-    # NOTE: Use Staging CA while testing, check `systemctl status caddy`
-    # to see if everything is working.
-    # acmeCA = "https://acme-staging-v02.api.letsencrypt.org/directory";
-    # environmentFile = config.sops.secrets.cloudflare_env.path;
-    # NOTE: DNS provider settings
-    # https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148
-    globalConfig = ''
-      # NOTE: DNS-01 for every managed cert. Issuance no longer depends on
-      # inbound 80/443 reachability (HTTP-01/TLS-ALPN-01 broke when LE
-      # couldn't connect in), and pairs with the wildcard vhost below so only
-      # `*.${config.zw.homelab.domain}` ever appears in CT logs.
-      acme_dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
-      dynamic_dns {
-        provider cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
-        domains {
-          ${config.zw.homelab.domain} @
-        }
-        dynamic_domains
-      }
-    '';
   };
 
-  # NOTE: Single wildcard site; each service module appends a `handle` block
-  # guarded by a host matcher (extraConfig is `lines`, so definitions merge).
-  # The matcher-less handle is the fallback for unmatched subdomains; Caddy
-  # evaluates handle blocks in order, so mkAfter keeps it textually last.
-  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkAfter ''
-    handle {
-      abort
-    }
-  '';
-  networking.firewall.allowedTCPPorts = with config.zw.servicePorts.tcp; [
-    caddyHttp
-    caddyHttps
-  ];
+  config = lib.mkIf config.zw.homelab.reverse-proxy.enable {
+    # Nextcloud uses Nginx as a loopback-only HTTP backend.
+    services.nginx.enable = lib.mkDefault false;
+
+
+    # TODO: There needs to be a zw.caddy or zw.reverse_proxy option to control
+    # this, and caddy sections for other services too. With an additional option
+    # that can check if we have secrets available to us. If we don't have secrets
+    # then we shouldn't enable cloudflare auto-dns in globalConfig because it's
+    # doomed to fail.
+    # TODO: Add Metrics with Prometheus & Grafana
+    services.caddy = {
+      enable = true;
+      package = pkgs.caddy.withPlugins {
+        # NOTE: Occasionally specify @latest and update the new versions, and the result hash.
+        # Realistically, some sort of automation should be setup for this.
+        plugins = [
+          # NOTE: v0.2.4+ required for new-format Cloudflare `cfat_`/`cfut_`
+          # API tokens (caddy-dns/cloudflare#123); older versions reject them
+          # with "API token appears invalid".
+          "github.com/mholt/caddy-dynamicdns@v0.0.0-20260711161133-a5890c9df68c"
+          "github.com/caddy-dns/cloudflare@v0.2.4"
+        ];
+        hash = "sha256-wK4Gk94MPxzjmNFaEI97pJJ8kMkp045Yj7p97gaN8O4="; # lib.fakeHash;
+      };
+      # NOTE: Use Staging CA while testing, check `systemctl status caddy`
+      # to see if everything is working.
+      # acmeCA = "https://acme-staging-v02.api.letsencrypt.org/directory";
+      # environmentFile = config.sops.secrets.cloudflare_env.path;
+      # NOTE: DNS provider settings
+      # https://caddy.community/t/how-to-use-dns-provider-modules-in-caddy-2/8148
+      globalConfig = lib.mkIf config.zw.homelab.reverse-proxy.secretsAreAvailable ''
+        # NOTE: DNS-01 for every managed cert. Issuance no longer depends on
+        # inbound 80/443 reachability (HTTP-01/TLS-ALPN-01 broke when LE
+        # couldn't connect in), and pairs with the wildcard vhost below so only
+        # `*.${config.zw.homelab.domain}` ever appears in CT logs.
+        acme_dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
+        dynamic_dns {
+          provider cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
+          domains {
+            ${config.zw.homelab.domain} @
+          }
+          dynamic_domains
+        }
+      '';
+    };
+
+    # NOTE: Single wildcard site; each service module appends a `handle` block
+    # guarded by a host matcher (extraConfig is `lines`, so definitions merge).
+    # The matcher-less handle is the fallback for unmatched subdomains; Caddy
+    # evaluates handle blocks in order, so mkAfter keeps it textually last.
+    services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkAfter ''
+      handle {
+        abort
+      }
+    '';
+    networking.firewall.allowedTCPPorts = with config.zw.servicePorts.tcp; [
+      caddyHttp
+      caddyHttps
+    ];
+  };
 }

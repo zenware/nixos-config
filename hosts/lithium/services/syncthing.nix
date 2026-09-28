@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 let
   homelabDomain = config.zw.homelab.domain;
   svcDomain = "sync.${homelabDomain}";
@@ -6,7 +6,7 @@ let
   dataDir = "/tank/shares/syncthing";
 in
 {
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
     @sync host ${svcDomain}
     handle @sync {
       reverse_proxy 127.0.0.1:${toString guiPort}

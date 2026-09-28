@@ -1,10 +1,10 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
   svcDomain = "status.${config.zw.homelab.domain}";
   svcPort = config.zw.servicePorts.tcp.uptimeKuma;
 in
 {
-  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
     @status host ${svcDomain}
     handle @status {
       reverse_proxy :${toString svcPort}

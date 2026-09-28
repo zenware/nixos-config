@@ -1,10 +1,10 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
   svcDomain = "tv.${config.zw.homelab.domain}";
   svcPort = config.zw.servicePorts.tcp.jellyfinHttp;
 in
 {
-  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
+  services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
     @tv host ${svcDomain}
     handle @tv {
       reverse_proxy :${toString svcPort}
@@ -12,8 +12,6 @@ in
   '';
   services.jellyfin = {
     enable = true;
-    # NOTE: Keeping this open for now, for internal network use.
-    # ports 8096 for http and 8920 for https
     openFirewall = false;
   };
   networking.firewall.allowedTCPPorts = with config.zw.servicePorts.tcp; [

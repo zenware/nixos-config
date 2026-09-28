@@ -9,6 +9,8 @@
     ./sops-secrets
   ];
 
+  zw.homelab.reverse-proxy.secretsAreAvailable = true;
+  zw.homelab.identity = true;
   # Example sops-nix wiring:
   # sops.secrets = {
   #   "example/service/api_key" = { sopsFile = ../lithium/secrets.yaml; };

@@ -35,7 +35,7 @@ in
   config = {
     # NOTE: The following repo contains a highly mature immich setup on nixos.
     # https://github.com/xinyangli/nixos-config/blob/a8b5bea68caea573801ccfdb8ceacb7a8f2b0190/machines/agate/services/immich.nix
-    services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = ''
+    services.caddy.virtualHosts."*.${config.zw.homelab.domain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
       @photos host ${svcDomain}
       handle @photos {
         reverse_proxy [::1]:${toString svcPort}
@@ -93,7 +93,7 @@ in
       toString machineLearningPort
     );
 
-    # services.kanidm.provision.systems.oauth2.immich = {
+    # services.kanidm.provision.systems.oauth2.immich = lib.mkIf config.zw.homelab.identity.enable {
     #   displayName = "immich";
     #   originUrl = "https://${svcDomain}/oauth2/oidc/callback";
     #   originLanding = "https://${svcDomain}/";

@@ -1,11 +1,11 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
   homelabDomain = config.zw.homelab.domain;
   svcDomain = "feeds.${homelabDomain}";
   svcPort = toString config.zw.servicePorts.tcp.miniflux;
 in
 {
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
     @feeds host ${svcDomain}
     handle @feeds {
       reverse_proxy :${svcPort}
@@ -48,7 +48,8 @@ in
     };
   };
 
-  services.kanidm.provision.systems.oauth2.miniflux = {
+  # TODO: there's probably a more elaborate way of rearranging things when we have an identity service or not.
+  services.kanidm.provision.systems.oauth2.miniflux = lib.mkIf config.zw.homelab.identity.enable {
     displayName = "miniflux";
     originUrl = "https://${svcDomain}/oauth2/oidc/callback";
     originLanding = "https://${svcDomain}/";

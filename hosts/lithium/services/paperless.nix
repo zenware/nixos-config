@@ -14,7 +14,7 @@ let
   ];
 in
 {
-  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = ''
+  services.caddy.virtualHosts."*.${homelabDomain}".extraConfig = lib.mkIf config.zw.homelab.reverse-proxy.enable ''
     @paperless host ${svcDomain}
     handle @paperless {
       reverse_proxy 127.0.0.1:${toString svcPort}

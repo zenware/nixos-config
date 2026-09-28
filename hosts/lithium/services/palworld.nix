@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.zw.palworld;
+  cfg = config.zw.game-servers.palworld;
   stateDir = "/var/lib/palworld";
   settingsDir = "${stateDir}/palworld/Pal/Saved/Config/LinuxServer";
   palworldHash = "sha256-zx2mj6IYqkFjoKtrKWRAy7/J2G8WhdZX0xKY6MuabLY=";
@@ -21,16 +21,24 @@ let
   };
 in
 {
-  options.zw.palworld.configFile = lib.mkOption {
-    type = lib.types.path;
-    default = pkgs.writeText "palworld-settings.ini" ''
-      [/Script/Pal.PalGameWorldSettings]
-      OptionSettings=(ServerName="lithium Palworld",ServerDescription="Palworld server",ServerPassword="FAKE-PALWORLD-SERVER-PASSWORD",AdminPassword="FAKE-PALWORLD-ADMIN-PASSWORD",PublicPort=${toString config.zw.servicePorts.udp.palworldGame},RCONEnabled=False)
-    '';
-    description = "PalWorldSettings.ini installed before the Palworld server starts.";
+  # TODO: Organize the game-servers options better.
+  options.zw.game-servers = {
+    enable = lib.mkEnableOption "Game servers";
+  };
+  options.zw.game-servers.palworld = {
+    enable = lib.mkEnableOption "Palworld server";
+    configFile = lib.mkOption {
+      type = lib.types.path;
+      default = pkgs.writeText "palworld-settings.ini" ''
+        [/Script/Pal.PalGameWorldSettings]
+        OptionSettings=(ServerName="lithium Palworld",ServerDescription="Palworld server",ServerPassword="FAKE-PALWORLD-SERVER-PASSWORD",AdminPassword="FAKE-PALWORLD-ADMIN-PASSWORD",PublicPort=${toString config.zw.servicePorts.udp.palworldGame},RCONEnabled=False)
+      '';
+      description = "PalWorldSettings.ini installed before the Palworld server starts.";
+    };
   };
 
-  config = {
+  # Only build this if both game-servers generally AND palworld in-specific are enabled.
+  config = lib.mkIf (config.zw.game-servers.enable && cfg.enable) {
     users.users.flux = {
       isSystemUser = true;
       group = "flux";
