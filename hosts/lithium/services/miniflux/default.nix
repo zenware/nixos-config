@@ -49,7 +49,7 @@ in
   };
 
   # TODO: there's probably a more elaborate way of rearranging things when we have an identity service or not.
-  services.kanidm.provision.systems.oauth2.miniflux = lib.mkIf config.zw.homelab.identity.enable {
+  services.kanidm.provision.systems.oauth2.miniflux = lib.mkIf config.zw.homelab.identity-management.enable {
     displayName = "miniflux";
     originUrl = "https://${svcDomain}/oauth2/oidc/callback";
     originLanding = "https://${svcDomain}/";

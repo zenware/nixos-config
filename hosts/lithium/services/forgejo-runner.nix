@@ -5,25 +5,15 @@
   ...
 }:
 let
-  cfg = config.zw.forgejo-runner;
+  cfg = config.zw.homelab.software-forge;
   homelabDomain = config.zw.homelab.domain;
 in
 {
-  options.zw.forgejo-runner = {
-    enable = lib.mkEnableOption "the Forgejo Actions runner";
-
-    tokenFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
-      description = "File containing the Forgejo runner registration token.";
-    };
-  };
-
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.enable && cfg.cicd.enable) {
     assertions = [
       {
-        assertion = cfg.tokenFile != null;
-        message = "zw.forgejo-runner.tokenFile must be set when the Forgejo runner is enabled.";
+        assertion = cfg.secretsAreAvailable != null;
+        message = "zw.homelab.software-forge.secretsAreAvailable must be set when cicd is enabled.";
       }
     ];
 
@@ -33,7 +23,8 @@ in
         enable = true;
         name = "${config.networking.hostName}-runner";
         url = "https://git.${homelabDomain}";
-        tokenFile = cfg.tokenFile;
+        # NOTE: Cannot make a token properly without secrets like sops-nix.
+        tokenFile = lib.mkIf (cfg.secretsAreAvailable) cfg.tokenFile;
         labels = [
           "ubuntu-latest:docker://node:22-bookworm-slim"
           "ubuntu-22.04:docker://node:22-bookworm-slim"

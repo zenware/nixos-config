@@ -93,7 +93,7 @@ in
       toString machineLearningPort
     );
 
-    # services.kanidm.provision.systems.oauth2.immich = lib.mkIf config.zw.homelab.identity.enable {
+    # services.kanidm.provision.systems.oauth2.immich = lib.mkIf config.zw.homelab.identity-management.enable {
     #   displayName = "immich";
     #   originUrl = "https://${svcDomain}/oauth2/oidc/callback";
     #   originLanding = "https://${svcDomain}/";

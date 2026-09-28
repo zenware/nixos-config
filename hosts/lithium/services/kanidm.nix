@@ -25,9 +25,9 @@ let
   kanidmCertCopier = "kanidm-cert-copier";
 in
 {
-  options.zw.homelab.identity.enable = lib.mkEnableOption "homelab identity service";
+  options.zw.homelab.identity-management.enable = lib.mkEnableOption "homelab identity service";
 
-  config = lib.mkIf config.zw.homelab.identity.enable {
+  config = lib.mkIf config.zw.homelab.identity-management.enable {
     # NOTE: Domains are serious when they are the root of identity/authnz.
     # Recommendation from Kanidm docs for "Maximum" security is to maintain
     # Both `example.com` and `id.example-auth.com`, the latter for idm infra exclusively.

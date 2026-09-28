@@ -33,7 +33,7 @@
     enable = true;
     palworld.enable = false;  # Palworld/Steam is too flaky to build all the time.
   };
-  zw.homelab.identity.enable = false; # Run a Kanidm identity service
+  zw.homelab.identity-management.enable = false; # Run a Kanidm identity service
   zw.homelab.reverse-proxy.enable = true;
   zw.llm-agents.enable = true;
 }
