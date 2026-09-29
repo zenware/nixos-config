@@ -135,7 +135,7 @@ in
             };
           };
           users.users.root = {
-            openssh.authorizedKeys = [
+            openssh.authorizedKeys.keys = [
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGWnk0plf2FvpUm5nsOnR6wbY5xodV6hgdI1WpBvbroV jml@titanium"
             ];
           };
