@@ -2,8 +2,7 @@
 {
   imports = [
     ./boot.nix
-    ../../modules/nixos
-    ../../modules/nixos/tailscale.nix
+    ./tailscale.nix
     # https://github.com/NixOS/nixos-hardware/blob/master/README.md#using-nix-flakes-support
     # TODO: This module doesn't exist yet.
     #inputs.nixos-hardware.nixosModules.asus-zenbook-ux390u
@@ -16,4 +15,6 @@
   zw.desktop.enable = true;
   zw.laptop.enable = true;
   zw.bluetooth.enable = true;
+  zw.calibre.enable = true;
+  zw.llm-agents.enable = true;
 }
