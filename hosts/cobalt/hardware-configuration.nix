@@ -13,6 +13,9 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
+  hardware.facter.enable = config.hardware.facter.report != {};
+  hardware.facter.reportPath = ./facter.json;
+  
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "ahci"
