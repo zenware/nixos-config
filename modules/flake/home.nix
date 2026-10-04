@@ -13,7 +13,7 @@
   };
   flake.modules.homeManager.jml-desktop = ../../users/jml/home/desktop.nix;
   flake.modules.homeManager.jml-niri = ../../users/jml/home/niri.nix;
-  flake.modules.homeManager.jml-linux-desktop = {
+  flake.modules.homeManager.jml-noctalia = {
     imports = [
       ../../users/jml/home/noctalia.nix
       inputs.noctalia.homeModules.default

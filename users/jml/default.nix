@@ -9,6 +9,8 @@
 }:
 let
   isDesktop = lib.attrByPath [ "zw" "desktop" "enable" ] pkgs.stdenv.hostPlatform.isDarwin config;
+  isNiri =
+    isDesktop && pkgs.stdenv.hostPlatform.isLinux && builtins.elem "niri" config.zw.desktop.sessions;
 in
 {
   home-manager = {
@@ -22,7 +24,8 @@ in
         homeManagerModules.jml
       ]
       ++ lib.optional isDesktop homeManagerModules.jml-desktop
-      ++ lib.optional (isDesktop && pkgs.stdenv.hostPlatform.isLinux) homeManagerModules.jml-linux-desktop
+      ++ lib.optional isNiri homeManagerModules.jml-noctalia
+      ++ lib.optional isNiri homeManagerModules.jml-niri
       ++ lib.optional (
         isDesktop && lib.hasAttrByPath [ "stylix" "enable" ] options
       ) inputs.stylix.homeModules.stylix;

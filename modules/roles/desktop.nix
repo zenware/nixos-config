@@ -20,6 +20,11 @@
       };
     in
     {
+      imports = [
+        inputs.niri.nixosModules.niri
+        inputs.stylix.nixosModules.stylix
+      ];
+
       options.zw.desktop = {
         enable = lib.mkEnableOption "a graphical desktop environment";
         sessions = lib.mkOption {
@@ -50,6 +55,10 @@
 
       config = lib.mkIf cfg.enable (
         lib.mkMerge [
+          {
+            stylix.homeManagerIntegration.autoImport = false;
+          }
+
           {
             assertions = [
               {

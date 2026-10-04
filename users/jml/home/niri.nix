@@ -93,7 +93,7 @@ let
   );
 in
 {
-  stylix = {
+  stylix = lib.mkIf osConfig.stylix.enable {
     enable = true;
     inherit (osConfig.stylix) base16Scheme polarity;
     targets = {
@@ -104,6 +104,8 @@ in
       nvf.enable = false;
     };
   };
+
+  xdg.configFile.niri-config.force = true;
 
   programs.niri.settings = {
     spawn-at-startup = [
