@@ -31,7 +31,14 @@
     # jdk # Java
   ];
 
-  zw.desktop.enable = true;
+  zw.desktop = {
+    enable = true;
+    sessions = [
+      "niri"
+      "plasma"
+    ];
+  };
+  zw.guest.enable = true;
   zw.laptop.enable = true;
   zw.bluetooth.enable = true;
 }

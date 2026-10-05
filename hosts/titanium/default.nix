@@ -16,7 +16,14 @@
 
   zw.gaming.enable = true;
   zw.game-emulation.enable = true;
-  zw.desktop.enable = true;
+  zw.desktop = {
+    enable = true;
+    sessions = [
+      "niri"
+      "plasma"
+    ];
+  };
+  zw.guest.enable = true;
   zw.calibre.enable = true;
   zw.bluetooth.enable = true;
   zw.llm-agents.enable = true;
