@@ -18,6 +18,18 @@
       custom-astronaut-theme = pkgs.sddm-astronaut.override {
         embeddedTheme = "pixel_sakura";
       };
+      breeze-dark-theme = pkgs.runCommand "sddm-theme-breeze-dark" { } ''
+        mkdir -p "$out/share/sddm/themes/breeze-dark"
+        cp -r ${pkgs.kdePackages.plasma-desktop}/share/sddm/themes/breeze/. \
+          "$out/share/sddm/themes/breeze-dark/"
+        cat > "$out/share/sddm/themes/breeze-dark/theme.conf.user" <<'EOF'
+        [General]
+        type=color
+        color=#11111b
+        showClock=true
+        showlogo=hidden
+        EOF
+      '';
     in
     {
       imports = [
@@ -32,6 +44,7 @@
             lib.types.enum [
               "hyprland"
               "niri"
+              "plasma"
               "xfce"
             ]
           );
@@ -46,10 +59,19 @@
           type = lib.types.enum [
             "hyprland"
             "niri"
+            "plasma"
             "xfce"
           ];
           default = "niri";
           description = "Session the display manager preselects. Must be one of zw.desktop.sessions.";
+        };
+        sddmTheme = lib.mkOption {
+          type = lib.types.enum [
+            "astronaut"
+            "breeze-dark"
+          ];
+          default = "breeze-dark";
+          description = "Theme displayed by SDDM.";
         };
       };
 
@@ -215,6 +237,7 @@
                 loginBackground = true;
               })
               custom-astronaut-theme
+              breeze-dark-theme
               # NOTE: Packages below here may be consumed by themes.
               pkgs.kdePackages.qtbase
               pkgs.kdePackages.qtwayland
@@ -222,14 +245,14 @@
             ];
             services.displayManager.defaultSession = cfg.defaultSession;
 
-            # TODO: Figure out how to add a session selector to sddm-astronaut-theme.
             services.displayManager.sddm = {
               enable = true;
-              package = pkgs.kdePackages.sddm;
               wayland.enable = true;
-              #theme = "catppuccin-mocha-teal";
-              theme = "sddm-astronaut-theme";
-              extraPackages = [ custom-astronaut-theme ];
+              theme = if cfg.sddmTheme == "astronaut" then "sddm-astronaut-theme" else "breeze-dark";
+              extraPackages = [
+                custom-astronaut-theme
+                breeze-dark-theme
+              ];
             };
           }
 
@@ -296,6 +319,11 @@
 
             # Screencasting - https://yalter.github.io/niri/Screencasting.html
             # Needs D-Bus, pipewire, `xdg-desktop-portal-gnome`? Or a portal from the above table with screencasting support
+          })
+
+          # Session: KDE Plasma
+          (lib.mkIf (sessionEnabled "plasma") {
+            services.desktopManager.plasma6.enable = true;
           })
 
           # Session: xfce
