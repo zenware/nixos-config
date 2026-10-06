@@ -49,8 +49,6 @@
     microvm.url = "github:astro/microvm.nix";
     microvm.inputs.nixpkgs.follows = "nixpkgs";
     nix-topology.url = "github:oddlama/nix-topology";
-    antigravity-nix.url = "github:jacopone/antigravity-nix";
-    antigravity-nix.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "github:nix-darwin/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };

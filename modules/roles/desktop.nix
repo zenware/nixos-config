@@ -136,9 +136,6 @@
               # Emergency launcher when the desktop shell is unavailable.
               fuzzel
 
-              # Emergency bar when the desktop shell is unavailable.
-              waybar
-
               # File manager
               nautilus
               gvfs # Trash support and more

@@ -12,7 +12,7 @@ It's designed to be **secure, composable, and automated** using modern Nix tooli
 - **Homelab Server ("lithium")**: Identity, Backups, Forgejo, Jellyfin
 - **Workstation / Gaming ("titanium")**: Dev and Gaming /w Steam/Proton
 - Secrets managed via `sops-nix`
-- Deployable with `nixos-rebuild` (and soon `deploy-rs` or `nixos-anywhere`)
+- Deployable with `nixos-rebuild` and `darwin-rebuild`
 
 Goofing
 ```bash
@@ -46,13 +46,13 @@ graph TD
     
     mkSystem --> hosts["hosts/{hostname}/default.nix"]
     mkSystem --> users_default["users/{username}/default.nix"]
-    mkSystem -.->|if file exists| users_home["users/{username}/home.nix"]
+    mkSystem --> users_home["users/{username}/home/default.nix"]
     
-    hosts --> nixos_mods@{ shape: docs, label: "modules/nixos/*"}
+    hosts --> nixos_mods@{ shape: docs, label: "modules/roles/*"}
     hosts --> hosts_conf["configuration.nix"]
     hosts --> hosts_hardware["hardware.nix"]
     
-    users_home --> home_mods@{ shape: docs, label: "modules/home/*"}
+    users_home --> home_mods@{ shape: docs, label: "users/{username}/home/*"}
 ```
 
 ## How to use this? (Deployment)
@@ -126,7 +126,7 @@ sudo -H darwin-rebuild switch --flake .#m5mbp
 ## Design Goals
 
 - **Reproducibility**: All systems can be rebuilt from this repo
-- **Modularity**: Every services is a reusable module
+- **Modularity**: Shared roles and service configuration are composed as modules
 - **Security**: Minimal trust, secrets managed explicitly
 - **Composability**: Roles + services enable rapid provisioning
 
@@ -137,18 +137,17 @@ sudo -H darwin-rebuild switch --flake .#m5mbp
 ├── lib        # functions to build flake outputs
 ├── hosts
 │   ├── <hostname>
-│   │   ├── configuration.nix  # imports from ../../modules/nixos
+│   │   ├── configuration.nix  # host-specific system configuration
 │   │   ├── hardware.nix       # host specific hardware configuration
 │   │   └── default.nix        # entrypoint for host configuration
 ├── users
 │   ├── <username>
 │   │   ├── default.nix  # entrypoint for user configuration
-│   │   └── home/default.nix     # imports from ../../modules/home/
-├── modules    # Reusable NixOS and Home-Manager Modules
-│   ├── nixos  # host configuration modules
-│   └── home   # home-manager modules
-├── overlays   # Custom Nixpkgs overlays that modify existing pacakges.
-└── pkgs       # Custom Nix packages (not in nixpkgs)
+│   │   └── home/default.nix  # Home Manager configuration
+├── modules
+│   ├── flake  # flake-parts output modules
+│   └── roles  # reusable NixOS role modules
+└── overlays  # Custom Nixpkgs overlays
 
 ```
 

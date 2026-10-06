@@ -1,26 +1,5 @@
 {
   "nodes": {
-    "antigravity-nix": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1789197223,
-        "narHash": "sha256-MVHEq1J+aE8NaapAot0BXEFP9f+4jXQRus6tFgp2P+0=",
-        "owner": "jacopone",
-        "repo": "antigravity-nix",
-        "rev": "0d6f9760ee4d685c6e75faeafb5055b93c4bc4aa",
-        "type": "github"
-      },
-      "original": {
-        "owner": "jacopone",
-        "repo": "antigravity-nix",
-        "type": "github"
-      }
-    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -1090,7 +1069,6 @@
     },
     "root": {
       "inputs": {
-        "antigravity-nix": "antigravity-nix",
         "determinate": "determinate",
         "disko": "disko",
         "flake-parts": "flake-parts_2",

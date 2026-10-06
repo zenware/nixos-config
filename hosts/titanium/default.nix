@@ -1,6 +1,5 @@
 { inputs, pkgs, ... }:
 {
-  nixpkgs.config.allowUnfree = true;
   imports = [
     inputs.nixos-hardware.nixosModules.asus-rog-strix-x570e
     ./hardware.nix

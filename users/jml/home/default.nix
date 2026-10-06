@@ -478,8 +478,6 @@ in
     };
   };
 
-  programs.antigravity-cli.enable = true;
-
   programs.vscode = {
     enable = desktop;
     mutableExtensionsDir = false;
