@@ -9,7 +9,6 @@
   environment.systemPackages = with pkgs; [
     sbctl # Secure-Boot
     helix
-    nil # nice for editing '.nix'
     (discord.override { withVencord = true; })
     signal-desktop
     obs-studio

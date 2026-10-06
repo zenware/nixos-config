@@ -92,6 +92,19 @@ nix build .#topology.x86_64-linux.config.output
 nix build .#nixosConfigurations.${hostname}.config.system.build.toplevel
 ```
 
+### Development shell
+
+The default development shell provides the Nix language server and formatter.
+With direnv installed, allow the checked-in `.envrc` once:
+
+```bash
+direnv allow
+```
+
+Zed receives the project environment when it opens this directory, while the
+explicit nixd path in the Home Manager configuration keeps the language server
+working when Zed is launched from the macOS Dock or another GUI launcher.
+
 ### Home Manager
 
 NixOS and nix-darwin hosts include Home Manager directly in their system

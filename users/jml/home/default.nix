@@ -33,14 +33,16 @@ in
   };
   home.packages =
     with pkgs;
-    [ devenv ]
+    [
+      devenv
+      nixd
+      nixfmt
+    ]
     # linux only
     # TODO: Add a test for linux + desktop environment
     ++ (lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       cfspeedtest
       helix
-      nil
-      nixfmt
     ])
     # linux + desktop manager
     #++ (lib.optionals (pkgs.stdenv.HostPlatform.isLinux && osConfig.services.desktopManager.enabled != null)
@@ -55,6 +57,10 @@ in
 
   programs = {
     home-manager.enable = true;
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
     fish.enable = true;
     bat.enable = true;
     fzf.enable = true;
@@ -531,8 +537,8 @@ in
         "explorer.confirmDragAndDrop" = false;
 
         "nix.enableLanguageServer" = true;
-        "nix.serverPath" = "nil";
-        "nix.serverSettings"."nil".formatting.command = [ "nixfmt" ];
+        "nix.serverPath" = "nixd";
+        "nix.serverSettings"."nixd".formatting.command = [ "nixfmt" ];
       };
     };
   };
@@ -560,7 +566,6 @@ in
     ];
     extraPackages = with pkgs; [
       basedpyright
-      nil
       nixd
       ruff
       #rust-analyzer
@@ -568,7 +573,9 @@ in
     ];
     userSettings = {
       vim_mode = true;
+      lsp.nixd.binary.path = "${pkgs.nixd}/bin/nixd";
       languages = {
+        Nix.language_servers = [ "nixd" ];
         Python = {
           language_servers = [
             "basedpyright"
