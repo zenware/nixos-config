@@ -5,6 +5,7 @@
     ../../users/jml
   ];
   nixpkgs.config.allowUnfree = true;
+  home-manager.backupFileExtension = ".bak";
 
   nix.settings.experimental-features = [
     "nix-command"
@@ -28,6 +29,8 @@
     pkgs.blender
     pkgs.famistudio
     pkgs.element-desktop
+    pkgs.helix
+    pkgs.mosh
   ];
 
   programs = {
