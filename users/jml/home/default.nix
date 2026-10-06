@@ -304,6 +304,9 @@ in
     ];
   };
 
+  # TODO: Compare some bulkier plugins with 'mini.nvim' replacements.
+  # mini.nvim is also configurable through nvf under it's own namespace rather than functionality-named namespaces.
+  # https://www.reddit.com/r/neovim/comments/1o6jjw0/my_review_of_minivim/
   programs.nvf = {
     enable = true;
     # When using the Home-Manager Module for nvf, the settings go into the following attribute set.
@@ -337,19 +340,83 @@ in
         }
       ];
 
-      lsp = {
-        enable = true;
-        formatOnSave = true;
-        lspkind.enable = false;
-        lightbulb.enable = true;
-        lspsaga.enable = false;
-        trouble.enable = true;
-        lspSignature.enable = false;
-        otter-nvim.enable = true;
-        nvim-docs-view.enable = true;
-        servers.rust-analyzer.settings.rust-analyzer.cargo.sysrootSrc = "${pkgs.rustPlatform.rustLibSrc}";
+      visuals = {
+        nvim-scrollbar.enable = true; # Configurable Visual Scrollbar (Can pair with Cursor, ALE, Diagnostics, Gitsigns, and hlslens)
+        nvim-web-devicons.enable = true; # Nerdfont Icons for use by other plugins
+        nvim-cursorline.enable = true; # Highlight Words & Lines on the cursor
+        cinnamon-nvim.enable = true; # Smooth Scrolling for any movement command.
+        fidget-nvim.enable = true; # UI for Notifications & LSP Progress Messages
+
+        highlight-undo.enable = true; # Highlight changed text after any non-insert actions
+        indent-blankline.enable = true; # Indentation Guides
       };
 
+      statusline.lualine = {
+        enable = true;
+        #setupOpts.options.theme = lib.mkForce "catppuccin";
+        integrations.breadcrumbs = {
+          nvim-navic.enable = true;
+          navbuddy.enable = true;
+        };
+      };
+
+      theme = {
+        enable = true;
+        name = lib.mkForce "catppuccin";
+        style = "mocha";
+        transparent = false;
+      };
+      autocomplete.blink-cmp = {
+        enable = true;
+        friendly-snippets.enable = true;
+      };
+      autopairs.nvim-autopairs.enable = true; # Pair up ", {, (, etc.
+      binds = {
+        cheatsheet.enable = true; # Searchable in-editor cheatsheet that uses Telescope
+        hardtime-nvim.enable = true; # Prevents you from using arrow keys and other "bad habits"
+        whichKey.enable = true; # Shows your available keybindings in a popup
+      };
+      clipboard.enable = true; # Clipboard Integration
+      dashboard.alpha.enable = true; # Greeter
+      debugger.nvim-dap.enable = true; # Debugger
+      debugger.nvim-dap.ui.enable = true; # Debugger UI
+      diagnostics = {
+        enable = true;
+        presets = {
+          deadnix.enable = true;
+          statix.enable = true;
+        };
+      };
+      filetree.neo-tree.enable = true; # Filesystem tree sidebar.
+      formatter.conform-nvim = {
+        enable = true;
+        presets = {
+          # Typescript
+          biome.enable = true;
+          biome-check.enable = true;
+          biome-organize-imports.enable = true;
+          # Golang
+          gofumpt.enable = true; # More-Strict Superset of gofmt
+          goimports.enable = true;
+          # Nix-lang
+          nixfmt.enable = true;
+          # Python
+          ruff.enable = true;
+          ruff-fix.enable = true;
+          ruff-organize-imports.enable = true;
+          # Rust
+          rustfmt.enable = true;
+        };
+      };
+      git = {
+        enable = true;
+        git-conflict.enable = true;
+        gitlinker-nvim.enable = true; # Copy GitHub/GitLab/Bitbucket links to clipboard
+        gitsigns.enable = true; # Git Info in Buffers + Gutters
+        gitsigns.codeActions.enable = false;
+        neogit.enable = true; # Interactive Git
+        octo-nvim.enable = true; # GitHub Integration
+      };
       languages = {
         enableDAP = true;
         enableExtraDiagnostics = true;
@@ -385,57 +452,26 @@ in
         css.enable = true;
         sql.enable = true;
       };
-
-      visuals = {
-        nvim-scrollbar.enable = true; # Configurable Visual Scrollbar (Can pair with Cursor, ALE, Diagnostics, Gitsigns, and hlslens)
-        nvim-web-devicons.enable = true; # Nerdfont Icons for use by other plugins
-        nvim-cursorline.enable = true; # Highlight Words & Lines on the cursor
-        cinnamon-nvim.enable = true; # Smooth Scrolling for any movement command.
-        fidget-nvim.enable = true; # UI for Notifications & LSP Progress Messages
-
-        highlight-undo.enable = true; # Highlight changed text after any non-insert actions
-        indent-blankline.enable = true; # Indentation Guides
-      };
-
-      statusline.lualine = {
+      lazy.enable = true; # Lazy Load when possible.
+      lsp = {
         enable = true;
-        #setupOpts.options.theme = lib.mkForce "catppuccin";
-        integrations.breadcrumbs = {
-          nvim-navic.enable = true;
-          navbuddy.enable = true;
-        };
+        formatOnSave = true;
+        lspkind.enable = false;
+        lightbulb.enable = true;
+        lspsaga.enable = false;
+        trouble.enable = true;
+        lspSignature.enable = false;
+        otter-nvim.enable = true;
+        nvim-docs-view.enable = true;
+        servers.rust-analyzer.settings.rust-analyzer.cargo.sysrootSrc = "${pkgs.rustPlatform.rustLibSrc}";
       };
 
-      theme = {
-        enable = true;
-        name = lib.mkForce "catppuccin";
-        style = "mocha";
-        transparent = false;
-      };
-
-      autopairs.nvim-autopairs.enable = true; # Pair up ", {, (, etc.
-      # blink-cmp is a compiled rust binary while nvim-cmp is a pure lua plugin...
-      autocomplete.blink-cmp.enable = true;
       # Code Snippets Engine /w support for Lua, VSCode, and SnipMate snippets.
       snippets.luasnip.enable = true;
 
-      filetree.neo-tree.enable = true; # Filesystem tree sidebar...
       tabline.nvimBufferline.enable = true; # Shows buffers as tabs at the top.
       treesitter.context.enable = true;
-      binds = {
-        whichKey.enable = true; # Shows your available keybindings in a popup
-        cheatsheet.enable = true; # Searchable in-editor cheatsheet that uses Telescope
-      };
       telescope.enable = true; # Fuzzy Finder, central to many other plugins.
-
-      git = {
-        enable = true;
-        gitsigns.enable = true; # Git Info in Buffers + Gutters
-        gitsigns.codeActions.enable = false;
-        neogit.enable = true; # Interactive Git
-      };
-
-      dashboard.alpha.enable = true; # Greeter
       notify.nvim-notify.enable = true; # Fancy Configurable Notification Manager
       projects.project-nvim.enable = true;
 
@@ -492,18 +528,7 @@ in
         fastaction.enable = true;
       };
 
-      assistant = {
-        chatgpt.enable = false;
-        copilot = {
-          enable = false;
-          cmp.enable = true;
-        };
-        codecompanion-nvim.enable = false;
-        # avante-nvim.enable = true;
-      };
-
       session.nvim-session-manager.enable = true; # Save sessions to reopen later
-      gestures.gesture-nvim.enable = false; # mouse gesture support?
       comments.comment-nvim.enable = true; # Fancy commenting
       presence.neocord.enable = true; # Discord Rich Presence
     };
