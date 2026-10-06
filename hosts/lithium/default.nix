@@ -15,8 +15,7 @@
     ./services/vaultwarden.nix
     ./services/uptime-kuma.nix
     ./services/miniflux
-    ./services/forgejo.nix
-    ./services/forgejo-runner.nix
+    ./services/forgejo
     ./services/paperless.nix
     ./services/home-assistant.nix
     ./services/jellyfin.nix
