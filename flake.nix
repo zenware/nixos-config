@@ -7,12 +7,14 @@
       "https://cache.numtide.com"
       "https://cachix.cachix.org"
       "https://nix-community.cachix.org"
+      "https://doom-emacs-unstraightened.cachix.org"
     ];
     extra-trusted-public-keys = [
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
       "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "doom-emacs-unstraightened.cachix.org-1:O5oOlRPnmQEvVaFyuMTmthCEooHbrg54WgSLR07tmg4="
     ];
   };
   inputs = {
@@ -20,33 +22,21 @@
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
-
     nixos-hardware.url = "github:nixos/nixos-hardware";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nix4vscode.url = "github:nix-community/nix4vscode";
-    nix4vscode.inputs.nixpkgs.follows = "nixpkgs";
     lanzaboote.url = "github:nix-community/lanzaboote/v1.1.0";
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     stylix.url = "github:nix-community/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
-
-    #obsidian-nvim.url = "github:epwalsh/obsidian.nvim";
-    nvf = {
-      url = "github:notashelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs";
-      #inputs.obsidian-nvim.follows = "obsidian-nvim";
-    };
-
-    # NOTE: Explicitly not following nixpkgs to use the cache.
-    noctalia.url = "github:noctalia-dev/noctalia/cachix";
-
-    niri = {
-      url = "github:sodiboo/niri-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nvf.url = "github:notashelf/nvf";
+    nvf.inputs.nixpkgs.follows = "nixpkgs";
+    doom-emacs.url = "github:marienz/nix-doom-emacs-unstraightened";
+    doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
+    rustowl.url = "github:nix-community/rustowl-flake";
+    rustowl.inputs.nixpkgs.follows = "nixpkgs";
     llm-agents.url = "github:numtide/llm-agents.nix";
     flux.url = "github:IogaMaster/flux";
     flux.inputs.nixpkgs.follows = "nixpkgs";
@@ -55,6 +45,10 @@
     nix-topology.url = "github:oddlama/nix-topology";
     nix-darwin.url = "github:nix-darwin/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    # NOTE: Explicitly not following nixpkgs to use the cache.
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
+    niri.url = "github:sodiboo/niri-flake";
   };
   outputs =
     inputs@{ flake-parts, ... }:

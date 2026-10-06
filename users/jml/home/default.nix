@@ -8,6 +8,13 @@
 }:
 let
   desktop = config.zw.home.desktop.enable;
+  rustTools = with pkgs; [
+    cargo
+    rustc
+    rustfmt
+    clippy
+  ];
+  rustowlPackages = inputs.rustowl.packages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   # NOTE: This file contains options that resolve under home-manager.users.<username>.
@@ -21,6 +28,7 @@ in
     stateVersion = "25.05";
     sessionVariables = {
       EDITOR = "hx";
+      RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
     };
 
     homeDirectory =
@@ -37,7 +45,9 @@ in
       devenv
       nixd
       nixfmt
+      rustowlPackages.rustowl
     ]
+    ++ rustTools
     # linux only
     # TODO: Add a test for linux + desktop environment
     ++ (lib.optionals pkgs.stdenv.hostPlatform.isLinux [
@@ -268,23 +278,32 @@ in
     ];
   };
 
-  programs.emacs = {
+  programs.doom-emacs = {
     enable = true;
-    # package = (pkgs.emacs30.pkgs.withPackages (epkgs: [
-    #   epkgs.treesit-grammars.with-grammars (grammars: [
-    #     grammars.tree-sitter-bash
-    #   ])
-    #   epkgs.pretty-sha-path
-    # ]));
-    extraConfig = ''
-      (setq standard-indent 2)
-    '';
+    doomDir = ./doom;
+    experimentalFetchTree = true;
+    extraBinPackages = [
+      pkgs.git
+      pkgs.ripgrep
+      pkgs.fd
+      pkgs.nixd
+      pkgs.nixfmt
+      pkgs.rust-analyzer
+      rustowlPackages.rustowl
+    ]
+    ++ rustTools;
+    extraPackages = epkgs: [
+      epkgs.nix-mode
+      epkgs.nixfmt
+      (epkgs.trivialBuild {
+        pname = "rustowl";
+        inherit (rustowlPackages.rustowl) version;
+        src = inputs.rustowl.inputs.rustowl;
+        packageRequires = [ epkgs.lsp-mode ];
+      })
+    ];
   };
 
-  # TODO: Implement support for at least
-  # Nix, Python, Rust, Golang, TypeScript
-  # TODO: Sort out why TF, `.nix` files tabs are cooked in neovim rn.
-  # It corrects things on document save, but this line for example started with an 8-long tabstop
   programs.nvf = {
     enable = true;
     # When using the Home-Manager Module for nvf, the settings go into the following attribute set.
@@ -293,12 +312,30 @@ in
       viAlias = true;
       vimAlias = true;
 
-      # TODO: For some reason spellcheck is having a very difficult time getting
-      # a wordlist.
-      #spellcheck = {
-      #  enable = true;
-      #  programmingWordlist.enable = true;
-      #};
+      extraPackages = rustTools ++ [ rustowlPackages.rustowl ];
+      extraPlugins.rustowl = {
+        package = rustowlPackages.rustowl-nvim;
+        setup = ''
+          require("rustowl").setup({
+            auto_enable = true,
+            client = { cmd = { "${rustowlPackages.rustowl}/bin/rustowl" } },
+          })
+        '';
+      };
+      spellcheck.enable = true;
+      # ponytail: bundled English dictionary; no runtime wordlist downloads.
+      spellcheck.languages = [ "en" ];
+      autocmds = [
+        {
+          event = [ "FileType" ];
+          pattern = [
+            "nix"
+            "terraform"
+            "hcl"
+          ];
+          command = "setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2";
+        }
+      ];
 
       lsp = {
         enable = true;
@@ -310,6 +347,7 @@ in
         lspSignature.enable = false;
         otter-nvim.enable = true;
         nvim-docs-view.enable = true;
+        servers.rust-analyzer.settings.rust-analyzer.cargo.sysrootSrc = "${pkgs.rustPlatform.rustLibSrc}";
       };
 
       languages = {
@@ -337,9 +375,6 @@ in
         python.enable = true;
         rust = {
           enable = true;
-          # TODO: null_ls is now deprecated.
-          # https://github.com/NotAShelf/nvf/issues/1175
-          # https://github.com/NotAShelf/nvf/blob/main/.github/CONTRIBUTING.md
           extensions.crates-nvim.enable = true;
         };
         go.enable = true;
@@ -362,15 +397,12 @@ in
         indent-blankline.enable = true; # Indentation Guides
       };
 
-      statusline = {
-        lualine = {
-          # Fancy Status Line
-          enable = true;
-          setupOpts.options.theme = lib.mkForce "catppuccin";
-          integrations.breadcrumbs = {
-            nvim-navic.enable = true;
-            navbuddy.enable = true;
-          };
+      statusline.lualine = {
+        enable = true;
+        #setupOpts.options.theme = lib.mkForce "catppuccin";
+        integrations.breadcrumbs = {
+          nvim-navic.enable = true;
+          navbuddy.enable = true;
         };
       };
 
@@ -403,9 +435,6 @@ in
         neogit.enable = true; # Interactive Git
       };
 
-      # TODO: Consider switching to `minimap-nvim` for rust-based minimap.
-      # codewindow may be tightly integrated with treesitter though...
-      # minimap.codewindow.enable = true;
       dashboard.alpha.enable = true; # Greeter
       notify.nvim-notify.enable = true; # Fancy Configurable Notification Manager
       projects.project-nvim.enable = true;
@@ -425,17 +454,13 @@ in
           # NOTE: https://github.com/smoka7/hop.nvim
           hop.enable = true; # EasyMotion like, allowing you to jump anywhere in the document with as few keystrokes as possible
           leap.enable = true; # Jump to anywhere visible
-          # TODO: I sort of hate how precognition injects itself in virtual
-          # lines, but I do like that it can be used to give a reminder.
           precognition.enable = false; # Helps with discovering motions to navigate your current buffer
         };
         images.img-clip.enable = true;
       };
 
-      # TODO: Get Obsidian Working.
       notes = {
         # obsidian.enable = true; # neovim fails to build with this enabled.
-        # mind-nvim.enable = true; NOTE: mind.nvim is totally decommissioned
         todo-comments.enable = true;
       };
 
@@ -481,65 +506,6 @@ in
       gestures.gesture-nvim.enable = false; # mouse gesture support?
       comments.comment-nvim.enable = true; # Fancy commenting
       presence.neocord.enable = true; # Discord Rich Presence
-    };
-  };
-
-  programs.vscode = {
-    enable = desktop;
-    mutableExtensionsDir = false;
-    argvSettings = {
-      password-store = "gnome-libsecret";
-      enable-crash-reporter = false;
-    };
-    profiles.default = {
-      enableExtensionUpdateCheck = false;
-      enableUpdateCheck = false;
-      extensions = inputs.nix4vscode.lib.${pkgs.stdenv.hostPlatform.system}.forVscode [
-        "jnoortheen.nix-ide"
-        "cordx56.rustowl-vscode"
-      ];
-      userSettings = {
-        "explorer.confirmDelete" = false;
-        "chat.agent.maxRequests" = 250;
-        "chat.allowAnonymousAccess" = true;
-        "chat.tools.terminal.autoApprove" = {
-          "git fetch" = true;
-          "/^\\(git ls-remote --heads origin 2>/dev/null \\| grep -E 'refs/heads/\\[0-9\\]\\+-early-access' \\|\\| echo \"No remote branches found\"\\) && \\(git branch 2>/dev/null \\| grep -E '\\^\\[\\* \\]\\*\\[0-9\\]\\+-early-access' \\|\\| echo \"No local branches found\"\\) && \\(find specs -maxdepth 1 -type d -name '\\[0-9\\]\\*-early-access' 2>/dev/null \\|\\| echo \"No specs directories found\"\\)$/" =
-            {
-              approve = true;
-              matchCommandLine = true;
-            };
-          awk = true;
-          "git rev-parse" = true;
-          "pnpm lint" = true;
-          "/^pnpm build 2>&1 \\| tail -30$/" = {
-            approve = true;
-            matchCommandLine = true;
-          };
-          "/^echo \"=== Tests ===\" && pnpm test 2>&1 \\| tail -15 && echo -e \"\\\\n=== Type Check ===\" && pnpm type-check 2>&1 && echo -e \"\\\\n=== Linting ===\" && pnpm lint 2>&1 && echo -e \"\\\\n✅ All quality checks passed!\"$/" =
-            {
-              approve = true;
-              matchCommandLine = true;
-            };
-          pnpm = true;
-          sed = true;
-          test = true;
-          "true" = true;
-          "/^bash \\.specify/scripts/bash/check-prerequisites\\.sh --json --require-tasks --include-tasks 2>&1 \\| head -100$/" =
-            {
-              approve = true;
-              matchCommandLine = true;
-            };
-        };
-        "terminal.integrated.defaultProfile.linux" = "bash";
-        "github.copilot.nextEditSuggestions.enabled" = true;
-        "workbench.startupEditor" = "none";
-        "explorer.confirmDragAndDrop" = false;
-
-        "nix.enableLanguageServer" = true;
-        "nix.serverPath" = "nixd";
-        "nix.serverSettings"."nixd".formatting.command = [ "nixfmt" ];
-      };
     };
   };
 

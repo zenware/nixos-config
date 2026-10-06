@@ -9,6 +9,7 @@
     imports = [
       ../../users/jml/home
       inputs.nvf.homeManagerModules.default
+      inputs.doom-emacs.homeModule
     ];
   };
   flake.modules.homeManager.jml-desktop = ../../users/jml/home/desktop.nix;

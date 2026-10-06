@@ -116,6 +116,21 @@ applies the matching home configuration too:
 sudo nixos-rebuild switch --flake .#lithium
 ```
 
+### Editors
+
+`users/jml/home/default.nix` installs nvf Neovim and
+[Doom Emacs Unstraightened](https://github.com/marienz/nix-doom-emacs-unstraightened)
+through Home Manager, including on `m5mbp`. Both editors have Rust Analyzer,
+RustOwl, and a Rust toolchain available without entering a development shell.
+Rust standard-library sources are supplied by Nix. In Neovim, RustOwl
+highlighting starts automatically; `:Rustowl toggle` switches it off/on.
+
+Doom's configuration lives in `users/jml/home/doom/`; rebuild the host after
+changing it rather than running `doom sync`. Its Cachix cache is declared in
+`flake.nix`. Neovim uses the bundled English spell dictionary and two-space
+indentation for Nix/Terraform/HCL; existing language support and formatting on
+save remain enabled. VS Code is no longer installed by this configuration.
+
 ### Setup a macbook
 
 This is different from standard NixOS systems in that... it's literally not NixOS, and also
