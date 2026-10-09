@@ -39,6 +39,9 @@ in
       else
         abort "Unsupported OS";
   };
+  # TODO: Completely eradicate cfspeedtest
+  # Add iperf3 to base config of all my machines?
+  # Replace cfspeedtest with a different/better? cli speedtest tool?
   home.packages =
     with pkgs;
     [
@@ -304,16 +307,17 @@ in
     ];
   };
 
-  # TODO: Compare some bulkier plugins with 'mini.nvim' replacements.
-  # mini.nvim is also configurable through nvf under it's own namespace rather than functionality-named namespaces.
-  # https://www.reddit.com/r/neovim/comments/1o6jjw0/my_review_of_minivim/
   programs.nvf = {
     enable = true;
-    # When using the Home-Manager Module for nvf, the settings go into the following attribute set.
-    # https://notashelf.github.io/nvf/index.xhtml#sec-hm-flakes
     settings.vim = {
       viAlias = true;
       vimAlias = true;
+      globals.editorconfig = true;
+      options = {
+        cursorline = true;
+        foldlevel = 99;
+        foldlevelstart = 99;
+      };
 
       extraPackages = rustTools ++ [ rustowlPackages.rustowl ];
       extraPlugins.rustowl = {
@@ -325,9 +329,6 @@ in
           })
         '';
       };
-      spellcheck.enable = true;
-      # ponytail: bundled English dictionary; no runtime wordlist downloads.
-      spellcheck.languages = [ "en" ];
       autocmds = [
         {
           event = [ "FileType" ];
@@ -340,54 +341,54 @@ in
         }
       ];
 
-      visuals = {
-        nvim-scrollbar.enable = true; # Configurable Visual Scrollbar (Can pair with Cursor, ALE, Diagnostics, Gitsigns, and hlslens)
-        nvim-web-devicons.enable = true; # Nerdfont Icons for use by other plugins
-        nvim-cursorline.enable = true; # Highlight Words & Lines on the cursor
-        cinnamon-nvim.enable = true; # Smooth Scrolling for any movement command.
-        fidget-nvim.enable = true; # UI for Notifications & LSP Progress Messages
-
-        highlight-undo.enable = true; # Highlight changed text after any non-insert actions
-        indent-blankline.enable = true; # Indentation Guides
-      };
-
-      statusline.lualine = {
-        enable = true;
-        #setupOpts.options.theme = lib.mkForce "catppuccin";
-        integrations.breadcrumbs = {
-          nvim-navic.enable = true;
-          navbuddy.enable = true;
-        };
-      };
-
-      theme = {
-        enable = true;
-        name = lib.mkForce "catppuccin";
-        style = "mocha";
-        transparent = false;
-      };
+      # TODO: If I have luasnip enabled, do I need to enable friendly-snippets here?
       autocomplete.blink-cmp = {
         enable = true;
         friendly-snippets.enable = true;
       };
       autopairs.nvim-autopairs.enable = true; # Pair up ", {, (, etc.
-      binds = {
-        cheatsheet.enable = true; # Searchable in-editor cheatsheet that uses Telescope
-        hardtime-nvim.enable = true; # Prevents you from using arrow keys and other "bad habits"
-        whichKey.enable = true; # Shows your available keybindings in a popup
-      };
+      binds.hardtime-nvim.enable = true; # Prevents you from using arrow keys and other "bad habits"
       clipboard.enable = true; # Clipboard Integration
       dashboard.alpha.enable = true; # Greeter
-      debugger.nvim-dap.enable = true; # Debugger
-      debugger.nvim-dap.ui.enable = true; # Debugger UI
-      diagnostics = {
+      debugger.nvim-dap = {
         enable = true;
-        presets = {
-          deadnix.enable = true;
-          statix.enable = true;
-        };
+        ui.enable = true;
+        adapters = lib.genAttrs [ "pwa-node" "node" ] (_: {
+          type = "server";
+          host = "127.0.0.1";
+          port = "\${port}";
+          executable = {
+            command = lib.getExe pkgs.vscode-js-debug;
+            args = [
+              "\${port}"
+              "127.0.0.1"
+            ];
+          };
+        });
+        # Project launch profiles are read from .vscode/launch.json on demand.
+        configurations =
+          lib.genAttrs
+            [
+              "javascript"
+              "javascriptreact"
+              "typescript"
+              "typescriptreact"
+            ]
+            (_: [
+              {
+                name = "Attach to Node.js";
+                type = "pwa-node";
+                request = "attach";
+                processId = lib.generators.mkLuaInline ''require("dap.utils").pick_process'';
+                cwd = "\${workspaceFolder}";
+              }
+            ]);
       };
-      filetree.neo-tree.enable = true; # Filesystem tree sidebar.
+      diagnostics.enable = true;
+      filetree.neo-tree = {
+        enable = true;
+        setupOpts.window.position = "right";
+      };
       formatter.conform-nvim = {
         enable = true;
         presets = {
@@ -410,11 +411,10 @@ in
       };
       git = {
         enable = true;
-        git-conflict.enable = true;
         gitlinker-nvim.enable = true; # Copy GitHub/GitLab/Bitbucket links to clipboard
         gitsigns.enable = true; # Git Info in Buffers + Gutters
-        gitsigns.codeActions.enable = false;
         neogit.enable = true; # Interactive Git
+        neogit.setupOpts.integrations.diffview = true;
         octo-nvim.enable = true; # GitHub Integration
       };
       languages = {
@@ -425,14 +425,10 @@ in
 
         nix = {
           enable = true;
-          lsp.enable = true;
           lsp.servers = [ "nixd" ];
-          extraDiagnostics.enable = true;
-          format.enable = true;
           format.type = [ "nixfmt" ];
-          treesitter.enable = true;
         };
-        markdown.enable = true;
+        #markdown.enable = true; markdown-oxide specified elsewhere.
         typst.enable = true;
 
         assembly.enable = true;
@@ -447,131 +443,160 @@ in
         go.enable = true;
         # zig.enable = true; # TODO: Add Zig packages?
 
-        typescript.enable = true;
+        typescript = {
+          enable = true;
+          lsp.servers = [ "typescript-go" ];
+        };
         #html.enable = true; # TODO: Add HTML packages?
         css.enable = true;
         sql.enable = true;
       };
-      lazy.enable = true; # Lazy Load when possible.
       lsp = {
         enable = true;
         formatOnSave = true;
-        lspkind.enable = false;
         lightbulb.enable = true;
-        lspsaga.enable = false;
-        trouble.enable = true;
-        lspSignature.enable = false;
         otter-nvim.enable = true;
-        nvim-docs-view.enable = true;
-        servers.rust-analyzer.settings.rust-analyzer.cargo.sysrootSrc = "${pkgs.rustPlatform.rustLibSrc}";
-      };
-
-      # Code Snippets Engine /w support for Lua, VSCode, and SnipMate snippets.
-      snippets.luasnip.enable = true;
-
-      tabline.nvimBufferline.enable = true; # Shows buffers as tabs at the top.
-      treesitter.context.enable = true;
-      telescope.enable = true; # Fuzzy Finder, central to many other plugins.
-      notify.nvim-notify.enable = true; # Fancy Configurable Notification Manager
-      projects.project-nvim.enable = true;
-
-      utility = {
-        ccc.enable = true; # Color Picker
-        diffview-nvim.enable = true;
-        icon-picker.enable = true;
-        surround.enable = true; # Change Surrounding Delimiter pairs `ysiw)`
-        leetcode-nvim.enable = true; # Allow solving LeetCode problems directly inside neovim
-        multicursors.enable = true; # Edit with multiple cursors simultaneously
-        smart-splits.enable = true; # Split-Pane Management
-        undotree.enable = true; # Undo history visualizer
-        nvim-biscuits.enable = true; # Shows the start of a code block from the bottom
-
-        motion = {
-          # NOTE: https://github.com/smoka7/hop.nvim
-          hop.enable = true; # EasyMotion like, allowing you to jump anywhere in the document with as few keystrokes as possible
-          leap.enable = true; # Jump to anywhere visible
-          precognition.enable = false; # Helps with discovering motions to navigate your current buffer
+        presets = {
+          harper.enable = true; # LSP English-only Grammar
+          markdown-oxide.enable = true; # Markdown LSP, Obsidian-Like
+          ruff.enable = true; # Python LSP
+          ty.enable = true; # Python LSP
         };
-        images.img-clip.enable = true;
+        # Extend the JS/TS filetypes supplied by the language module to React buffers.
+        servers.typescript-go.filetypes = [
+          "javascriptreact"
+          "typescriptreact"
+        ];
+        servers.ruff.filetypes = [ "python" ];
+        servers.ty.filetypes = [ "python" ];
+        servers.markdown-oxide.filetypes = [ "markdown" ];
+        servers.rust-analyzer.settings.rust-analyzer.cargo.sysrootSrc = "${pkgs.rustPlatform.rustLibSrc}";
+        trouble.enable = true;
+      };
+      mini = {
+        clue.enable = true; # whichKey replacement: Shows keybinding hints in a popup
+        icons.enable = true; # nvim-web-devicons replacement: mocks out the methods to improve compatibility
+        sessions.enable = true; # Session Management
+        starter.enable = true;
+        statusline.enable = true; # lualine replacement: Less complex statusline
+        tabline.enable = true; # nvimBufferline replacement, I do get value from this with multiple buffers open
       };
 
+      # TODO: Not sure I care about harpoon at all.
+      # navigation.harpoon.enable = true; # Quick Navigation to Files, Buffers, and Bookmarks
       notes = {
         # obsidian.enable = true; # neovim fails to build with this enabled.
         todo-comments.enable = true;
       };
 
-      terminal = {
-        toggleterm = {
-          enable = true;
-          lazygit.enable = true;
-        };
-      };
+      notify.nvim-notify.enable = true; # Notification backend for Noice.
+      presence.cord-nvim.enable = true; # Discord Rich Presence
 
+      spellcheck = {
+        enable = true;
+        languages = [ "en" ];
+        programmingWordlist.enable = true;
+      };
+      telescope.enable = true; # Fuzzy Finder, central to many other plugins.
+      terminal.toggleterm.enable = true;
+      theme = {
+        enable = true;
+        name = "catppuccin";
+        style = "mocha";
+        transparent = false;
+      };
+      treesitter.context.enable = true;
+      treesitter.fold = true;
       ui = {
         borders.enable = true;
-        noice.enable = true;
-        colorizer.enable = true;
-        modes-nvim.enable = false; # this looks terrible with catppuccin
+        colorful-menu-nvim.enable = true;
+        dropbar-nvim.enable = true;
         illuminate.enable = true;
-        smartcolumn = {
-          enable = true;
-          setupOpts.custom_colorcolumn = {
-            nix = "110";
-            ruby = "120";
-            java = "130";
-            go = [
-              "90"
-              "130"
-            ];
-          };
-        };
-        fastaction.enable = true;
+        noice.enable = true;
+        nvim-highlight-colors.enable = true; # Preview color literals inline.
+        smartcolumn.enable = true;
       };
-
-      session.nvim-session-manager.enable = true; # Save sessions to reopen later
-      comments.comment-nvim.enable = true; # Fancy commenting
-      presence.neocord.enable = true; # Discord Rich Presence
+      undoFile.enable = true;
+      utility = {
+        auto-indent-nvim.enable = true; # VSCode-like tab indentation? Probably there's a better solution.
+        ccc.enable = true; # Color Picker
+        crazy-coverage.enable = true; # Code Coverage Visualizer
+        csvview.enable = true; # CSV Viewer
+        direnv.enable = true; # Consider nix-develop only if it adds something really useful.
+        grug-far-nvim.enable = true; # Find and Replace Tool
+        # NOTE: Guess Indent doesn't exist?
+        #guess-indent.enable = true; # Automatic indentation detection, I think I don't like this premise. Probably prefer defined indentation.
+        icon-picker.enable = true; # Nerdfonts Icon Picker
+        images = {
+          image-nvim.enable = true; # Kitty Image Protocol Support
+          img-clip.enable = true; # Clipboard Image Support
+        };
+        # TODO: I kind of want this leetcode plugin for hackerrank/projecteuler/AdventOfCode/etc.
+        # Perhaps I should implement that myself as a fun open source project.
+        leetcode-nvim.enable = true; # Allow solving LeetCode problems directly inside neovim
+        mkdir.enable = true; # Create directories on the fly when saving files
+        motion = {
+          leap.enable = true; # Jump to anywhere visible
+        };
+        multicursors.enable = true; # Edit with multiple cursors simultaneously
+        nvim-biscuits.enable = true; # Visually clarifies the end of a block-context, Actually quite love this.
+        outline.aerial-nvim.enable = true; # Show a sidebar with the outline of the current buffer, code-symbol navigation.
+        # TODO: add 'markdown-render.nvim' for live markdown rendering.
+        # NOTE: If smart-paste works it will solve a longstanding frustration I have with forgetting to `:set paste`, `:set nopaste`
+        smart-paste-nvim.enable = true; # Paste text without losing indentation, I think this is a good idea.
+        smart-splits.enable = true; # Split-Pane Management
+        surround.enable = true; # Change Surrounding Delimiter pairs `ysiw)`
+        undotree.enable = true; # Undo history visualizer
+      };
+      visuals = {
+        blink-indent.enable = true; # Indentation guides.
+        cinnamon-nvim.enable = true; # Smooth Scrolling for any movement command.
+        highlight-undo.enable = true; # Highlight changed text after any non-insert actions
+        hlargs-nvim.enable = true;
+        nvim-scrollbar.enable = true; # Configurable Visual Scrollbar (Can pair with Cursor, ALE, Diagnostics, Gitsigns, and hlslens)
+        rainbow-delimiters.enable = true; # Colorize Delimiters # Occasionally do LISP/Scheme things and this is handy.
+        twilight-nvim.enable = true; # Tree-Sitter Aware Code Dimming
+      };
     };
   };
-
-  # services.podman.enable = true;
-
-  # TODO: Consider configuring MCP servers. and local-ai
-  # TODO:
-  # services.home-manager.autoUpgrade.useFlake = true;
-  # services.home-manager.autoUpgrade.flakeDir = <here-ish>;
-  # TODO: Manually import necessary modules.
-  # home-manager.minimal = true;
-
-  # TODO: A weird amount of work if I actually care to get Zed running.
-  # https://wiki.nixos.org/wiki/Zed
+  # Python Support built into Zed with ty + ruff - How do I make sure there's Debugger, etc.
+  # Rust support built in, CodeLLDB Debugger
   targets.genericLinux.nixGL.vulkan.enable = desktop && pkgs.stdenv.hostPlatform.isLinux;
+  # TODO: Consider what needs to be in `nix-ld` for LSP support.
+  # https://wiki.nixos.org/wiki/Zed#Nix-ld_(recommended)
+  # https://github.com/search?q=lang%3Anix+zed-editor&type=code
   programs.zed-editor = {
     enable = desktop;
+    # TODO: Automate catppuccin theme and icons
     extensions = [
       "nix"
       "toml"
-      #"rust"
-      "basedpyright"
-      "ruff"
+      "typst"
     ];
+    # TODO: Add gopls, and anything else needed...
     extraPackages = with pkgs; [
-      basedpyright
       nixd
-      ruff
-      #rust-analyzer
-      #rustc
     ];
+    # TODO: Configure the programming languages I use in Zed just how I like them
+    # Look to the extension store, and Zed's own documentation: https://zed.dev/docs/languages/python
+    # As well as other NixOS Configs posted to GitHub
+    #
     userSettings = {
       vim_mode = true;
+      # TODO: Set rust-analyzer path?
       lsp.nixd.binary.path = "${pkgs.nixd}/bin/nixd";
       languages = {
         Nix.language_servers = [ "nixd" ];
         Python = {
+          # Enable the Python Servers I care about
           language_servers = [
-            "basedpyright"
-            "!pyright"
+            "ty"
+            "!basedpyright"
           ];
+          # TODO: Quirk with building this line properly
+          # the code_actions_on_format line needs to be as-written to get the right output shape.
+          code_actions_on_format."source.organizeImports.ruff" = true;
+          formatter.language_server.name = "ruff";
         };
       };
     };
