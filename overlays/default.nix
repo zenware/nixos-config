@@ -59,4 +59,5 @@ in
   libretroCmake3Overlay
   inputs.flux.overlays.default
   inputs.nix-topology.overlays.default
+  inputs.niri.overlays.niri
 ])
