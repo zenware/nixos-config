@@ -14,6 +14,7 @@ let
 in
 {
   home-manager = {
+    backupFileExtension = ".bak";
     extraSpecialArgs = {
       inherit inputs;
       username = "jml";
