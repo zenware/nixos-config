@@ -7,7 +7,6 @@
   services.udisks2.enable = true;
 
   environment.systemPackages = with pkgs; [
-    simple-mtpfs
     gvfs
     libmtp
   ];
