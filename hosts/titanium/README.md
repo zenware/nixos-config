@@ -7,7 +7,8 @@ of importance will find it's way to this repo.
 
 ## Non-Deterministic Post-Install Steps
 
-Rearrange Monitors in Gnome Display Settings
+Rearrange Monitors in Gnome Display Settings OR whatever display manager we're using.
+There's also probably some steps to get 165 Hz refresh rate working.
 
 Use a fido2 key (YubiKey) to decrypt luks
 ```bash

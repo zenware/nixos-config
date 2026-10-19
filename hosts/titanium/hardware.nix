@@ -13,6 +13,9 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
+  hardware.facter.enable = config.hardware.facter.report != {};
+  hardware.facter.reportPath = ./facter.json;
+
   boot.initrd.systemd.enable = true;
   #boot.initrd.luks.devices.FOO.crypttabExtraOpts = ["fido2-device=auto"];
   # nvidia_drm.fbdev=1

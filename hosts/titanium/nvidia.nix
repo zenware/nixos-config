@@ -1,5 +1,6 @@
 { config, ... }:
 {
+  # https://wiki.nixos.org/wiki/NVIDIA
   # GPU Things
   # NOTE: The following command can be helpful when diagnosing GPU issues:
   # `nix shell nixpkgs#vulkan-tools -c vulkaninfo --summary`
@@ -20,7 +21,9 @@
     package = config.boot.kernelPackages.nvidiaPackages.latest;
     modesetting.enable = true;
     # Open Source Drivers: https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
-    open = false;
+    # We're NVIDIA GeForce RTX 3060 Ti: PCI id 2486, so there is open GPU kernel support.
+    # Occasionally there are issues /w 165 Hz + refresh rates, and experimenting with proprietary drivers has helped.
+    open = true;
     nvidiaSettings = true;
     powerManagement.enable = false;
     powerManagement.finegrained = false;
