@@ -5,6 +5,7 @@
     ./hardware.nix
     ./configuration.nix
     ./nvidia.nix
+    ./displays.nix
     inputs.lanzaboote.nixosModules.lanzaboote
     ./secure-boot.nix
     inputs.disko.nixosModules.disko

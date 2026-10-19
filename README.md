@@ -33,6 +33,7 @@ graph TD
         hosts
         hosts_conf
         hosts_hardware
+        hosts_displays
     end
     subgraph User Configuration
         users_default
@@ -46,14 +47,28 @@ graph TD
     
     mkSystem --> hosts["hosts/{hostname}/default.nix"]
     mkSystem --> users_default["users/{username}/default.nix"]
-    mkSystem --> users_home["users/{username}/home/default.nix"]
+    users_default --> users_home["users/{username}/home/default.nix"]
     
     hosts --> nixos_mods@{ shape: docs, label: "modules/roles/*"}
     hosts --> hosts_conf["configuration.nix"]
     hosts --> hosts_hardware["hardware.nix"]
+    hosts --> hosts_displays["displays.nix (optional)"]
     
     users_home --> home_mods@{ shape: docs, label: "users/{username}/home/*"}
+
+    %% Host hardware facts are merged into every Home Manager user on that host.
+    hosts_displays -. "home-manager.sharedModules" .-> home_mods
 ```
+
+Home Manager configuration is split by who owns the fact:
+
+- **User-level** (`users/<username>/home/*`): keybinds, rules, and preferences
+  that follow me to every machine (e.g. `niri.nix`).
+- **Host-level** (`hosts/<hostname>/*`): facts about the hardware, such as
+  monitor modes and positions in `hosts/titanium/displays.nix`. These are
+  injected into every Home Manager user on the host with
+  `home-manager.sharedModules`, so the user config never needs to know which
+  machine it is on.
 
 ## How to use this? (Deployment)
 
@@ -167,7 +182,8 @@ sudo -H darwin-rebuild switch --flake .#m5mbp
 │   ├── <hostname>
 │   │   ├── configuration.nix  # host-specific system configuration
 │   │   ├── hardware.nix       # host specific hardware configuration
-│   │   └── default.nix        # entrypoint for host configuration
+│   │   ├── displays.nix       # optional: monitor facts, shared into Home Manager
+│   │   └── default.nix        # entrypoint for host configuration
 ├── users
 │   ├── <username>
 │   │   ├── default.nix  # entrypoint for user configuration
