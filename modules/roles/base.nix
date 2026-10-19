@@ -108,7 +108,11 @@
 
         networking.firewall.enable = true;
 
-        # Fill up the terminfo db, and keep terminfo details on sudo.
+        # NOTE: For some reason the only way to get terminfo for pkgs.contour is to build contour in full.
+        # This did cause a temporary build error.
+        # Reported as: https://github.com/NixOS/nixpkgs/issues/570595
+        # Fixed by tracking upstream: https://github.com/NixOS/nixpkgs/pull/569719
+        # I think I'd prefer most of my systems to have all terminfo on them, but I'm leaving this note here as a reminder to think about it.
         environment.enableAllTerminfo = true;
         security.sudo.keepTerminfo = true;
 

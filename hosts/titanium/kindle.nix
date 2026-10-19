@@ -6,6 +6,7 @@
   services.gvfs.enable = true;
   services.udisks2.enable = true;
 
+  # TODO: Make sure the environment has a file manager with gvfs support to automate this.
   environment.systemPackages = with pkgs; [
     gvfs
     libmtp
