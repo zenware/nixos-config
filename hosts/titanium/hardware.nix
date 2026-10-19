@@ -15,6 +15,7 @@
 
   boot.initrd.systemd.enable = true;
   #boot.initrd.luks.devices.FOO.crypttabExtraOpts = ["fido2-device=auto"];
+  # nvidia_drm.fbdev=1
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "ahci"
@@ -25,6 +26,7 @@
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
+  boot.kernelParams = [ "nvidia_drm.fbdev=1" ];  # For Steam/Gamescope per: https://github.com/ValveSoftware/gamescope/issues/1125
   # boot.blacklistedKernelModules = [ "nouveau" ];
   boot.extraModulePackages = [ ];
 
