@@ -19,9 +19,9 @@ in
 
     services.adguardhome = {
       enable = true;
-      host = "127.0.0.1";
       port = webPort;
       settings = {
+        http.address = "127.0.0.1";
         dns = {
           bind_hosts = [ "0.0.0.0" ];
           port = dnsPort;
