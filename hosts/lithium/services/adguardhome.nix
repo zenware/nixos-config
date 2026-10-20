@@ -21,7 +21,7 @@ in
       enable = true;
       port = webPort;
       settings = {
-        http.address = "127.0.0.1";
+        http.address = lib.mkForce "127.0.0.1";
         dns = {
           bind_hosts = [ "0.0.0.0" ];
           port = dnsPort;
