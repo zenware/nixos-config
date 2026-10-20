@@ -19,9 +19,8 @@ in
 
     services.adguardhome = {
       enable = true;
-      port = webPort;
       settings = {
-        http.address = lib.mkForce "127.0.0.1";
+        http.address = lib.mkForce "127.0.0.1:${webPort}";
         dns = {
           bind_hosts = [ "0.0.0.0" ];
           port = dnsPort;
