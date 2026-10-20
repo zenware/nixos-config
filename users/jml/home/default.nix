@@ -307,6 +307,7 @@ in
     ];
   };
 
+  # TODO: Add a binding to easily open and close toggleterm, and to navigate panes like toggleterm.
   programs.nvf = {
     enable = true;
     settings.vim = {
@@ -347,7 +348,8 @@ in
         friendly-snippets.enable = true;
       };
       autopairs.nvim-autopairs.enable = true; # Pair up ", {, (, etc.
-      binds.hardtime-nvim.enable = true; # Prevents you from using arrow keys and other "bad habits"
+      # Hardtime is mainly a PITA, but I will probably enable it occasionally.
+      #binds.hardtime-nvim.enable = true; # Prevents you from using arrow keys and other "bad habits"
       clipboard.enable = true; # Clipboard Integration
       dashboard.alpha.enable = true; # Greeter
       debugger.nvim-dap = {
@@ -473,8 +475,10 @@ in
         servers.rust-analyzer.settings.rust-analyzer.cargo.sysrootSrc = "${pkgs.rustPlatform.rustLibSrc}";
         trouble.enable = true;
       };
+      # TODO: Haven't gotten clue working how I want. Might go back to whichKey
+      binds.whichKey.enable = true;
       mini = {
-        clue.enable = true; # whichKey replacement: Shows keybinding hints in a popup
+        #clue.enable = true; # whichKey replacement: Shows keybinding hints in a popup
         icons.enable = true; # nvim-web-devicons replacement: mocks out the methods to improve compatibility
         sessions.enable = true; # Session Management
         starter.enable = true;
@@ -565,6 +569,11 @@ in
   # TODO: Consider what needs to be in `nix-ld` for LSP support.
   # https://wiki.nixos.org/wiki/Zed#Nix-ld_(recommended)
   # https://github.com/search?q=lang%3Anix+zed-editor&type=code
+  # NOTE: Zed has native language support for the following:
+  # Bash, C, C++, CSS/Tailwind CSS, Diff, Go, JavaScript/TypeScript, JSON, Markdown, Python, Rust, YAML
+  # Anywhere the built-in language support is good enough we shouldn't reach for additional plugins.
+  # Additional Plugins should provide new language support, equivalent functionality to some other environment
+  # Or some additional functionality that is simply too good to pass up.
   programs.zed-editor = {
     enable = desktop;
     # TODO: Automate catppuccin theme and icons
