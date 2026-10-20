@@ -27,9 +27,10 @@ in
       ++ lib.optional isDesktop homeManagerModules.jml-desktop
       ++ lib.optional isNiri homeManagerModules.jml-noctalia
       ++ lib.optional isNiri homeManagerModules.jml-niri
-      ++ lib.optional (
-        isDesktop && lib.hasAttrByPath [ "stylix" "enable" ] options
-      ) inputs.stylix.homeModules.stylix;
+      # niri-flake adds its stylix HM module to every host that has the NixOS
+      # stylix options (even non-desktop ones), and that module reads
+      # `config.stylix.enable`, so the HM stylix options must always exist.
+      ++ lib.optional (lib.hasAttrByPath [ "stylix" "enable" ] options) inputs.stylix.homeModules.stylix;
     };
   };
 

@@ -1,14 +1,19 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  osConfig,
+  ...
+}:
 let
   wallpaper = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/8957e93c95867faafec7f9988cedddd6837859fa/wallpapers/nix-wallpaper-binary-black.png";
     hash = "sha256-mhSh0wz2ntH/kri3PF5ZrFykjjdQLhmlIlDDGFQIYWw=";
   };
+  hasBattery = osConfig.zw.laptop.enable;
+  hasBluetooth = osConfig.zw.bluetooth.enable;
 in
 {
-  # Is there any way of doing home-manager separately from nixosConfig/darwinConfig
-  # and yet still reference the contents of the nixosConfig to decide whether to enable
-  # noctalia-shell?
+  # NOTE: Bar widgets follow the host roles read through `osConfig`.
   # https://docs.noctalia.dev/getting-started/nixos/#config-ref
   #
   # NOTE: theme.* and wallpaper.default.path are set with `mkDefault` because
@@ -35,15 +40,9 @@ in
         position = "right";
 
         capsule = false;
-        start = [
-          "network"
-          "bluetooth"
-        ];
+        start = [ "network" ] ++ lib.optional hasBluetooth "bluetooth";
         center = [ "workspaces" ];
-        end = [
-          "battery"
-          "clock"
-        ];
+        end = lib.optional hasBattery "battery" ++ [ "clock" ];
       };
     };
   };
